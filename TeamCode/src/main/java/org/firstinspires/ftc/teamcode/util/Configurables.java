@@ -41,6 +41,8 @@ public class Configurables {
     public static Color CAMERA_RED_POWERSHOT_UPPER  = new Color(15, 255, 255);
     public static Color CAMERA_BLUE_GOAL_LOWER      = new Color(75, 40, 80);
     public static Color CAMERA_BLUE_GOAL_UPPER      = new Color(120, 255, 255);
+    public static Color CAMERA_BLACK_GOAL_LOWER      = new Color(0, 0, 0);
+    public static Color CAMERA_BLACK_GOAL_UPPER      = new Color(360, 0, 0);
     public static Color CAMERA_BLUE_POWERSHOT_LOWER = new Color(75, 30, 50);
     public static Color CAMERA_BLUE_POWERSHOT_UPPER = new Color(120, 255, 255);
     public static Color CAMERA_ORANGE_LOWER         = new Color(0, 70, 50);
