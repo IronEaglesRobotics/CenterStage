@@ -14,9 +14,8 @@ import org.firstinspires.ftc.teamcode.vision.TargetingPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 
-// Class for the camera
 public class Camera {
-    private HardwareMap hardwareMap;
+    private final HardwareMap hardwareMap;
     private OpenCvCamera targetingCamera;
     private TargetingPipeline targetingPipeline;
     private boolean targetingCameraInitialized;

@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.vision;
 
-import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_RED_GOAL_LOWER;
-import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_RED_GOAL_UPPER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.FTC_RED_LOWER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.FTC_RED_UPPER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_MAX_GOAL_AREA;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_MIN_GOAL_AREA;
 import static org.firstinspires.ftc.teamcode.util.Constants.ANCHOR;
@@ -54,10 +54,10 @@ public class TargetingPipeline extends OpenCvPipeline {
     // Update the Red Goal Detection
     private void updateRed(Mat input) {
         // take pixels that are in the color range and put them into a mask, eroding and dilating them to remove white noise
-        redGoalLower1 = new Scalar(CAMERA_RED_GOAL_LOWER.getH(), CAMERA_RED_GOAL_LOWER.getS(), CAMERA_RED_GOAL_LOWER.getV());
-        redGoalUpper1 = new Scalar(180, CAMERA_RED_GOAL_UPPER.getS(), CAMERA_RED_GOAL_UPPER.getV());
-        redGoalLower2 = new Scalar(0, CAMERA_RED_GOAL_LOWER.getS(), CAMERA_RED_GOAL_LOWER.getV());
-        redGoalUpper2 = new Scalar(CAMERA_RED_GOAL_UPPER.getH(), CAMERA_RED_GOAL_UPPER.getS(), CAMERA_RED_GOAL_UPPER.getV());
+        redGoalLower1 = new Scalar(FTC_RED_LOWER.getH(), FTC_RED_LOWER.getS(), FTC_RED_LOWER.getV());
+        redGoalUpper1 = new Scalar(180, FTC_RED_UPPER.getS(), FTC_RED_UPPER.getV());
+        redGoalLower2 = new Scalar(0, FTC_RED_LOWER.getS(), FTC_RED_LOWER.getV());
+        redGoalUpper2 = new Scalar(FTC_RED_UPPER.getH(), FTC_RED_UPPER.getS(), FTC_RED_UPPER.getV());
         Core.inRange(hsv, redGoalLower1, redGoalUpper1, redMask1);
         Core.inRange(hsv, redGoalLower2, redGoalUpper2, redMask2);
         Core.add(redMask1, redMask2, redMask);
