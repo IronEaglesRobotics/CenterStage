@@ -20,12 +20,10 @@ public class Camera {
     private TargetingPipeline targetingPipeline;
     private boolean targetingCameraInitialized;
 
-    // Constructor
     public Camera(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
     }
 
-    // Initiate the Targeting Camera
     public void initTargetingCamera() {
         int targetingCameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         this.targetingCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, TARGETING_WEBCAM), targetingCameraMonitorViewId);
@@ -45,14 +43,12 @@ public class Camera {
         });
     }
 
-    // Close the Targeting Camera
     public void stopTargetingCamera() {
         if (targetingCameraInitialized) {
             targetingCamera.closeCameraDeviceAsync(() -> targetingCameraInitialized = false);
         }
     }
 
-    // Get the Red Goal Detection
     public Detection getRed() {
         return (targetingCameraInitialized ? targetingPipeline.getRed() : INVALID_DETECTION);
     }

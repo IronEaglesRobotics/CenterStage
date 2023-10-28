@@ -54,8 +54,6 @@ public class Detection {
         if (isValid()) {
             drawConvexHull(img, contour, color);
             drawPoint(img, centerPx, GREEN);
-//            drawPoint(img, bottomLeftPx, GREEN);
-//            drawPoint(img, bottomRightPx, GREEN);
         }
     }
 
@@ -64,14 +62,11 @@ public class Detection {
         if (isValid()) {
             fillConvexHull(img, contour, color);
             drawPoint(img, centerPx, GREEN);
-//            drawPoint(img, bottomLeftPx, GREEN);
-//            drawPoint(img, bottomRightPx, GREEN);
         }
     }
 
     // Check if the current Detection is valid
     public boolean isValid() {
-//        return true;
         return (this.contour != null) && (this.centerPx != INVALID_POINT) && (this.areaPx != INVALID_AREA);
     }
 
