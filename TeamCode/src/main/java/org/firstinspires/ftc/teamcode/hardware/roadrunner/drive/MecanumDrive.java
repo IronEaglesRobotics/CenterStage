@@ -308,4 +308,10 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     public static TrajectoryAccelerationConstraint getAccelerationConstraint(double maxAccel) {
         return new ProfileAccelerationConstraint(maxAccel);
     }
+
+    public void setInput(double x, double y, double z) {
+        Pose2d vel = new Pose2d(x, y, z);
+        setDrivePower(vel);
+        update();
+    }
 }
