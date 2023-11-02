@@ -51,4 +51,6 @@ public class Constants {
     public static final String STACK_WEBCAM = "Stack Webcam";
     public static final String TARGETING_WEBCAM = "Targeting Webcam";
     public static final String IMU_SENSOR = "imu";
+    public static final String LEFT = "leftHang";
+    public static final String RIGHT = "rightHang";
 }

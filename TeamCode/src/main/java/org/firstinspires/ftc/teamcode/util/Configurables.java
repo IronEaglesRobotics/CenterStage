@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.teamcode.util;
 
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
-import org.opencv.core.Size;
-
 public class Configurables {
     // Robot Constants
     public static double R_ARM_POWER = 0.2;
@@ -39,5 +35,11 @@ public class Configurables {
     public static double CV_MIN_STARTERSTACK_QUAD_AREA = 1.3;
     public static double CV_MIN_GOAL_AREA = 0;
     public static double CV_MAX_GOAL_AREA = 0.3;
+
+    //Servo Positions
+    public static double UNLOCKSPEED = .5;
+    public static double LOCKSPEED = .1;
+    public static double UNLOCK = .5;
+    public static double LOCK = .1;
 
 }
