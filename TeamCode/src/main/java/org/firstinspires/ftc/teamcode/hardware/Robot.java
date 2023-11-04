@@ -17,6 +17,9 @@ public class Robot {
     @Getter
     private Claw claw;
 
+    @Getter
+    private RobotLift lift;
+
     public Robot(HardwareMap hardwareMap) {
         this.init(hardwareMap);
     }
@@ -25,5 +28,6 @@ public class Robot {
         this.drive = new MecanumDrive(hardwareMap);
         this.gantry = new Gantry(hardwareMap);
         this.claw = new Claw(hardwareMap);
+        this.lift = new RobotLift(hardwareMap);
     }
 }
