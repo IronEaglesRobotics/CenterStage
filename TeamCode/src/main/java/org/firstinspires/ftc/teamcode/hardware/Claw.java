@@ -21,6 +21,8 @@ public class Claw {
         this.armLeft = hardwareMap.get(Servo.class, CLAW_ARM_LEFT_NAME);
         this.armRight = hardwareMap.get(Servo.class, CLAW_ARM_RIGHT_NAME);
         this.armRight.setDirection(Servo.Direction.REVERSE);
+        this.setArmPosition(PICKUP_ARM_MAX);
+        this.close();
     }
 
     public void open() {
@@ -40,6 +42,7 @@ public class Claw {
     }
 
     public void setArmPosition(double target) {
+        target = Math.min(PICKUP_ARM_MAX, Math.max(PICKUP_ARM_MIN, target));
         this.armLeft.setPosition(target);
         this.armRight.setPosition(target);
     }

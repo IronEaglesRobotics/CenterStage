@@ -22,6 +22,7 @@ public class Gantry extends Slide {
         this.xServo = hardwareMap.get(Servo.class, GANTRY_X_NAME);
         this.armServo = hardwareMap.get(Servo.class, GANTRY_ARM_NAME);
         this.screwServo = hardwareMap.get(Servo.class, GANTRY_SCREW_NAME);
+        this.screwServo.setPosition(1);
     }
 
     public void setX(double x) {
@@ -41,12 +42,12 @@ public class Gantry extends Slide {
     }
 
     public void resetScrew() {
-        this.currentScrewIndex = 0;
-        this.screwServo.setPosition(GANTRY_SCREW_POSITIONS[currentScrewIndex]);
+        this.screwServo.setPosition(0);
     }
 
-    public void deposit() {
-        this.screwServo.setPosition(GANTRY_SCREW_POSITIONS[this.currentScrewIndex--]);
+    public void setScrew(double target) {
+        double clamped = Math.min(1, Math.max(0, target));
+        this.screwServo.setPosition(clamped);
     }
 
     public void center() {

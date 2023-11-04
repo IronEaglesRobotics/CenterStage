@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.WEBCAM_NAME;
 import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_DETECTION;
-import static org.firstinspires.ftc.teamcode.util.Constants.TARGETING_WEBCAM;
 import static org.firstinspires.ftc.teamcode.util.Constants.WEBCAM_HEIGHT;
 import static org.firstinspires.ftc.teamcode.util.Constants.WEBCAM_ROTATION;
 import static org.firstinspires.ftc.teamcode.util.Constants.WEBCAM_WIDTH;
@@ -26,7 +26,7 @@ public class Camera {
 
     public void initTargetingCamera() {
         int targetingCameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        this.targetingCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, TARGETING_WEBCAM), targetingCameraMonitorViewId);
+        this.targetingCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, WEBCAM_NAME), targetingCameraMonitorViewId);
         this.targetingPipeline = new TargetingPipeline();
         targetingCamera.setPipeline(targetingPipeline);
         targetingCamera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {

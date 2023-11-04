@@ -1,26 +1,28 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import static org.firstinspires.ftc.teamcode.util.Constants.WHEEL_BACK_LEFT;
-import static org.firstinspires.ftc.teamcode.util.Constants.WHEEL_BACK_RIGHT;
-import static org.firstinspires.ftc.teamcode.util.Constants.WHEEL_FRONT_LEFT;
-import static org.firstinspires.ftc.teamcode.util.Constants.WHEEL_FRONT_RIGHT;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.BACK_LEFT_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.BACK_RIGHT_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.FRONT_LEFT_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.FRONT_RIGHT_NAME;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import java.util.Locale;
+
 public class Drive {
-    private DcMotor frontLeft;
-    private DcMotor frontRight;
-    private DcMotor backLeft;
-    private DcMotor backRight;
+    private final DcMotor frontLeft;
+    private final DcMotor frontRight;
+    private final DcMotor backLeft;
+    private final DcMotor backRight;
 
     public Drive(HardwareMap hardwareMap) {
         // Drive
-        this.frontLeft = hardwareMap.get(DcMotor.class, WHEEL_FRONT_LEFT);
-        this.frontRight = hardwareMap.get(DcMotor.class, WHEEL_FRONT_RIGHT);
-        this.backLeft = hardwareMap.get(DcMotor.class, WHEEL_BACK_LEFT);
-        this.backRight = hardwareMap.get(DcMotor.class, WHEEL_BACK_RIGHT);
+        this.frontLeft = hardwareMap.get(DcMotor.class, FRONT_LEFT_NAME);
+        this.frontRight = hardwareMap.get(DcMotor.class, FRONT_RIGHT_NAME);
+        this.backLeft = hardwareMap.get(DcMotor.class, BACK_LEFT_NAME);
+        this.backRight = hardwareMap.get(DcMotor.class, BACK_RIGHT_NAME);
         this.frontLeft.setDirection(DcMotor.Direction.REVERSE);
         this.frontRight.setDirection(DcMotor.Direction.FORWARD);
         this.backLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -53,6 +55,15 @@ public class Drive {
         frontRight.setPower(frPower);
         backLeft.setPower(blPower);
         backRight.setPower(brPower);
+    }
+
+    public String getTelemetry() {
+        double flPower = this.frontLeft.getPower();
+        double frPower = this.frontRight.getPower();
+        double blPower = this.backLeft.getPower();
+        double brPower = this.backRight.getPower();
+
+        return String.format("FL: %f, FR: %f, BL: %f, BR: %f", flPower, frPower, blPower, brPower);
     }
 
     public void setInput(Gamepad gamepad1, Gamepad gamepad2) {

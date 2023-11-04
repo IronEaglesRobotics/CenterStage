@@ -8,8 +8,11 @@ import lombok.Getter;
 
 public class Robot {
 
+//    @Getter
+//    private MecanumDrive drive;
+
     @Getter
-    private MecanumDrive drive;
+    private Drive drive;
 
     @Getter
     private Gantry gantry;
@@ -25,9 +28,10 @@ public class Robot {
     }
 
     private void init(HardwareMap hardwareMap) {
-        this.drive = new MecanumDrive(hardwareMap);
-        this.gantry = new Gantry(hardwareMap);
+//        this.drive = new MecanumDrive(hardwareMap);
+        this.drive = new Drive(hardwareMap);
+//        this.gantry = new Gantry(hardwareMap);
         this.claw = new Claw(hardwareMap);
-        this.lift = new RobotLift(hardwareMap);
+//        this.lift = new RobotLift(hardwareMap);
     }
 }
