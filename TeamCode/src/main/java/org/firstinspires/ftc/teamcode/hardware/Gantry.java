@@ -28,6 +28,10 @@ public class Gantry extends Slide {
         this.xServo.setPosition(x);
     }
 
+    public double getX() {
+        return this.xServo.getPosition();
+    }
+
     public void armOut() {
         this.armServo.setPosition(GANTRY_ARM_MAX);
     }
@@ -39,10 +43,6 @@ public class Gantry extends Slide {
     public void resetScrew() {
         this.currentScrewIndex = 0;
         this.screwServo.setPosition(GANTRY_SCREW_POSITIONS[currentScrewIndex]);
-    }
-
-    public void intake() {
-        this.screwServo.setPosition(GANTRY_SCREW_POSITIONS[this.currentScrewIndex++]);
     }
 
     public void deposit() {

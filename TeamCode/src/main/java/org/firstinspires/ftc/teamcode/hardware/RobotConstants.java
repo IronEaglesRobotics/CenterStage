@@ -29,6 +29,7 @@ public class RobotConstants {
     public static double GANTRY_ARM_MAX = 0;
     public static double[] GANTRY_SCREW_POSITIONS = new double[] { 0, 0.1, 0.2, 1.0 };
     public static int GANTRY_LIFT_DELTA = 50;
+    public static double GANTRY_X_DELTA = 0.01;
     public static double GANTRY_CENTER = 0.5;
 
     // Robot Lift

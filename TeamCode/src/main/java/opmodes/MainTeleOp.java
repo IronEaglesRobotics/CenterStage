@@ -2,6 +2,7 @@ package opmodes;
 
 import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.CLAW_ARM_DELTA;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.GANTRY_LIFT_DELTA;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.GANTRY_X_DELTA;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -17,7 +18,6 @@ public class MainTeleOp extends OpMode {
     private boolean screwArmPos = false;
     private boolean previousScrewArmToggle = false;
     private boolean previousScrewDeposit = false;
-    private boolean previousScrewIntake = false;
     private boolean previousScrewReset = false;
     private boolean previousSlideUp = false;
     private boolean previousSlideDown = false;
@@ -38,11 +38,23 @@ public class MainTeleOp extends OpMode {
         double z = gamepad1.right_stick_x;
         this.robot.getDrive().setInput(x, y, z);
 
+        // Button Mappings
+        boolean openClaw = gamepad2.b; // B
+        boolean clawUp = gamepad2.y; // Y
+        boolean clawDown = gamepad2.a; // A
+
+        boolean raiseRobotLift = gamepad2.right_trigger > 0.25; // RT
+        boolean liftRobot = gamepad2.right_bumper; // RB
+
+        boolean screwArmToggle = gamepad2.x; // X
+        boolean screwDeposit = gamepad2.left_trigger > 0.25; // LT
+        boolean screwReset = gamepad2.left_bumper; // LB
+        boolean slideUp = gamepad2.left_stick_y < -0.25; // Left Y Axis Joystick
+        boolean slideDown = gamepad2.left_stick_y > 0.25; // Left Y Axis Joystick
+        boolean gantryLeft = gamepad2.dpad_left; // dpad left
+        boolean gantryRight = gamepad2.dpad_right; // dpad right
 
         // Claw
-        boolean openClaw = false;
-        boolean clawUp = false;
-        boolean clawDown = false;
         if (openClaw) {
             this.robot.getClaw().open();
         } else {
@@ -57,8 +69,6 @@ public class MainTeleOp extends OpMode {
         }
 
         // Robot Lift
-        boolean raiseRobotLift = false;
-        boolean liftRobot = false;
         if (raiseRobotLift) {
             this.robot.getLift().raise();
         } else if (liftRobot) {
@@ -66,12 +76,6 @@ public class MainTeleOp extends OpMode {
         }
 
         // Gantry
-        boolean screwArmToggle = false;
-        boolean screwDeposit = false;
-        boolean screwIntake = false;
-        boolean screwReset = false;
-        boolean slideUp = false;
-        boolean slideDown = false;
         if (!previousScrewArmToggle && screwArmToggle) {
             if (screwArmPos) {
                 this.robot.getGantry().armOut();
@@ -82,8 +86,6 @@ public class MainTeleOp extends OpMode {
         }
         if (!previousScrewDeposit && screwDeposit) {
             this.robot.getGantry().deposit();
-        } else if (!previousScrewIntake && screwIntake) {
-            this.robot.getGantry().intake();
         } else if (!previousScrewReset && screwReset) {
             this.robot.getGantry().resetScrew();
         }
@@ -91,11 +93,16 @@ public class MainTeleOp extends OpMode {
             int currentPosition  = this.robot.getGantry().getSlidePosition();
             this.robot.getGantry().setTarget(currentPosition + GANTRY_LIFT_DELTA);
         }
+        if (gantryLeft) {
+            this.robot.getGantry().setX(this.robot.getGantry().getX() + GANTRY_X_DELTA);
+        } else if (gantryRight) {
+            this.robot.getGantry().setX(this.robot.getGantry().getX() - GANTRY_X_DELTA);
+        }
+
 
         this.previousSlideUp = slideUp;
         this.previousScrewArmToggle = screwArmToggle;
         this.previousScrewDeposit = screwDeposit;
-        this.previousScrewIntake = screwIntake;
         this.previousScrewReset = screwReset;
     }
 }
