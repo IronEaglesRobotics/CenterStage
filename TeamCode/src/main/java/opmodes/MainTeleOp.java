@@ -30,11 +30,6 @@ public class MainTeleOp extends OpMode {
         telemetry.addData("Status", "Initialized");
     }
 
-    // Gamepad 2 - Arm Control
-    // RT - Hanger Raise
-    // RB - Hanger Lift Robot
-    // DPad Left/Right - Gantry Left/Right
-    // DPad Up/Down - Lift Up/Down
     @Override
     public void loop() {
         // Drive
@@ -89,7 +84,7 @@ public class MainTeleOp extends OpMode {
             this.robot.getGantry().deposit();
         } else if (!previousScrewIntake && screwIntake) {
             this.robot.getGantry().intake();
-        } else if (screwReset) {
+        } else if (!previousScrewReset && screwReset) {
             this.robot.getGantry().resetScrew();
         }
         if ((!previousSlideUp && slideUp) || (!previousSlideDown && slideDown)) {
