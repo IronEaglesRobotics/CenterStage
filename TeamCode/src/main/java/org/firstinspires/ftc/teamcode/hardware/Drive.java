@@ -6,7 +6,6 @@ import static org.firstinspires.ftc.teamcode.util.Constants.WHEEL_FRONT_LEFT;
 import static org.firstinspires.ftc.teamcode.util.Constants.WHEEL_FRONT_RIGHT;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Drive {
@@ -53,13 +52,5 @@ public class Drive {
         frontRight.setPower(frPower);
         backLeft.setPower(blPower);
         backRight.setPower(brPower);
-    }
-
-    public void setInput(Gamepad gamepad1, Gamepad gamepad2) {
-        double x = gamepad1.left_stick_x;
-        double y = -gamepad1.left_stick_y;
-        double z = gamepad1.right_stick_x;
-
-        setInput(x, y, z);
     }
 }

@@ -11,6 +11,8 @@ import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveCons
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kA;
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kStatic;
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kV;
+import static org.firstinspires.ftc.teamcode.util.Configurables.SPEED;
+import static org.firstinspires.ftc.teamcode.util.Configurables.TURN;
 
 import androidx.annotation.NonNull;
 
@@ -56,8 +58,8 @@ import java.util.List;
  */
 @Config
 public class    MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(25, 0, 2.5);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(15, 0, 1);
 
     public static double LATERAL_MULTIPLIER = 1;
 
@@ -105,6 +107,14 @@ public class    MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDr
         leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
         rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
         rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        this.leftFront.setDirection(DcMotor.Direction.REVERSE);
+        this.rightFront.setDirection(DcMotor.Direction.FORWARD);
+        this.leftRear.setDirection(DcMotor.Direction.REVERSE);
+        this.rightRear.setDirection(DcMotor.Direction.FORWARD);
+        this.leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -315,9 +325,9 @@ public class    MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDr
         double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         this.setWeightedDrivePower(
                 new Pose2d(
-                        gamepad1.left_stick_y* -1,
-                        gamepad1.left_stick_x*-1,
-                        -gamepad1.right_stick_x
+                        gamepad1.left_stick_y* -1 * SPEED,
+                        gamepad1.left_stick_x*-1 * SPEED,
+                        -gamepad1.right_stick_x * TURN
                 ));
     }
 
