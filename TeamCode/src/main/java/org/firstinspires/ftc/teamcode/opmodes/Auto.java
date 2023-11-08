@@ -42,12 +42,12 @@ public class Auto extends LinearOpMode {
 
         //Preload Two
         this.preloadTwo = this.robot.getDrive().trajectoryBuilder(initialPosition)
-                .lineToLinearHeading(new Pose2d(40,-25, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(35,-27, Math.toRadians(270)))
                 .build();
 
         //Preload Three
         this.preloadThree = this.robot.getDrive().trajectoryBuilder(initialPosition)
-                .lineToLinearHeading(new Pose2d(47.5,-37.5, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(46,-35, Math.toRadians(270)))
                 .build();
 
         // Do super fancy chinese shit
