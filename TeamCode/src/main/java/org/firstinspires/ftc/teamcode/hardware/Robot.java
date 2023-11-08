@@ -25,18 +25,18 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
+import org.firstinspires.ftc.teamcode.vision.Camera;
 
 import lombok.Getter;
 
 public class Robot {
-    @Getter
-    private MecanumDrive drive;
-//    private Hang hang;
+    @Getter private MecanumDrive drive;
     @Getter private Intake intake;
     @Getter private Arm arm;
     @Getter private Wrist wrist;
     @Getter private Claw claw;
     @Getter private Hang hang;
+    @Getter private Camera camera;
 
     public Robot init(HardwareMap hardwareMap) {
         this.drive = new MecanumDrive(hardwareMap);
@@ -45,6 +45,7 @@ public class Robot {
         this.arm = new Arm().init(hardwareMap);
         this.wrist = new Wrist().init(hardwareMap);
         this.claw = new Claw().init(hardwareMap);
+        this.camera = new Camera(hardwareMap);
         return this;
     }
 
@@ -108,12 +109,12 @@ public class Robot {
             this.rightArm.setPosition(PICKUP);
         }
 
-        public void rest() {
+        public void armScore() {
             this.leftArm.setPosition(ARMDOWN);
             this.rightArm.setPosition(ARMDOWN);
         }
 
-        public void scoreArm() {
+        public void armRest() {
             this.leftArm.setPosition(ARMUP);
             this.rightArm.setPosition(ARMUP);
         }
@@ -156,7 +157,5 @@ public class Robot {
         public void openScore() {
             this.claw.setPosition(BIGOPEN);
         }
-
     }
-
 }

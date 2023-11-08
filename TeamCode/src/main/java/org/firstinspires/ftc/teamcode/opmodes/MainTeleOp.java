@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
-import org.firstinspires.ftc.teamcode.util.Configurables;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Main TeleOp", group = "Development")
 public class MainTeleOp extends OpMode {
@@ -18,51 +17,38 @@ public class MainTeleOp extends OpMode {
 
     @Override
     public void loop() {
+        boolean hang = gamepad2.dpad_up;
+        boolean restArm = gamepad2.dpad_left || gamepad2.x;
+        boolean pickupArm = gamepad2.dpad_down;
+        boolean scoreArm = gamepad2.dpad_right || gamepad2.a;
+        boolean claw = gamepad2.b;
+        boolean pickupWrist = gamepad2.left_bumper || gamepad2.x;
+        boolean scoreWrist = gamepad2.right_bumper || gamepad2.a;
 //Drive
         robot.getDrive().setInput(gamepad1, gamepad2);
 //Hang
-        if (gamepad2.dpad_up) {
+        if (hang) {
             this.robot.getHang().release();
-        } else {
-            this.robot.getHang().lock();
         }
-//Intake
-//        if (gamepad1.x) {
-//            this.robot.getIntake().spinIn();
-//        } else if (gamepad1.y) {
-//            this.robot.getIntake().spinOut();
-//        } else {
-//            this.robot.getIntake().stop();
-//        }
 //Arm
-        if (gamepad2.dpad_down) {
+        if (pickupArm) {
             this.robot.getArm().pickup();
-        } else if (gamepad2.dpad_right ||gamepad2.x) {
-            this.robot.getArm().scoreArm();
-        } else if (gamepad2.dpad_left || gamepad2.a) {
-            this.robot.getArm().rest();
+        } else if (restArm) {
+            this.robot.getArm().armRest();
+        } else if (scoreArm) {
+            this.robot.getArm().armScore();
         }
 //Claw
-        if (gamepad2.b) {
+        if (claw) {
             this.robot.getClaw().open();
-        }  else if (gamepad2.y) {
-            this.robot.getClaw().openScore();
         } else {
             this.robot.getClaw().close();
         }
 //Wrist
-        if (gamepad2.left_bumper || gamepad2.x) {
+        if (pickupWrist) {
             this.robot.getWrist().wristPickup();
-        } else if (gamepad2.right_bumper || gamepad2.a) {
+        } else if (scoreWrist) {
             this.robot.getWrist().wristScore();
-        }
-//SLOWMO
-        if (gamepad1.y) {
-            Configurables.SPEED = .5;
-            Configurables.TURN = .75;
-        } else {
-            Configurables.SPEED = 1;
-            Configurables.TURN = 1;
         }
     }
 }

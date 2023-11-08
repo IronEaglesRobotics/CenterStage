@@ -11,6 +11,8 @@ import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveCons
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kA;
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kStatic;
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kV;
+import static org.firstinspires.ftc.teamcode.util.Configurables.SLOWMODE_SPEED;
+import static org.firstinspires.ftc.teamcode.util.Configurables.SLOWMODE_TURN;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SPEED;
 import static org.firstinspires.ftc.teamcode.util.Configurables.TURN;
 
@@ -140,7 +142,7 @@ public class    MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDr
         List<Integer> lastTrackingEncVels = new ArrayList<>();
 
         // TODO: if desired, use setLocalizer() to change the localization method
-        // setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels));
+         setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(
                 follower, HEADING_PID, batteryVoltageSensor,
@@ -307,7 +309,7 @@ public class    MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDr
 
     @Override
     public Double getExternalHeadingVelocity() {
-        return (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).zRotationRate;
+        return (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).xRotationRate;
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {
@@ -322,13 +324,14 @@ public class    MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDr
     }
 
     public void setInput(Gamepad gamepad1, Gamepad gamepad2) {
-        double heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        double speedScale = gamepad1.y ? SLOWMODE_SPEED : SPEED;
+        double turnScale = gamepad1.y ? SLOWMODE_TURN : TURN;
+
         this.setWeightedDrivePower(
                 new Pose2d(
-                        gamepad1.left_stick_y* -1 * SPEED,
-                        gamepad1.left_stick_x*-1 * SPEED,
-                        -gamepad1.right_stick_x * TURN
+                        gamepad1.left_stick_y* -1 * speedScale,
+                        gamepad1.left_stick_x*-1 * speedScale,
+                        -gamepad1.right_stick_x * turnScale
                 ));
     }
-
 }
