@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import static org.firstinspires.ftc.teamcode.util.Configurables.ARMDOWN;
-import static org.firstinspires.ftc.teamcode.util.Configurables.ARMUP;
+import static org.firstinspires.ftc.teamcode.util.Configurables.ARMACCSCORE;
+import static org.firstinspires.ftc.teamcode.util.Configurables.ARMSCORE;
+import static org.firstinspires.ftc.teamcode.util.Configurables.ARMREST;
 import static org.firstinspires.ftc.teamcode.util.Configurables.BIGOPEN;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CLOSE;
 import static org.firstinspires.ftc.teamcode.util.Configurables.LOCK;
@@ -30,13 +31,20 @@ import org.firstinspires.ftc.teamcode.vision.Camera;
 import lombok.Getter;
 
 public class Robot {
-    @Getter private MecanumDrive drive;
-    @Getter private Intake intake;
-    @Getter private Arm arm;
-    @Getter private Wrist wrist;
-    @Getter private Claw claw;
-    @Getter private Hang hang;
-    @Getter private Camera camera;
+    @Getter
+    private MecanumDrive drive;
+    @Getter
+    private Intake intake;
+    @Getter
+    private Arm arm;
+    @Getter
+    private Wrist wrist;
+    @Getter
+    private Claw claw;
+    @Getter
+    private Hang hang;
+    @Getter
+    private Camera camera;
 
     public Robot init(HardwareMap hardwareMap) {
         this.drive = new MecanumDrive(hardwareMap);
@@ -49,7 +57,7 @@ public class Robot {
         return this;
     }
 
-    public static class Intake{
+    public static class Intake {
         private DcMotor intake = null;
 
         public Intake init(HardwareMap hardwareMap) {
@@ -59,11 +67,17 @@ public class Robot {
             return this;
         }
 
-        public void spinIn() {this.intake.setPower(0.7);}
+        public void spinIn() {
+            this.intake.setPower(0.7);
+        }
 
-        public void spinOut() {this.intake.setPower(-0.7);}
+        public void spinOut() {
+            this.intake.setPower(-0.7);
+        }
 
-        public void stop() {this.intake.setPower(0);}
+        public void stop() {
+            this.intake.setPower(0);
+        }
 
     }
 
@@ -95,12 +109,12 @@ public class Robot {
         private Servo rightArm;
 
 
-        public Arm init(HardwareMap hardwareMap){
+        public Arm init(HardwareMap hardwareMap) {
             this.leftArm = hardwareMap.get(Servo.class, LEFTARM);
             this.rightArm = hardwareMap.get(Servo.class, RIGHTARM);
             this.rightArm.setDirection(Servo.Direction.REVERSE);
-            this.rightArm.setPosition(ARMUP);
-            this.leftArm.setPosition(ARMUP);
+            this.rightArm.setPosition(ARMREST);
+            this.leftArm.setPosition(ARMREST);
             return this;
         }
 
@@ -110,20 +124,25 @@ public class Robot {
         }
 
         public void armScore() {
-            this.leftArm.setPosition(ARMDOWN);
-            this.rightArm.setPosition(ARMDOWN);
+            this.leftArm.setPosition(ARMSCORE);
+            this.rightArm.setPosition(ARMSCORE);
+        }
+
+        public void armAccurateScore() {
+            this.leftArm.setPosition(ARMACCSCORE);
+            this.rightArm.setPosition(ARMACCSCORE);
         }
 
         public void armRest() {
-            this.leftArm.setPosition(ARMUP);
-            this.rightArm.setPosition(ARMUP);
+            this.leftArm.setPosition(ARMREST);
+            this.rightArm.setPosition(ARMREST);
         }
     }
 
     public static class Wrist {
         private Servo wrist;
 
-        public Wrist init(HardwareMap hardwareMap){
+        public Wrist init(HardwareMap hardwareMap) {
             this.wrist = hardwareMap.get(Servo.class, WRIST);
             this.wrist.setPosition(WRISTPICKUP);
             return this;
@@ -141,8 +160,9 @@ public class Robot {
     public static class Claw {
         private Servo claw;
 
-        public Claw init (HardwareMap hardwareMap) {
+        public Claw init(HardwareMap hardwareMap) {
             this.claw = hardwareMap.get(Servo.class, CLAW);
+            this.claw.setPosition(CLOSE);
             return this;
         }
 

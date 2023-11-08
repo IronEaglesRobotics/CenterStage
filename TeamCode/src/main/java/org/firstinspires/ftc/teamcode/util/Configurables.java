@@ -18,8 +18,9 @@ public class Configurables {
     public static double LOCKSPEED = .25;
     public static double UNLOCK = .6;
     public static double LOCK = 0.4;
-    public static double ARMUP = .88;
-    public static double ARMDOWN = 0.15;
+    public static double ARMREST = .88;
+    public static double ARMSCORE = 0.15;
+    public static double ARMACCSCORE = 0.02;
     public static double PICKUP = .935;
     public static double WRISTPICKUP = 0.28;
     public static double WRISTSCORE = .96;

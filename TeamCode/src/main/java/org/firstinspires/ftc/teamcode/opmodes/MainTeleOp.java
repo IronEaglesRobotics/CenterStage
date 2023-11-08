@@ -21,6 +21,7 @@ public class MainTeleOp extends OpMode {
         boolean restArm = gamepad2.dpad_left || gamepad2.x;
         boolean pickupArm = gamepad2.dpad_down;
         boolean scoreArm = gamepad2.dpad_right || gamepad2.a;
+        boolean accurateScoreArm = gamepad2.y;
         boolean claw = gamepad2.b;
         boolean pickupWrist = gamepad2.left_bumper || gamepad2.x;
         boolean scoreWrist = gamepad2.right_bumper || gamepad2.a;
@@ -37,6 +38,8 @@ public class MainTeleOp extends OpMode {
             this.robot.getArm().armRest();
         } else if (scoreArm) {
             this.robot.getArm().armScore();
+        } else if (accurateScoreArm) {
+            this.robot.getArm().armAccurateScore();
         }
 //Claw
         if (claw) {
