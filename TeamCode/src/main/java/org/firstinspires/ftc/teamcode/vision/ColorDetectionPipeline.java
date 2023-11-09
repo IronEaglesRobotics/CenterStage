@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.vision;
 
+import static org.firstinspires.ftc.teamcode.util.Configurables.FTC_BLUE_LOWER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.FTC_BLUE_UPPER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.FTC_RED_LOWER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.FTC_RED_UPPER;
 import static org.firstinspires.ftc.teamcode.util.Constants.ANCHOR;
+import static org.firstinspires.ftc.teamcode.util.Constants.BLUE;
 import static org.firstinspires.ftc.teamcode.util.Constants.BLUR_SIZE;
 import static org.firstinspires.ftc.teamcode.util.Constants.ERODE_DILATE_ITERATIONS;
 import static org.firstinspires.ftc.teamcode.util.Constants.RED;
@@ -30,13 +33,25 @@ public class ColorDetectionPipeline extends OpenCvPipeline {
     Scalar redGoalLower2;
     Scalar redGoalUpper2;
 
+    Mat blueMask1 = new Mat();
+    Mat blueMask2 = new Mat();
+    Mat blueMask = new Mat();
+    Scalar blueGoalLower1;
+    Scalar blueGoalUpper1;
+    Scalar blueGoalLower2;
+    Scalar blueGoalUpper2;
+
     private Detection red;
+    private Detection blue;
+
 
     // Init
     @Override
     public void init(Mat input) {
         red = new Detection(input.size(), 0);
+        blue = new Detection(input.size(), 0);
     }
+
 
     // Process each frame that is received from the webcam
     @Override
@@ -45,6 +60,7 @@ public class ColorDetectionPipeline extends OpenCvPipeline {
         Imgproc.cvtColor(blurred, hsv, Imgproc.COLOR_RGB2HSV);
 
         updateRed(input);
+        updateBlue(input);
 
         return input;
     }
@@ -74,7 +90,31 @@ public class ColorDetectionPipeline extends OpenCvPipeline {
         red.fill(input, RED);
     }
 
+    private void updateBlue(Mat input) {
+        // take pixels that are in the color range and put them into a mask, eroding and dilating them to remove white noise
+        blueGoalLower1 = new Scalar(FTC_BLUE_LOWER.getH(), FTC_BLUE_LOWER.getS(), FTC_BLUE_LOWER.getV());
+        blueGoalUpper1 = new Scalar(FTC_BLUE_UPPER.getH(), FTC_BLUE_UPPER.getS(), FTC_BLUE_UPPER.getV());
+        Core.inRange(hsv, blueGoalLower1, blueGoalUpper1, blueMask);
+        Imgproc.erode(blueMask, blueMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
+        Imgproc.dilate(blueMask, blueMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
+
+        ArrayList<MatOfPoint> contours = new ArrayList<>();
+        Imgproc.findContours(blueMask, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
+        for (int i = 0; i < contours.size(); i++) {
+            Detection newDetection = new Detection(input.size(), 0, 1f);
+            newDetection.setContour(contours.get(i));
+            newDetection.draw(input, BLUE);
+        }
+
+        blue.setContour(getLargestContour(contours));
+        blue.fill(input, BLUE);
+    }
+
     public Detection getRed() {
         return this.red;
+    }
+
+    public Detection getBlue() {
+        return this.blue;
     }
 }
