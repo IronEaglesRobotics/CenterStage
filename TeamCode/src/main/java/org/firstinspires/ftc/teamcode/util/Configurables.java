@@ -32,6 +32,6 @@ public class Configurables {
     public static double SPEED = 1;
     public static double SLOWMODE_SPEED = 0.5;
     public static double TURN = 1;
-    public static double SLOWMODE_TURN = 0.75;
+    public static double SLOWMODE_TURN = 0.5;
 
 }

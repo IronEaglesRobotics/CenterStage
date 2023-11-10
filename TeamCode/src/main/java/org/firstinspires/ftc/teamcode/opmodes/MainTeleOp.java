@@ -18,13 +18,13 @@ public class MainTeleOp extends OpMode {
     @Override
     public void loop() {
         boolean hang = gamepad2.dpad_up;
-        boolean restArm = gamepad2.dpad_left || gamepad2.x;
+        boolean restArm = gamepad2.dpad_right || gamepad2.x;
         boolean pickupArm = gamepad2.dpad_down;
-        boolean scoreArm = gamepad2.dpad_right || gamepad2.a;
-        boolean accurateScoreArm = gamepad2.y;
+        boolean scoreArm = gamepad2.dpad_left || gamepad2.a;
+        boolean accurateScoreArm = gamepad2.right_bumper;
         boolean claw = gamepad2.b;
         boolean pickupWrist = gamepad2.left_bumper || gamepad2.x;
-        boolean scoreWrist = gamepad2.right_bumper || gamepad2.a;
+        boolean scoreWrist = gamepad2.a;
 //Drive
         robot.getDrive().setInput(gamepad1, gamepad2);
 //Hang
