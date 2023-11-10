@@ -8,8 +8,11 @@ import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.CLAW_MAX;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.CLAW_MIN;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.CLAW_NAME;
 
+import com.arcrobotics.ftclib.controller.PController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Claw {
     private final Servo claw;
@@ -31,14 +34,6 @@ public class Claw {
 
     public void close() {
         this.claw.setPosition(CLAW_MIN);
-    }
-
-    public void up() {
-        this.setArmPosition(PICKUP_ARM_MAX);
-    }
-
-    public void down() {
-        this.setArmPosition(PICKUP_ARM_MIN);
     }
 
     public void setArmPosition(double target) {

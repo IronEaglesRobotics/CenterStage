@@ -21,12 +21,12 @@ public class Slide {
     }
 
     public void setTarget(int target) {
-        this.left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         this.left.setTargetPosition(target);
+        this.left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         this.left.setPower(1);
 
-        this.right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         this.right.setTargetPosition(target);
+        this.right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         this.right.setPower(1);
     }
 
