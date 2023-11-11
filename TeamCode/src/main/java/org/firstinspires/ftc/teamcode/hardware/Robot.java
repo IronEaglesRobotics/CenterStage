@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -9,11 +10,8 @@ import lombok.Getter;
 
 public class Robot {
 
-//    @Getter
-//    private MecanumDrive drive;
-
     @Getter
-    private Drive drive;
+    private MecanumDrive drive;
 
     @Getter
     private Gantry gantry;
@@ -32,8 +30,7 @@ public class Robot {
     }
 
     private void init(HardwareMap hardwareMap) {
-//        this.drive = new MecanumDrive(hardwareMap);
-        this.drive = new Drive(hardwareMap);
+        this.drive = new MecanumDrive(hardwareMap);
         this.gantry = new Gantry(hardwareMap, telemetry);
         this.claw = new Claw(hardwareMap);
         this.lift = new RobotLift(hardwareMap, telemetry);
@@ -43,5 +40,11 @@ public class Robot {
         this.gantry.update();
         this.lift.update();
         this.telemetry.update();
+        this.drive.update();
+        this.claw.update();
+
+//        Pose2d pose = this.drive.getLocalizer().getPoseEstimate();
+//        this.telemetry.addData("x", pose.getX());
+//        this.telemetry.addData("y", pose.getY());
     }
 }

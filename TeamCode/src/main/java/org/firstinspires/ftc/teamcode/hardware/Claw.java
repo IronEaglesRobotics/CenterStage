@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.CLAW_ARM_LEFT_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.CLAW_KP;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.PICKUP_ARM_MAX;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.PICKUP_ARM_MIN;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.CLAW_ARM_RIGHT_NAME;
@@ -12,12 +13,12 @@ import com.arcrobotics.ftclib.controller.PController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
 public class Claw {
     private final Servo claw;
     private final Servo armLeft;
     private final Servo armRight;
+    PController clawController = new PController(CLAW_KP);
+    private double clawControllerTarget;
 
     public Claw(HardwareMap hardwareMap) {
         this.claw = hardwareMap.get(Servo.class, CLAW_NAME);
@@ -29,16 +30,28 @@ public class Claw {
     }
 
     public void open() {
-        this.claw.setPosition(CLAW_MAX);
+        this.clawControllerTarget = CLAW_MAX;
     }
 
     public void close() {
-        this.claw.setPosition(CLAW_MIN);
+        this.clawControllerTarget = CLAW_MIN;
     }
 
     public void setArmPosition(double target) {
         target = Math.min(PICKUP_ARM_MAX, Math.max(PICKUP_ARM_MIN, target));
         this.armLeft.setPosition(target);
         this.armRight.setPosition(target);
+    }
+
+    public void update() {
+        this.clawController.setSetPoint(this.clawControllerTarget);
+        this.clawController.setTolerance(0.001);
+        this.clawController.setP(CLAW_KP);
+
+        double output = 0;
+        if (!this.clawController.atSetPoint()) {
+            output = Math.max(-1 * CLAW_MAX, Math.min(CLAW_MAX, this.clawController.calculate(claw.getPosition())));
+            this.claw.setPosition(this.claw.getPosition() + output);
+        }
     }
 }
