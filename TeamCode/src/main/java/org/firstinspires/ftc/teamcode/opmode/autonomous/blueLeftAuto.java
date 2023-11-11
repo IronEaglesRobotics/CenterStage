@@ -13,13 +13,16 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.util.CameraPosition;
 
 @Autonomous(name = "Blue Left", group = "Left Start", preselectTeleOp = "Khang Main")
-public class blueLeftAuto {
+public class blueLeftAuto extends AbstractAuto{
     public SampleMecanumDrive drive;
     public Robot robot;
     public Camera camera;
     private boolean camEnabled = true;
     public CameraPosition cameraPosition;
     public Trajectory start;
+
+    @Override
+    public void setAlliance() {}
 
     public void Robot(HardwareMap hardwareMap) {
         //set to new Drive to revert
