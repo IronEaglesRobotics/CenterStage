@@ -1,5 +1,13 @@
 package org.firstinspires.ftc.teamcode.hardware.roadrunner.drive;
 
+import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.BACK_LEFT_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.BACK_RIGHT_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.FRONT_LEFT_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.FRONT_RIGHT_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.SLOW_MODE_SPEED_PCT;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.SLOW_MODE_TURN_PCT;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.SPEED;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.TURN;
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.MAX_ACCEL;
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.MAX_ANG_ACCEL;
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.MAX_ANG_VEL;
@@ -29,6 +37,7 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
@@ -40,13 +49,14 @@ import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.Tra
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceRunner;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.util.LynxModuleUtil;
+
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kV;
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kA;
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kStatic;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 
 
 /*
@@ -99,10 +109,10 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
         imu.initialize(parameters);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
-        rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
-        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        leftFront = hardwareMap.get(DcMotorEx.class, FRONT_LEFT_NAME);
+        leftRear = hardwareMap.get(DcMotorEx.class, BACK_LEFT_NAME);
+        rightRear = hardwareMap.get(DcMotorEx.class, BACK_RIGHT_NAME);
+        rightFront = hardwareMap.get(DcMotorEx.class, FRONT_RIGHT_NAME);
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -124,11 +134,16 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
         // TODO: reverse any motors using DcMotor.setDirection()
 
+        this.leftFront.setDirection(DcMotor.Direction.REVERSE);
+        this.rightFront.setDirection(DcMotor.Direction.FORWARD);
+        this.leftRear.setDirection(DcMotor.Direction.REVERSE);
+        this.rightRear.setDirection(DcMotor.Direction.FORWARD);
+
         List<Integer> lastTrackingEncPositions = new ArrayList<>();
         List<Integer> lastTrackingEncVels = new ArrayList<>();
 
         // TODO: if desired, use setLocalizer() to change the localization method
-        // setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels));
+        setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(
                 follower, HEADING_PID, batteryVoltageSensor,
@@ -309,9 +324,15 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         return new ProfileAccelerationConstraint(maxAccel);
     }
 
-    public void setInput(double x, double y, double z) {
-        Pose2d vel = new Pose2d(x, y, z);
-        setDrivePower(vel);
-        update();
+    public void setInput(Gamepad gamepad1, Gamepad gamepad2, boolean slowmode) {
+        double speedScale = slowmode ? SLOW_MODE_SPEED_PCT : SPEED;
+        double turnScale = slowmode ? SLOW_MODE_TURN_PCT : TURN;
+
+        this.setWeightedDrivePower(
+                new Pose2d(
+                        gamepad1.left_stick_y * -1 * speedScale,
+                        gamepad1.left_stick_x * -1 * speedScale,
+                        -gamepad1.right_stick_x * turnScale
+                ));
     }
 }

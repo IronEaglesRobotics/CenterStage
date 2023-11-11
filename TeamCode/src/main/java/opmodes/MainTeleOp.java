@@ -35,13 +35,8 @@ public class MainTeleOp extends OpMode {
     @Override
     public void loop() {
         // Drive
-        double x = -gamepad1.left_stick_x;
-        double y = -gamepad1.left_stick_y;
-        double z = -gamepad1.right_stick_x;
-        this.robot.getDrive().setInput(0, y, z);
-
-        this.telemetry.addLine(this.robot.getDrive().getTelemetry());
-        this.telemetry.update();
+        boolean slowmode = gamepad1.right_bumper;
+        this.robot.getDrive().setInput(gamepad1, gamepad2, slowmode);
 
         // Button Mappings
         boolean openClaw = gamepad2.b; // B
@@ -133,11 +128,12 @@ public class MainTeleOp extends OpMode {
             this.robot.getLift().stopReset();
         }
 
-        this.robot.update();
 
         this.previousSlideUp = slideUp;
         this.previousScrewArmToggle = screwArmToggle;
         this.previousRobotLiftReset = robotLiftReset;
         this.previousRobotLiftExtend = robotLiftExtend;
+
+        this.robot.update();
     }
 }
