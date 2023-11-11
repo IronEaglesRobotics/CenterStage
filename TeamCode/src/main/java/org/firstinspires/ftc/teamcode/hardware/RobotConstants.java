@@ -25,7 +25,7 @@ public class RobotConstants {
 
     // Arm
     public static double PICKUP_ARM_MIN = 0.17;
-    public static double PICKUP_ARM_MAX = 0.76;
+    public static double PICKUP_ARM_MAX = 0.75;
     public static double CLAW_MIN = 0.9;
     public static double CLAW_MAX = 0.6;
     public static double CLAW_ARM_DELTA = 0.008;
