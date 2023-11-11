@@ -56,4 +56,5 @@ public class Constants {
     public static final String LEFTARM = "leftArm";
     public static final String RIGHTARM = "rightArm";
     public static final String WRIST = "wrist";
+    public static final String PLANE = "plane";
 }

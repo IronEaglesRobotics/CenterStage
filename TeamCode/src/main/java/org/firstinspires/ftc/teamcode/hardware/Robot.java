@@ -9,6 +9,8 @@ import static org.firstinspires.ftc.teamcode.util.Configurables.LOCK;
 import static org.firstinspires.ftc.teamcode.util.Configurables.LOCKSPEED;
 import static org.firstinspires.ftc.teamcode.util.Configurables.OPEN;
 import static org.firstinspires.ftc.teamcode.util.Configurables.PICKUP;
+import static org.firstinspires.ftc.teamcode.util.Configurables.PLANELAUNCH;
+import static org.firstinspires.ftc.teamcode.util.Configurables.PLANELOCK;
 import static org.firstinspires.ftc.teamcode.util.Configurables.UNLOCK;
 import static org.firstinspires.ftc.teamcode.util.Configurables.UNLOCKSPEED;
 import static org.firstinspires.ftc.teamcode.util.Configurables.WRISTPICKUP;
@@ -16,6 +18,7 @@ import static org.firstinspires.ftc.teamcode.util.Configurables.WRISTSCORE;
 import static org.firstinspires.ftc.teamcode.util.Constants.CLAW;
 import static org.firstinspires.ftc.teamcode.util.Constants.LEFTARM;
 import static org.firstinspires.ftc.teamcode.util.Constants.LEFTHANG;
+import static org.firstinspires.ftc.teamcode.util.Constants.PLANE;
 import static org.firstinspires.ftc.teamcode.util.Constants.RIGHTARM;
 import static org.firstinspires.ftc.teamcode.util.Constants.RIGHTHANG;
 import static org.firstinspires.ftc.teamcode.util.Constants.WRIST;
@@ -45,6 +48,8 @@ public class Robot {
     private Hang hang;
     @Getter
     private Camera camera;
+    @Getter
+    private Plane plane;
 
     public Robot init(HardwareMap hardwareMap) {
         this.drive = new MecanumDrive(hardwareMap);
@@ -54,6 +59,7 @@ public class Robot {
         this.wrist = new Wrist().init(hardwareMap);
         this.claw = new Claw().init(hardwareMap);
         this.camera = new Camera(hardwareMap);
+        this.plane = new Plane().init(hardwareMap);
         return this;
     }
 
@@ -177,5 +183,24 @@ public class Robot {
         public void openScore() {
             this.claw.setPosition(BIGOPEN);
         }
+    }
+
+    public static class Plane {
+        private Servo plane;
+
+        public Plane init(HardwareMap hardwareMap) {
+            this.plane = hardwareMap.get(Servo.class, PLANE);
+            this.plane.setPosition(PLANELOCK);
+            return this;
+        }
+
+        public void planeLock() {
+            this.plane.setPosition(PLANELOCK);
+        }
+
+        public void planeLaunch() {
+            this.plane.setPosition(PLANELAUNCH);
+        }
+
     }
 }

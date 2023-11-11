@@ -27,6 +27,8 @@ public class Configurables {
     public static double OPEN = 0.53;
     public static double BIGOPEN = 0.45;
     public static double CLOSE = 0.6;
+    public static double PLANELOCK = 0.1;
+    public static double PLANELAUNCH = 0.9;
 
     //Drive Speed
     public static double SPEED = 1;

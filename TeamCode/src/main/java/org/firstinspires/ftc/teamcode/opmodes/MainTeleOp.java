@@ -23,8 +23,9 @@ public class MainTeleOp extends OpMode {
         boolean scoreArm = gamepad2.dpad_left || gamepad2.a;
         boolean accurateScoreArm = gamepad2.right_bumper;
         boolean claw = gamepad2.b;
-        boolean pickupWrist = gamepad2.left_bumper || gamepad2.x;
-        boolean scoreWrist = gamepad2.a;
+        boolean pickupWrist = gamepad2.x;
+        boolean scoreWrist = gamepad2.a || gamepad2.left_bumper;
+        boolean launch = gamepad2.y;
 //Drive
         robot.getDrive().setInput(gamepad1, gamepad2);
 //Hang
@@ -52,6 +53,12 @@ public class MainTeleOp extends OpMode {
             this.robot.getWrist().wristPickup();
         } else if (scoreWrist) {
             this.robot.getWrist().wristScore();
+        }
+//Plane
+        if (launch) {
+            this.robot.getPlane().planeLaunch();
+        } else {
+            this.robot.getPlane().planeLock();
         }
     }
 }
