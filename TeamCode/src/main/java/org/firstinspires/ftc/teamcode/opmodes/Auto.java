@@ -54,11 +54,11 @@ public class Auto extends LinearOpMode {
                 .build();
 
         this.scoreOne = this.robot.getDrive().trajectoryBuilder(preloadOne.end())
-                .lineToLinearHeading(new Pose2d(33, -30, Math.toRadians(360)))
+                .lineToLinearHeading(new Pose2d(31, -32, Math.toRadians(360)))
                 .build();
 
         this.boardOne = this.robot.getDrive().trajectoryBuilder(scoreOne.end())
-                .lineToLinearHeading(new Pose2d(73, -26, Math.toRadians(360)))
+                .lineToLinearHeading(new Pose2d(73, -28, Math.toRadians(360)))
                 .addTemporalMarker(.2, robot.getArm()::armAccurateScore)
                 .addTemporalMarker(.2, robot.getWrist()::wristScore)
                 .build();
@@ -70,11 +70,11 @@ public class Auto extends LinearOpMode {
 
         //Randomization Two
         this.preloadTwo = this.robot.getDrive().trajectoryBuilder(initialPosition)
-                .lineToLinearHeading(new Pose2d(35, -27, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(35, -28, Math.toRadians(270)))
                 .build();
 
         this.scoreTwo = this.robot.getDrive().trajectoryBuilder(preloadTwo.end())
-                .lineToLinearHeading(new Pose2d(73, -34, Math.toRadians(360)))
+                .lineToLinearHeading(new Pose2d(73, -34.5, Math.toRadians(360)))
                 .addTemporalMarker(.2, robot.getArm()::armAccurateScore)
                 .addTemporalMarker(.2, robot.getWrist()::wristScore)
                 .build();

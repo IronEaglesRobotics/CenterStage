@@ -53,7 +53,7 @@ public class AutoBlue extends LinearOpMode {
                 .build();
 
         this.scoreOne = this.robot.getDrive().trajectoryBuilder(preloadOne.end())
-                .lineToLinearHeading(new Pose2d(-29, -30, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-29, -32, Math.toRadians(180)))
                 .build();
 
         this.boardOne = this.robot.getDrive().trajectoryBuilder(scoreOne.end())
@@ -69,7 +69,7 @@ public class AutoBlue extends LinearOpMode {
 
         //Randomization Two
         this.preloadTwo = this.robot.getDrive().trajectoryBuilder(initialPosition)
-                .lineToLinearHeading(new Pose2d(-35, -27, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(-35, -28, Math.toRadians(270)))
                 .build();
 
         this.scoreTwo = this.robot.getDrive().trajectoryBuilder(preloadTwo.end())
