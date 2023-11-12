@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import androidx.annotation.VisibleForTesting;
+
 import org.firstinspires.ftc.teamcode.vision.Detection;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -51,4 +53,6 @@ public class Constants {
     public static final String STACK_WEBCAM = "Stack Webcam";
     public static final String TARGETING_WEBCAM = "Targeting Webcam";
     public static final String IMU_SENSOR = "imu";
+    public static final String lServo = "lServo";
+    public static final String rServo = "rServo";
 }

@@ -136,7 +136,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
 
-        setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
+//        setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
 //        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
@@ -282,8 +282,8 @@ public class SampleMecanumDrive extends MecanumDrive {
     public void setMotorPowers(double v, double v1, double v2, double v3) {
         leftFront.setPower(v);
         leftRear.setPower(v1);
-        rightRear.setPower(v2);
-        rightFront.setPower(v3);
+        rightRear.setPower(-v2);
+        rightFront.setPower(-v3);
     }
 
     @Override
@@ -314,13 +314,5 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     public String getTelemetry() {
         return "Drive: "+getPoseEstimate();
-    }
-
-    public void setInput(Gamepad gamepad1, Gamepad gamepad2) {
-        double x = gamepad1.left_stick_x;
-        double y = -gamepad1.left_stick_y;
-        double z = gamepad1.right_stick_x;
-
-        setInput(gamepad1, gamepad2);
     }
 }

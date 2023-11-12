@@ -6,12 +6,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
-public class Intake { // TODO done in theory, but need to get the actual servo positions &&&& do the Sensor stuff
+public class Intake {
     private Servo rServo;
     private Servo lServo;
     private DcMotor dcMotor;
     private Position pos = Position.UP;
-
     public enum Position {
         STACK1, STACK2, STACK3, STACK4, STACK5, UP;
 
@@ -27,12 +26,12 @@ public class Intake { // TODO done in theory, but need to get the actual servo p
     }
 
     //Position
-    public static double stack1 = 0.49;
-    public static double stack2 = 0.50;
-    public static double stack3 = 0.51;
-    public static double stack4 = 0.52;
-    public static double stack5 = 0.53;
-    public static double up = 0.551;
+    public static double stack1 = 0;
+    public static double stack2 = 0.03;
+    public static double stack3 = 0.06;
+    public static double stack4 = 0.09;
+    public static double stack5 = 0.12;
+    public static double up = 0.30;
     public static double motorPower = 0;
 
     public Intake(HardwareMap hardwareMap) {
