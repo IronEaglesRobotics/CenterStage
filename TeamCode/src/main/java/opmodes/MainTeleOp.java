@@ -2,12 +2,15 @@ package opmodes;
 
 import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.CLAW_ARM_DELTA;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.PICKUP_ARM_MAX;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.X_MAX;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.X_MIN;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 
 @TeleOp(name = "MainTeleOp", group = "Main")
@@ -22,10 +25,11 @@ public class MainTeleOp extends OpMode {
     private boolean previousRobotLiftExtend = false;
     private boolean liftArmShouldBeUp = false;
     private boolean screwArmIsMoving = false;
+    private Telemetry dashboard;
 
     @Override
     public void init() {
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        this.dashboard = FtcDashboard.getInstance().getTelemetry();
         this.clawArmPosition = PICKUP_ARM_MAX;
 
         this.robot = new Robot(this.hardwareMap, telemetry);
@@ -35,18 +39,22 @@ public class MainTeleOp extends OpMode {
     @Override
     public void loop() {
         // Drive
-        boolean slowmode = gamepad1.right_bumper;
+        boolean slowmode = gamepad1.right_bumper || gamepad1.y;
         this.robot.getDrive().setInput(gamepad1, gamepad2, slowmode);
 
         // Button Mappings
+        // Claw / Pickup
         boolean openClaw = gamepad2.b; // B
         boolean clawUp = gamepad2.y; // Y
-        boolean clawDown = gamepad2.a; // A
+        boolean clawDownSafe = gamepad2.dpad_down; // dpad-down
+        boolean clawDown = gamepad2.a || clawDownSafe; // A
 
+        // Robot Lift
         boolean robotLiftRotation = gamepad2.right_trigger > 0.05; // RT
         boolean robotLiftExtend = gamepad2.right_trigger > 0.5; // RT
         boolean robotLiftReset = gamepad2.right_stick_button;
 
+        // Gantry
         boolean screwArmToggle = gamepad2.x; // X
         boolean screwDeposit = gamepad2.left_trigger > 0.25; // LT
         boolean screwIntake = gamepad2.left_bumper; // LB
@@ -68,7 +76,9 @@ public class MainTeleOp extends OpMode {
             this.robot.getClaw().setArmPosition(clawArmPosition);
         } else if (clawDown) {
             this.screwArmIsMoving = false;
-            this.robot.getClaw().open();
+            if (!clawDownSafe) {
+                this.robot.getClaw().open();
+            }
             this.clawArmPosition = Math.max(0, this.clawArmPosition - CLAW_ARM_DELTA);
             this.robot.getClaw().setArmPosition(clawArmPosition);
         }
@@ -97,11 +107,13 @@ public class MainTeleOp extends OpMode {
 //            this.robot.getGantry().setTarget(currentPosition + GANTRY_LIFT_DELTA);
 //        }
 //
-//        if (gantryLeft) {
-//            this.robot.getGantry().setX(this.robot.getGantry().getX() + GANTRY_X_DELTA);
-//        } else if (gantryRight) {
-//            this.robot.getGantry().setX(this.robot.getGantry().getX() - GANTRY_X_DELTA);
-//        }
+        if (gantryRight) {
+            this.robot.getGantry().setX(X_MIN);
+        } else if (gantryLeft) {
+            this.robot.getGantry().setX(X_MAX);
+        } else {
+            this.robot.getGantry().center();
+        }
 
         // Robot Lift
 

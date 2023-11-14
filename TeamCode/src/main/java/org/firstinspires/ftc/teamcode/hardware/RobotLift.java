@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class RobotLift {
+public class RobotLift implements Updatable{
     private Servo rotation;
     private DcMotor lift;
     PController armController = new PController(LIFT_ARM_KP);
@@ -78,8 +78,6 @@ public class RobotLift {
         this.armController.setSetPoint(this.armControllerTarget);
         double output = this.armController.calculate(this.rotation.getPosition());
         this.rotation.setPosition(this.rotation.getPosition() + output);
-
-        this.telemetry.addData("Lift P Controller", output);
     }
 
     public boolean isUp() {
