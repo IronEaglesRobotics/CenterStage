@@ -52,6 +52,7 @@ public class Arm {
             this.armControllerTarget = startingArmPos;
             lAServo.setPosition(startingArmPos);
             rAServo.setPosition(startingArmPos);
+            wristServo.setPosition(startingWristPos);
         } else if (tape == ArmPos.APosition.SCORE) {
             this.armControllerTarget = armScorePos;
             lAServo.setPosition(armScorePos);
@@ -69,13 +70,13 @@ public class Arm {
     }
 
 
-    public void setHopper(HopperPos.hopperPos hopper) {
-        if (hopper == HopperPos.hopperPos.UP) {
-                wristServo.setPosition(wristScorePos);
-        } else if (hopper == HopperPos.hopperPos.DOWN) {
-            wristServo.setPosition(startingWristPos);
-        }
-    }
+//    public void setHopper(HopperPos.hopperPos hopper) {
+//        if (hopper == HopperPos.hopperPos.UP) {
+//                wristServo.setPosition(wristScorePos);
+//        } else if (hopper == HopperPos.hopperPos.DOWN) {
+//            wristServo.setPosition(startingWristPos);
+//        }
+//    }
 
     public String getTelemetry() {
         return "Wrist Servo: "+wristServo.getPosition()+"Left Arm Servo: "+lAServo.getPosition()+"Right Arm Servo: "+rAServo.getPosition()+"Door Servo: "+dServo.getPosition();
