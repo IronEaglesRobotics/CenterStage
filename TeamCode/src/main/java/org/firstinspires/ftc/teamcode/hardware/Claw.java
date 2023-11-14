@@ -13,10 +13,13 @@ import com.arcrobotics.ftclib.controller.PController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class Claw {
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+public class Claw implements Updatable {
     private final Servo claw;
     private final Servo armLeft;
     private final Servo armRight;
+    private Telemetry telemetry;
     PController clawController = new PController(CLAW_KP);
     private double clawControllerTarget;
 
@@ -27,6 +30,11 @@ public class Claw {
         this.armRight.setDirection(Servo.Direction.REVERSE);
         this.setArmPosition(PICKUP_ARM_MAX);
         this.close();
+    }
+
+    public Claw(HardwareMap hardwareMap, Telemetry telemetry) {
+        this(hardwareMap);
+        this.telemetry = telemetry;
     }
 
     public void open() {
