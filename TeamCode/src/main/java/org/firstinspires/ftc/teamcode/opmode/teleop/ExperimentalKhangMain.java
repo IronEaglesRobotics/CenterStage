@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.controller.Controller;
 import org.firstinspires.ftc.teamcode.hardware.ArmPos;
@@ -14,15 +16,10 @@ import org.firstinspires.ftc.teamcode.hardware.HopperPos;
 import org.firstinspires.ftc.teamcode.hardware.Intake;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.SlidePos;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Config
-@TeleOp(name = "Meet 1 TeleOp", group = "OpModes")
-public class KhangMain extends OpMode {
-
-    //turbo mode
-    public static double normal = 0.5;
-    public static double turbo = 1;
+@TeleOp(name = "experimental opmode", group = "OpModes")
+public class ExperimentalKhangMain extends OpMode {
 
     //keep track of runtime for advanced macros
     private ElapsedTime runTime = new ElapsedTime();
@@ -41,6 +38,11 @@ public class KhangMain extends OpMode {
     private HopperPos.hopperPos hopperpos = HopperPos.hopperPos.DOWN;
     //create manual slide height varable and set it to hold position as start
     private Hieght.height CurrentHeight = Hieght.height.HOLD;
+
+    //robot position stuff
+    Pose2d robot_pos;
+    double robot_x, robot_y, robot_heading;
+
     //create robot instance
     private Robot robot;
     //create servo for plane
@@ -72,6 +74,12 @@ public class KhangMain extends OpMode {
     @Override
     public void loop() {
 
+        // robot position update
+        robot_pos = robot.drive.getPoseEstimate();
+        robot_x = robot_pos.getX();
+        robot_y = robot_pos.getY();
+        robot_heading = robot_pos.getHeading(); // in radians
+
         // Calculate the runtime in seconds
         double currentTime = runTime.seconds();
 
@@ -83,17 +91,6 @@ public class KhangMain extends OpMode {
             double y = -gamepad1.left_stick_x;
             double z = -gamepad1.right_stick_x;
             robot.drive.setWeightedDrivePower(new Pose2d(x, y, z));
-
-        //turbo activation
-        if (controller1.getRightBumper().isJustPressed()){
-            x *= turbo;
-            y *= turbo;
-            z *= turbo;
-        } else {
-            x *= normal;
-            y *= normal;
-            z *= normal;
-        }
 
         //set intake to be pressure reactant to right trigger
         robot.intake.setDcMotor(gamepad2.right_trigger);
@@ -145,9 +142,13 @@ public class KhangMain extends OpMode {
         //make door rise as intake goes on
         if (intakeON >= 0.01) {
             CurrentDpos = DoorPos.DoorPosition.OPEN;
-            Currentpos = Intake.Position.STACK1;
         } else {
             CurrentDpos = DoorPos.DoorPosition.CLOSE;
+        }
+
+        if (intakeON >= 0.35) {
+            Currentpos = Intake.Position.STACK1;
+        } else {
             Currentpos = Intake.Position.UP;
         }
 
@@ -189,10 +190,18 @@ public class KhangMain extends OpMode {
             Currentpos = Currentpos.STACK1;
         }
 
-        //arm safety pause going up
-        if (controller2.getA().isJustPressed()){
-            CurrentApos = CurrentApos.SAFTEYUP;
-            DownQuestion = DownQuestion.NO;
+//        //arm safety pause going up
+//        if (controller2.getA().isJustPressed()){
+//            CurrentApos = CurrentApos.SAFTEYUP;
+//            DownQuestion = DownQuestion.NO;
+//        }
+
+        if (controller2.getA().isJustPressed()) {
+            macroStartTime = currentTime;
+            CurrentSpos = CurrentSpos.TAPE1;
+            if (macroStartTime + 1000 <= currentTime) {
+                CurrentApos = CurrentApos.SCORE;
+            }
         }
 
         //arm safety pause going down
