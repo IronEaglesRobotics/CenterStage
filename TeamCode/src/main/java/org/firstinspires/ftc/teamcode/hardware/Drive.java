@@ -1,15 +1,13 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.BACK_LEFT_NAME;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.BACK_RIGHT_NAME;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.FRONT_LEFT_NAME;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.FRONT_RIGHT_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.BACK_LEFT_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.BACK_RIGHT_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.FRONT_LEFT_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.FRONT_RIGHT_NAME;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
-import java.util.Locale;
 
 public class Drive {
     private final DcMotor frontLeft;

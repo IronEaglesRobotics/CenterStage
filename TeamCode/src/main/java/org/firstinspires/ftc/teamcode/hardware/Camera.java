@@ -1,55 +1,96 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.WEBCAM_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DETECTION_CENTER_X;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DETECTION_LEFT_X;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DETECTION_RIGHT_X;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.WEBCAM_NAME;
 import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_DETECTION;
-import static org.firstinspires.ftc.teamcode.util.Constants.WEBCAM_HEIGHT;
-import static org.firstinspires.ftc.teamcode.util.Constants.WEBCAM_ROTATION;
-import static org.firstinspires.ftc.teamcode.util.Constants.WEBCAM_WIDTH;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 import org.firstinspires.ftc.teamcode.vision.Detection;
-import org.firstinspires.ftc.teamcode.vision.TargetingPipeline;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.firstinspires.ftc.teamcode.vision.PropDetectionPipeline;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public class Camera {
-    private final HardwareMap hardwareMap;
-    private OpenCvCamera targetingCamera;
-    private TargetingPipeline targetingPipeline;
-    private boolean targetingCameraInitialized;
+    @Getter
+    @Setter
+    private CenterStageCommon.Alliance alliance;
+    private PropDetectionPipeline prop;
+    private AprilTagProcessor aprilTag;
+    private VisionPortal visionPortal;
+    private Telemetry telemetry;
 
-    public Camera(HardwareMap hardwareMap) {
-        this.hardwareMap = hardwareMap;
+    private boolean initialized;
+
+    public Camera(HardwareMap hardwareMap, Telemetry telemetry) {
+        this.telemetry = telemetry;
+        this.init(hardwareMap);
     }
 
-    public void initTargetingCamera() {
-        int targetingCameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        this.targetingCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, WEBCAM_NAME), targetingCameraMonitorViewId);
-        this.targetingPipeline = new TargetingPipeline();
-        targetingCamera.setPipeline(targetingPipeline);
-        targetingCamera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-            @Override
-            public void onOpened() {
-                targetingCamera.startStreaming(WEBCAM_WIDTH, WEBCAM_HEIGHT, WEBCAM_ROTATION);
-                targetingCameraInitialized = true;
-            }
-
-            @Override
-            public void onError(int errorCode) {
-
-            }
-        });
+    private void init(HardwareMap hardwareMap) {
+        this.aprilTag = new AprilTagProcessor.Builder()
+                .setDrawAxes(true)
+                .setDrawCubeProjection(true)
+                .setDrawTagID(true)
+                .setDrawTagOutline(true)
+                .build();
+        this.prop = new PropDetectionPipeline();
+        this.visionPortal = VisionPortal.easyCreateWithDefaults(
+                hardwareMap.get(WebcamName.class, WEBCAM_NAME), aprilTag, prop);
+        this.initialized = true;
     }
 
-    public void stopTargetingCamera() {
-        if (targetingCameraInitialized) {
-            targetingCamera.closeCameraDeviceAsync(() -> targetingCameraInitialized = false);
+    public Detection getProp() {
+        if (!initialized || alliance == null) {
+            return INVALID_DETECTION;
         }
+
+        switch (alliance) {
+
+            case Blue:
+                return this.prop.getBlue();
+            case Red:
+                return this.prop.getRed();
+        }
+
+        return INVALID_DETECTION;
     }
 
-    public Detection getRed() {
-        return (targetingCameraInitialized ? targetingPipeline.getRed() : INVALID_DETECTION);
+    public CenterStageCommon.PropLocation getPropLocation() {
+        Detection prop = this.getProp();
+        if (!prop.isValid()) {
+            return CenterStageCommon.PropLocation.Unknown;
+        }
+
+        double x = prop.getCenter().x + 50;
+
+        if (x <= DETECTION_LEFT_X) {
+            return CenterStageCommon.PropLocation.Left;
+        }
+        if (x <= DETECTION_CENTER_X) {
+            return CenterStageCommon.PropLocation.Center;
+        }
+        if (x <= DETECTION_RIGHT_X) {
+            return CenterStageCommon.PropLocation.Right;
+        }
+
+        return CenterStageCommon.PropLocation.Unknown;
+    }
+
+    public AprilTagDetection getAprilTag(int id) {
+        return this.aprilTag.getDetections()
+                .stream()
+                .filter(x -> x.id == id)
+                .findFirst()
+                .orElse(null);
     }
 }

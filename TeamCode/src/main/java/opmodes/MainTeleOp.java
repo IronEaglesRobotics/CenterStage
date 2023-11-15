@@ -1,16 +1,16 @@
 package opmodes;
 
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.CLAW_ARM_DELTA;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.PICKUP_ARM_MAX;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.X_MAX;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.X_MIN;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CLAW_ARM_DELTA;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.PICKUP_ARM_MAX;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.SLIDE_UP;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.X_CENTER;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.X_MAX;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.X_MIN;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 
 @TeleOp(name = "MainTeleOp", group = "Main")
@@ -25,11 +25,11 @@ public class MainTeleOp extends OpMode {
     private boolean previousRobotLiftExtend = false;
     private boolean liftArmShouldBeUp = false;
     private boolean screwArmIsMoving = false;
-    private Telemetry dashboard;
+    private FtcDashboard dashboard;
 
     @Override
     public void init() {
-        this.dashboard = FtcDashboard.getInstance().getTelemetry();
+        this.dashboard = FtcDashboard.getInstance();
         this.clawArmPosition = PICKUP_ARM_MAX;
 
         this.robot = new Robot(this.hardwareMap, telemetry);
@@ -60,8 +60,7 @@ public class MainTeleOp extends OpMode {
         boolean screwIntake = gamepad2.left_bumper; // LB
         boolean slideUp = gamepad2.left_stick_y < -0.25; // Left Y Axis Joystick
         boolean slideDown = gamepad2.left_stick_y > 0.25; // Left Y Axis Joystick
-        boolean gantryLeft = gamepad2.dpad_left; // dpad left
-        boolean gantryRight = gamepad2.dpad_right; // dpad right
+        double gantryXInput = -gamepad2.right_stick_x;
 
         // Claw
         if (openClaw) {
@@ -102,18 +101,18 @@ public class MainTeleOp extends OpMode {
         } else {
             this.robot.getGantry().stop();
         }
-//        if ((!previousSlideUp && slideUp) || (!previousSlideDown && slideDown)) {
-//            int currentPosition  = this.robot.getGantry().getSlidePosition();
-//            this.robot.getGantry().setTarget(currentPosition + GANTRY_LIFT_DELTA);
-//        }
-//
-        if (gantryRight) {
-            this.robot.getGantry().setX(X_MIN);
-        } else if (gantryLeft) {
-            this.robot.getGantry().setX(X_MAX);
-        } else {
-            this.robot.getGantry().center();
+
+        if (slideUp) {
+            this.robot.getGantry().setSlideTarget(SLIDE_UP);
+        } else if (slideDown) {
+            this.robot.getGantry().setSlideTarget(0);
+        } else if (previousSlideUp || previousSlideDown){
+            this.robot.getGantry().setSlideTarget(this.robot.getGantry().getSlidePosition());
         }
+
+        double gantryXPosition = X_CENTER + (gantryXInput * 0.5);
+        gantryXPosition = Math.max(X_MIN, Math.min(gantryXPosition, X_MAX));
+        this.robot.getGantry().setX(gantryXPosition);
 
         // Robot Lift
 

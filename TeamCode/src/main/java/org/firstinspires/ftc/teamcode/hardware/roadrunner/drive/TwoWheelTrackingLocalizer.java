@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware.roadrunner.drive;
 
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.PARALLEL_DRIVE_ODOMETRY;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.PERPENDICULAR_DRIVE_ODOMETRY;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.PARALLEL_DRIVE_ODOMETRY;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.PERPENDICULAR_DRIVE_ODOMETRY;
 
 import androidx.annotation.NonNull;
 

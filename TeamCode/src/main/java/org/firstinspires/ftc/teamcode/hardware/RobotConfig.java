@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-public class RobotConstants {
+public class RobotConfig {
     public static final String FRONT_LEFT_NAME = "frontLeft";
     public static final String FRONT_RIGHT_NAME = "frontRight";
     public static final String BACK_LEFT_NAME = "backLeft";
@@ -28,14 +28,13 @@ public class RobotConstants {
     public static double SPEED = 1f;
     public static double TURN = 1f;
 
-    // Slide
-
     // Arm
     public static double PICKUP_ARM_MIN = 0.185;
     public static double PICKUP_ARM_MAX = 0.755;
     public static double CLAW_MIN = 0.92;
     public static double CLAW_MAX = 0.6;
     public static double CLAW_ARM_DELTA = 0.03;
+    public static double CLAW_KP = 0.3;
 
     // Gantry
     public static double GANTRY_ARM_MIN = 0.435;
@@ -47,7 +46,8 @@ public class RobotConstants {
     public static double X_MIN = 0.16;
     public static double X_CENTER = 0.54;
     public static double GANTRY_ARM_DELTA_MAX = 0.013;
-    public static int SLIDE_UP = 100;
+    public static int SLIDE_UP = 820;
+    public static double SLIDE_POWER = 0.5;
 
 
     // Robot Lift
@@ -58,5 +58,11 @@ public class RobotConstants {
     public static double LIFT_ARM_KP = 0.1;
     public static double LIFT_POWER = 1f;
 
-    public static double CLAW_KP = 0.3;
+    // Vision
+    public static double CAMERA_OFFSET_X = 0f;
+    public static double DETECTION_AREA_MIN = 0f;
+    public static double DETECTION_AREA_MAX = 1f;
+    public static double DETECTION_LEFT_X = 0;
+    public static double DETECTION_CENTER_X = .5;
+    public static double DETECTION_RIGHT_X = 1;
 }
