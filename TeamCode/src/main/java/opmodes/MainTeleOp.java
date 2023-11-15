@@ -1,20 +1,16 @@
 package opmodes;
 
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.CLAW_ARM_DELTA;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.GANTRY_LIFT_DELTA;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.PICKUP_ARM_MAX;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.SLIDE_POWER;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.SLIDE_UP;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.X_CENTER;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.X_MAX;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.X_MIN;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CLAW_ARM_DELTA;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.PICKUP_ARM_MAX;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.SLIDE_UP;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.X_CENTER;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.X_MAX;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.X_MIN;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 
 @TeleOp(name = "MainTeleOp", group = "Main")

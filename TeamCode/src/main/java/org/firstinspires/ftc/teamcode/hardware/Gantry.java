@@ -1,19 +1,19 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.GANTRY_ARM_DELTA_MAX;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.GANTRY_ARM_KP;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.GANTRY_ARM_MAX;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.GANTRY_ARM_MIN;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.GANTRY_ARM_NAME;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.SLIDE_POWER;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.X_CENTER;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.GANTRY_SCREW_NAME;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.GANTRY_X_NAME;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.LEFT_SLIDE_MOTOR_NAME;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.RIGHT_SLIDE_MOTOR_NAME;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.X_KP;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.X_MAX;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.X_MIN;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.GANTRY_ARM_DELTA_MAX;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.GANTRY_ARM_KP;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.GANTRY_ARM_MAX;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.GANTRY_ARM_MIN;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.GANTRY_ARM_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.SLIDE_POWER;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.X_CENTER;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.GANTRY_SCREW_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.GANTRY_X_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.LEFT_SLIDE_MOTOR_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.RIGHT_SLIDE_MOTOR_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.X_KP;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.X_MAX;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.X_MIN;
 
 import com.arcrobotics.ftclib.controller.PController;
 import com.qualcomm.robotcore.hardware.CRServo;

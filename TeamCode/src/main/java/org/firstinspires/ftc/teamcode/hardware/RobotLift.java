@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.LIFT_ARM_KP;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.LIFT_EXTEND_MAX;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.LIFT_RETRACT_PCT;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.LIFT_ROTATION_DOWN;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.LIFT_ROTATION_UP;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.ROBOT_LIFT_LIFT_NAME;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.ROBOT_LIFT_ROTATION_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.LIFT_ARM_KP;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.LIFT_EXTEND_MAX;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.LIFT_POWER;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.LIFT_RETRACT_PCT;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.LIFT_ROTATION_DOWN;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.LIFT_ROTATION_UP;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.ROBOT_LIFT_LIFT_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.ROBOT_LIFT_ROTATION_NAME;
 
 import com.arcrobotics.ftclib.controller.PController;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -15,7 +16,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class RobotLift implements Updatable{
+public class RobotLift implements Updatable {
     private Servo rotation;
     private DcMotor lift;
     PController armController = new PController(LIFT_ARM_KP);
@@ -53,17 +54,17 @@ public class RobotLift implements Updatable{
 
     public void retract() {
         this.armControllerTarget = LIFT_ROTATION_UP;
-        int liftTarget = (int)(LIFT_EXTEND_MAX * (1 - LIFT_RETRACT_PCT));
+        int liftTarget = (int) (LIFT_EXTEND_MAX * (1 - LIFT_RETRACT_PCT));
         int target = this.lift.getCurrentPosition() < liftTarget ? 0 : liftTarget;
         this.lift.setTargetPosition(target);
 
-        this.lift.setPower(1);
+        this.lift.setPower(LIFT_POWER);
     }
 
     public void startReset() {
         this.armControllerTarget = LIFT_ROTATION_DOWN;
         this.lift.setTargetPosition(-1 * LIFT_EXTEND_MAX);
-        this.lift.setPower(1);
+        this.lift.setPower(LIFT_POWER);
     }
 
     public void stopReset() {

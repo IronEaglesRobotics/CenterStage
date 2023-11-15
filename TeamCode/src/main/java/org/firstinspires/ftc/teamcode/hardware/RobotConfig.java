@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-public class RobotConstants {
+public class RobotConfig {
     public static final String FRONT_LEFT_NAME = "frontLeft";
     public static final String FRONT_RIGHT_NAME = "frontRight";
     public static final String BACK_LEFT_NAME = "backLeft";
@@ -34,6 +34,7 @@ public class RobotConstants {
     public static double CLAW_MIN = 0.92;
     public static double CLAW_MAX = 0.6;
     public static double CLAW_ARM_DELTA = 0.03;
+    public static double CLAW_KP = 0.3;
 
     // Gantry
     public static double GANTRY_ARM_MIN = 0.435;
@@ -57,5 +58,11 @@ public class RobotConstants {
     public static double LIFT_ARM_KP = 0.1;
     public static double LIFT_POWER = 1f;
 
-    public static double CLAW_KP = 0.3;
+    // Vision
+    public static double CAMERA_OFFSET_X = 0f;
+    public static double DETECTION_AREA_MIN = 0f;
+    public static double DETECTION_AREA_MAX = 1f;
+    public static double DETECTION_LEFT_X = 0;
+    public static double DETECTION_CENTER_X = .5;
+    public static double DETECTION_RIGHT_X = 1;
 }

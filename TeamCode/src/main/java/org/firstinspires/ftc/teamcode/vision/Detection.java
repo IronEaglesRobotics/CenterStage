@@ -35,10 +35,10 @@ public class Detection {
         this.maxAreaPx = frameSize.area();
     }
 
-    public Detection(Size frameSize, double minAreaFactor, double maxSizeFactor) {
+    public Detection(Size frameSize, double minAreaFactor, double maxAreaFactor) {
         this.maxSizePx = frameSize;
         this.minAreaPx = frameSize.area() * minAreaFactor;
-        this.maxAreaPx = frameSize.area() * maxSizeFactor;
+        this.maxAreaPx = frameSize.area() * maxAreaFactor;
     }
 
     public void setMinArea(double minAreaFactor) {

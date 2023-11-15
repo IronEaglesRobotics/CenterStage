@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode.hardware.roadrunner.drive;
 
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.BACK_LEFT_NAME;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.BACK_RIGHT_NAME;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.FRONT_LEFT_NAME;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.FRONT_RIGHT_NAME;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.SLOW_MODE_SPEED_PCT;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.SLOW_MODE_TURN_PCT;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.SPEED;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.TURN;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.BACK_LEFT_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.BACK_RIGHT_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.FRONT_LEFT_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.FRONT_RIGHT_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.SLOW_MODE_SPEED_PCT;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.SLOW_MODE_TURN_PCT;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.SPEED;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.TURN;
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.MAX_ACCEL;
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.MAX_ANG_ACCEL;
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.MAX_ANG_VEL;
