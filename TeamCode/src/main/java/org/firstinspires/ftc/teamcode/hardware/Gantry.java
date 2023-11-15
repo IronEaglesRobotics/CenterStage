@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.GANTRY_ARM_
 import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.GANTRY_ARM_MAX;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.GANTRY_ARM_MIN;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.GANTRY_ARM_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.SLIDE_POWER;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.X_CENTER;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.GANTRY_SCREW_NAME;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConstants.GANTRY_X_NAME;
@@ -28,7 +29,7 @@ public class Gantry {
     private final Servo armServo;
     private final CRServo screwServo;
     private final DcMotor liftLeft;
-    private final DcMotor right;
+    private final DcMotor liftRight;
     PController armController = new PController(GANTRY_ARM_KP);
     private double armControllerTarget;
     PController xController = new PController(X_KP);
@@ -43,11 +44,14 @@ public class Gantry {
 
         this.liftLeft = hardwareMap.get(DcMotor.class, LEFT_SLIDE_MOTOR_NAME);
         this.liftLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.liftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.liftLeft.setTargetPosition(0);
+        this.liftLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        this.right = hardwareMap.get(DcMotor.class, RIGHT_SLIDE_MOTOR_NAME);
-        this.right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.liftRight = hardwareMap.get(DcMotor.class, RIGHT_SLIDE_MOTOR_NAME);
+        this.liftRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.liftRight.setTargetPosition(0);
+        this.liftRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.liftRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         this.xControllerTarget = X_MIN;
     }
@@ -59,12 +63,10 @@ public class Gantry {
 
     public void setSlideTarget(int target) {
         this.liftLeft.setTargetPosition(target);
-        this.liftLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        this.liftLeft.setPower(1);
+        this.liftLeft.setPower(SLIDE_POWER);
 
-        this.right.setTargetPosition(target);
-        this.right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        this.right.setPower(1);
+        this.liftRight.setTargetPosition(target);
+        this.liftRight.setPower(SLIDE_POWER);
     }
 
     public void setX(double x)
@@ -100,6 +102,10 @@ public class Gantry {
 
     public void center() {
         this.setX(X_CENTER);
+    }
+
+    public int getSlidePosition() {
+        return this.liftLeft.getCurrentPosition();
     }
 
     public boolean isIn() {

@@ -28,8 +28,6 @@ public class RobotConstants {
     public static double SPEED = 1f;
     public static double TURN = 1f;
 
-    // Slide
-
     // Arm
     public static double PICKUP_ARM_MIN = 0.185;
     public static double PICKUP_ARM_MAX = 0.755;
@@ -47,7 +45,8 @@ public class RobotConstants {
     public static double X_MIN = 0.16;
     public static double X_CENTER = 0.54;
     public static double GANTRY_ARM_DELTA_MAX = 0.013;
-    public static int SLIDE_UP = 100;
+    public static int SLIDE_UP = 820;
+    public static double SLIDE_POWER = 0.5;
 
 
     // Robot Lift

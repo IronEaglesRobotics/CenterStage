@@ -11,38 +11,43 @@ import static org.firstinspires.ftc.teamcode.util.Constants.RED;
 import static org.firstinspires.ftc.teamcode.util.Constants.STRUCTURING_ELEMENT;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getLargestContour;
 
+import android.graphics.Canvas;
+
+import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
+import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 
-public class TargetingPipeline extends OpenCvPipeline {
+public class ColorDetectionPipeline implements VisionProcessor {
     Mat blurred = new Mat();
     Mat hsv = new Mat();
     Mat redMask1 = new Mat();
     Mat redMask2 = new Mat();
     Mat redMask = new Mat();
     Mat whiteMask = new Mat();
-    Scalar redGoalLower1;
-    Scalar redGoalUpper1;
-    Scalar redGoalLower2;
-    Scalar redGoalUpper2;
+    Scalar redLower1;
+    Scalar redUpper1;
+    Scalar redLower2;
+    Scalar redUpper2;
 
     private Detection red;
 
     // Init
     @Override
-    public void init(Mat input) {
-        red = new Detection(input.size(), CV_MIN_GOAL_AREA);
+    public void init(int width, int height, CameraCalibration calibration) {
+        red = new Detection(new Size(width, height), CV_MIN_GOAL_AREA);
     }
 
     // Process each frame that is received from the webcam
     @Override
-    public Mat processFrame(Mat input) {
+    public Object processFrame(Mat input, long captureTimeNanos) {
         Imgproc.GaussianBlur(input, blurred, BLUR_SIZE, 0);
         Imgproc.cvtColor(blurred, hsv, Imgproc.COLOR_RGB2HSV);
 
@@ -51,15 +56,20 @@ public class TargetingPipeline extends OpenCvPipeline {
         return input;
     }
 
+    @Override
+    public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
+
+    }
+
     // Update the Red Goal Detection
     private void updateRed(Mat input) {
         // take pixels that are in the color range and put them into a mask, eroding and dilating them to remove white noise
-        redGoalLower1 = new Scalar(FTC_RED_LOWER.getH(), FTC_RED_LOWER.getS(), FTC_RED_LOWER.getV());
-        redGoalUpper1 = new Scalar(180, FTC_RED_UPPER.getS(), FTC_RED_UPPER.getV());
-        redGoalLower2 = new Scalar(0, FTC_RED_LOWER.getS(), FTC_RED_LOWER.getV());
-        redGoalUpper2 = new Scalar(FTC_RED_UPPER.getH(), FTC_RED_UPPER.getS(), FTC_RED_UPPER.getV());
-        Core.inRange(hsv, redGoalLower1, redGoalUpper1, redMask1);
-        Core.inRange(hsv, redGoalLower2, redGoalUpper2, redMask2);
+        redLower1 = new Scalar(FTC_RED_LOWER.getH(), FTC_RED_LOWER.getS(), FTC_RED_LOWER.getV());
+        redUpper1 = new Scalar(180, FTC_RED_UPPER.getS(), FTC_RED_UPPER.getV());
+        redLower2 = new Scalar(0, FTC_RED_LOWER.getS(), FTC_RED_LOWER.getV());
+        redUpper2 = new Scalar(FTC_RED_UPPER.getH(), FTC_RED_UPPER.getS(), FTC_RED_UPPER.getV());
+        Core.inRange(hsv, redLower1, redUpper1, redMask1);
+        Core.inRange(hsv, redLower2, redUpper2, redMask2);
         Core.add(redMask1, redMask2, redMask);
         Imgproc.erode(redMask, redMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
         Imgproc.dilate(redMask, redMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
