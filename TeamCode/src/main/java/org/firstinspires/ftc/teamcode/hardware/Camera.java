@@ -24,7 +24,7 @@ public class Camera {
     @Getter
     @Setter
     private CenterStageCommon.Alliance alliance;
-    private PropDetectionPipeline colorDetectionPipeline;
+    private PropDetectionPipeline prop;
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
     private Telemetry telemetry;
@@ -43,9 +43,9 @@ public class Camera {
                 .setDrawTagID(true)
                 .setDrawTagOutline(true)
                 .build();
-        this.colorDetectionPipeline = new PropDetectionPipeline();
+        this.prop = new PropDetectionPipeline();
         this.visionPortal = VisionPortal.easyCreateWithDefaults(
-                hardwareMap.get(WebcamName.class, WEBCAM_NAME), aprilTag, colorDetectionPipeline);
+                hardwareMap.get(WebcamName.class, WEBCAM_NAME), aprilTag, prop);
         this.initialized = true;
     }
 
@@ -57,9 +57,9 @@ public class Camera {
         switch (alliance) {
 
             case Blue:
-                return this.colorDetectionPipeline.getBlue();
+                return this.prop.getBlue();
             case Red:
-                return this.colorDetectionPipeline.getRed();
+                return this.prop.getRed();
         }
 
         return INVALID_DETECTION;
