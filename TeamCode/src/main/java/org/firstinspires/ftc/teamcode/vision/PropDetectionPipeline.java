@@ -8,6 +8,7 @@ import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DETECTION_RIGH
 import static org.firstinspires.ftc.teamcode.util.Colors.FTC_BLUE_RANGE;
 import static org.firstinspires.ftc.teamcode.util.Colors.FTC_RED_RANGE_1;
 import static org.firstinspires.ftc.teamcode.util.Colors.FTC_RED_RANGE_2;
+import static org.firstinspires.ftc.teamcode.util.Colors.RED;
 import static org.firstinspires.ftc.teamcode.util.Colors.WHITE;
 import static org.firstinspires.ftc.teamcode.util.Constants.ANCHOR;
 import static org.firstinspires.ftc.teamcode.util.Constants.BLUR_SIZE;
@@ -79,11 +80,12 @@ public class PropDetectionPipeline implements VisionProcessor {
     }
 
     private MatOfPoint detect(ScalarRange... colorRanges) {
-        if (!mask.empty()) {
-            mask.setTo(this.zeros(mask.size(), mask.type()));
-        }
+        mask.release();
         for (ScalarRange colorRange : colorRanges) {
             Core.inRange(hsv, colorRange.getLower(), colorRange.getUpper(), tmpMask);
+            if (mask.empty() || mask.rows() <= 0) {
+                Core.inRange(hsv, colorRange.getLower(), colorRange.getUpper(), mask);
+            }
             Core.add(mask, tmpMask, mask);
         }
 
@@ -105,5 +107,13 @@ public class PropDetectionPipeline implements VisionProcessor {
         canvas.drawLine(detectionLeftXPx, 0, detectionLeftXPx, canvas.getHeight(), WHITE);
         canvas.drawLine(detectionCenterXPx, 0, detectionCenterXPx, canvas.getHeight(), WHITE);
         canvas.drawLine(detectionRightXPx, 0, detectionRightXPx, canvas.getHeight(), WHITE);
+
+        if (red.isValid()) {
+            canvas.drawCircle((float)red.getCenterPx().x, (float)red.getCenterPx().y, 10, WHITE);
+        }
+
+        if (blue.isValid()) {
+            canvas.drawCircle((float)blue.getCenterPx().x, (float)blue.getCenterPx().y, 10, WHITE);
+        }
     }
 }
