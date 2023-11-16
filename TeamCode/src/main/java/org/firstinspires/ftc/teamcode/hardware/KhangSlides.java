@@ -6,10 +6,10 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Config
-public class Slides {
+public class KhangSlides {
 
     //Create and assign motors
-    public Slides(HardwareMap hardwareMap) {
+    public KhangSlides(HardwareMap hardwareMap) {
         rSMotor = hardwareMap.get(DcMotor.class, "Right Slide Motor");
 //        rSMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rSMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

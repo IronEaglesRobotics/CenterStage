@@ -34,7 +34,7 @@ public class Intake {
     public static double up = 0.30;
     public static double motorPower = 0;
 
-    public Intake(HardwareMap hardwareMap) {
+    public Intake(HardwareMap hardwareMap, Position up) {
         lServo = hardwareMap.get(Servo.class, "Left Servo");
         lServo.setDirection(Servo.Direction.REVERSE);
         rServo = hardwareMap.get(Servo.class, "Right Servo");

@@ -148,7 +148,4 @@ public class TargetingPipeline extends OpenCvPipeline {
     public Detection getBlue() {
         return this.blue;
     }
-    public Detection getBlack() {
-        return this.black;
-    }
 }

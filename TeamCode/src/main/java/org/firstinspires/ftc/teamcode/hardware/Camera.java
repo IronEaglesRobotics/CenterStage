@@ -82,9 +82,6 @@ public class Camera {
         return (targetingCameraInitialized ? targetingPipeline.getBlue() : INVALID_DETECTION);
     }
 
-    public Detection getBlack() {
-        return (targetingCameraInitialized ? targetingPipeline.getBlack() : INVALID_DETECTION);
-    }
 
     //return frame rate
     public int getFrameCount() {

@@ -5,6 +5,8 @@ import com.arcrobotics.ftclib.controller.PController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.hardware.robby.Slides;
+
 @Config
 public class Arm {
 
@@ -13,10 +15,15 @@ public class Arm {
     private Servo rAServo;
     private Servo lAServo;
     private Servo wristServo;
-    private SlidePos.SPosition pos = SlidePos.SPosition.DOWN;
+    private Slides.Position pos = Slides.Position.DOWN;
     private PController armController;
     private double armControllerTarget;
     private double ARM_KP = 0.001;
+
+
+    public enum APosition {
+        SDOWN, SCORE, SAFTEYDOWN, SAFTEYUP;
+    }
 
     public Arm(HardwareMap hardwareMap) {
         wristServo = hardwareMap.get(Servo.class, "Wrist Servo");
@@ -47,22 +54,22 @@ public class Arm {
         }
     }
 
-    public void setPos(ArmPos.APosition tape) {
-        if (tape == ArmPos.APosition.SDOWN) {
+    public void setPos(APosition tape) {
+        if (tape == APosition.SDOWN) {
             this.armControllerTarget = startingArmPos;
             lAServo.setPosition(startingArmPos);
             rAServo.setPosition(startingArmPos);
             wristServo.setPosition(startingWristPos);
-        } else if (tape == ArmPos.APosition.SCORE) {
+        } else if (tape == APosition.SCORE) {
             this.armControllerTarget = armScorePos;
             lAServo.setPosition(armScorePos);
             rAServo.setPosition(armScorePos);
             wristServo.setPosition(wristScorePos);
-        } else if (tape == ArmPos.APosition.SAFTEYDOWN) {
+        } else if (tape == APosition.SAFTEYDOWN) {
             lAServo.setPosition(safteyDownPos);
             rAServo.setPosition(safteyDownPos);
             wristServo.setPosition(wristScorePos);
-        } else if (tape == ArmPos.APosition.SAFTEYUP) {
+        } else if (tape == APosition.SAFTEYUP) {
             lAServo.setPosition(safteyUpPos);
             rAServo.setPosition(safteyUpPos);
             wristServo.setPosition(wristScorePos);

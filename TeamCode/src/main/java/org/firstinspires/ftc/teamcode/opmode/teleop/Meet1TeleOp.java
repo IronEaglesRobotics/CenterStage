@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.controller.Controller;
-import org.firstinspires.ftc.teamcode.hardware.ArmPos;
+import org.firstinspires.ftc.teamcode.hardware.Arm;
 import org.firstinspires.ftc.teamcode.hardware.DoorPos;
 import org.firstinspires.ftc.teamcode.hardware.Down;
 import org.firstinspires.ftc.teamcode.hardware.Hieght;
@@ -18,7 +18,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Config
 @TeleOp(name = "Meet 1 TeleOp", group = "OpModes")
-public class KhangMain extends OpMode {
+public class Meet1TeleOp extends OpMode {
 
     //turbo mode
     public static double normal = 0.5;
@@ -34,7 +34,7 @@ public class KhangMain extends OpMode {
     //create and set start position of slides
     private SlidePos.SPosition CurrentSpos = SlidePos.SPosition.DOWN;
     //create and set start position of arm
-    private ArmPos.APosition CurrentApos = ArmPos.APosition.SDOWN;
+    private Arm.APosition CurrentApos = Arm.APosition.SDOWN;
     //create and set start position of door, default close
     private DoorPos.DoorPosition CurrentDpos = DoorPos.DoorPosition.CLOSE;
     //create and set start position of hopper
@@ -65,7 +65,7 @@ public class KhangMain extends OpMode {
         controller2 = new Controller(gamepad2);
         //feedback to driver hub to know if init was successful
         telemetry.addLine("Started");
-        //update to amke sure we receive last lien of code
+        //update to make sure we receive last line of code
         telemetry.update();
     }
 
@@ -85,11 +85,11 @@ public class KhangMain extends OpMode {
             robot.drive.setWeightedDrivePower(new Pose2d(x, y, z));
 
         //turbo activation
-        if (controller1.getRightBumper().isJustPressed()){
+        if (controller1.getA().isJustPressed()){
             x *= turbo;
             y *= turbo;
             z *= turbo;
-        } else {
+        } else if (controller1.getA().isJustReleased()){
             x *= normal;
             y *= normal;
             z *= normal;
@@ -105,6 +105,7 @@ public class KhangMain extends OpMode {
         double sY = -gamepad2.left_stick_y;
         //graph of X
         double sX = gamepad2.left_stick_x;
+        double manualSY = gamepad2.right_stick_y;
 
         //reset value to set slides to starting value
         double reset = gamepad2.left_trigger;
@@ -145,9 +146,14 @@ public class KhangMain extends OpMode {
         //make door rise as intake goes on
         if (intakeON >= 0.01) {
             CurrentDpos = DoorPos.DoorPosition.OPEN;
-            Currentpos = Intake.Position.STACK1;
         } else {
             CurrentDpos = DoorPos.DoorPosition.CLOSE;
+        }
+
+        //make intake go to stack 1 when pressed down
+        if (intakeON >= 0.25) {
+            Currentpos = Intake.Position.STACK1;
+        } else {
             Currentpos = Intake.Position.UP;
         }
 
@@ -233,15 +239,19 @@ public class KhangMain extends OpMode {
             CurrentSpos = CurrentSpos.TAPE2;
         }
 
-        //set slides all the way down when left bumper gets pressed
-        if (controller2.getLeftBumper().isJustPressed()) {
-            CurrentSpos = CurrentSpos.DOWN;
+        if (manualSY >=0.1) {
+            CurrentSpos = CurrentSpos.MANUAL;
         }
 
-        //set intake all teh way up when right bumper is pressed
-        if (controller2.getRightBumper().isJustPressed()) {
-            Currentpos = Currentpos.UP;
-        }
+//        //set slides all the way down when left bumper gets pressed
+//        if (controller2.getLeftBumper().isJustPressed()) {
+//            CurrentSpos = CurrentSpos.DOWN;
+//        }
+//
+//        //set intake all teh way up when right bumper is pressed
+//        if (controller2.getRightBumper().isJustPressed()) {
+//            Currentpos = Currentpos.UP;
+//        }
 
         // update the runtime on the telemetry
         telemetry.addData("Runtime", currentTime);
