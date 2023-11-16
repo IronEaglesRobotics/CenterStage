@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
 @TeleOp(name = "Drivebase Only", group = "OpModes")
 public class Drivebase extends OpMode {
     //turbo mode
-    public static double normal = 0.5;
-    public static double turbo = 1;
+    public static double normal = 1;
+    public static double turbo = 0.5;
     //create robot instance
     private Robot robot;
     //create controller 1 (driver)
