@@ -23,7 +23,6 @@ import org.firstinspires.ftc.teamcode.vision.Detection;
 public abstract class AutoBase extends LinearOpMode {
     public static int DEPOSIT_HEIGHT = 100;
     public static int SCORING_DURATION_MS =  5000;
-
     protected Robot robot;
     protected FtcDashboard dashboard;
     protected Telemetry dashboardTelemetry;
@@ -68,7 +67,7 @@ public abstract class AutoBase extends LinearOpMode {
         }
 
         moveToBackstage();
-        prepareToScore(2);
+        prepareToScore();
         scorePreloadedPixel();
 
         // TODO Tommy: Park
@@ -86,7 +85,7 @@ public abstract class AutoBase extends LinearOpMode {
         this.robot.getGantry().stop();
     }
 
-    private void prepareToScore(int tagId) {
+    private void prepareToScore() {
         double distance = this.robot.getCamera().getDistanceToAprilTag(2, 25, 5);
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.forward(distance - SCORING_DISTANCE_FROM_APRIL_TAG);
