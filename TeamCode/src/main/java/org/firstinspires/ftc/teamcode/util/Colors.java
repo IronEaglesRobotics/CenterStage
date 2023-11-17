@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode.util;
 
-import org.opencv.core.Scalar;
 import android.graphics.Color;
+
+import org.opencv.core.Scalar;
 public class Colors {
     // CV Color Threshold Constants
     public static Scalar FTC_RED_LOWER = new Scalar(165, 80, 80);

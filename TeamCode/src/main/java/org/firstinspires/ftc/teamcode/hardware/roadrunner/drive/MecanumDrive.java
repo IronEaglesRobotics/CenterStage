@@ -17,6 +17,9 @@ import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveCons
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.RUN_USING_ENCODER;
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.TRACK_WIDTH;
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.encoderTicksToInches;
+import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kA;
+import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kStatic;
+import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kV;
 
 import androidx.annotation.NonNull;
 
@@ -50,10 +53,6 @@ import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.Tra
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceRunner;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.util.LynxModuleUtil;
-
-import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kV;
-import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kA;
-import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kStatic;
 
 import java.util.ArrayList;
 import java.util.Arrays;

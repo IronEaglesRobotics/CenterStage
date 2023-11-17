@@ -17,9 +17,6 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-import lombok.Getter;
-import lombok.Setter;
-
 public class Camera {
     private PropDetectionPipeline prop;
     private AprilTagProcessor aprilTag;
@@ -90,6 +87,19 @@ public class Camera {
                 .filter(x -> x.id == id)
                 .findFirst()
                 .orElse(null);
+    }
+
+    public double getDistanceToAprilTag(int id, double rejectAbove, double rejectBelow) {
+        for (int i = 0; i < 10; i++) {
+            AprilTagDetection aprilTagDetection = getAprilTag(id);
+            if (aprilTagDetection != null) {
+                if (aprilTagDetection.ftcPose.y < rejectAbove
+                        && aprilTagDetection.ftcPose.y > rejectBelow) {
+                    return aprilTagDetection.ftcPose.y;
+                }
+            }
+        }
+        return Double.MAX_VALUE;
     }
 
     public void setAlliance(CenterStageCommon.Alliance alliance) {
