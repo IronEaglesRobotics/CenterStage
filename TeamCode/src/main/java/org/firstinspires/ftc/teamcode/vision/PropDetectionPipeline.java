@@ -8,7 +8,6 @@ import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DETECTION_RIGH
 import static org.firstinspires.ftc.teamcode.util.Colors.FTC_BLUE_RANGE;
 import static org.firstinspires.ftc.teamcode.util.Colors.FTC_RED_RANGE_1;
 import static org.firstinspires.ftc.teamcode.util.Colors.FTC_RED_RANGE_2;
-import static org.firstinspires.ftc.teamcode.util.Colors.RED;
 import static org.firstinspires.ftc.teamcode.util.Colors.WHITE;
 import static org.firstinspires.ftc.teamcode.util.Constants.ANCHOR;
 import static org.firstinspires.ftc.teamcode.util.Constants.BLUR_SIZE;

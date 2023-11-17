@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware.roadrunner.drive;
 
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.AUTO_STRAFE_SLOWDOWN;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.BACK_LEFT_NAME;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.BACK_RIGHT_NAME;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.FRONT_LEFT_NAME;
@@ -64,8 +65,8 @@ import java.util.List;
  */
 @Config
 public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(10, 0, 1.5);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(6, 0, 0);
 
     public static double LATERAL_MULTIPLIER = 1;
 
@@ -75,8 +76,9 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
-    private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
-    private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL);
+    public static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
+    public static final TrajectoryVelocityConstraint SLOW_VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL / AUTO_STRAFE_SLOWDOWN, MAX_ANG_VEL / AUTO_STRAFE_SLOWDOWN, TRACK_WIDTH);
+    public static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL);
 
     private TrajectoryFollower follower;
 
@@ -206,6 +208,9 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
         waitForIdle();
     }
 
+    public void breakFollowing() {
+        trajectorySequenceRunner.breakFollowing();
+    }
     public Pose2d getLastError() {
         return trajectorySequenceRunner.getLastPoseError();
     }

@@ -53,7 +53,7 @@ public class Gantry {
         this.liftRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         this.liftRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        this.xControllerTarget = X_MIN;
+        this.xControllerTarget = X_CENTER;
     }
 
     public Gantry(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -87,13 +87,11 @@ public class Gantry {
     }
 
     public void intake() {
-        this.screwServo.setPower(1);
-        this.screwServo.setDirection(DcMotorSimple.Direction.FORWARD);
+        this.screwServo.setPower(-1);
     }
 
     public void deposit() {
-        this.screwServo.setPower(1);
-        this.screwServo.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.screwServo.setPower(-1);
     }
 
     public void stop() {
