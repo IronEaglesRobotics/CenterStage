@@ -41,6 +41,13 @@ public class Claw implements Updatable {
         this.clawControllerTarget = CLAW_MAX;
     }
 
+    public void openSync() {
+        this.clawControllerTarget = CLAW_MAX;
+        while (Math.abs(this.claw.getPosition() - CLAW_MAX) > 0.001) {
+            this.update();
+        }
+    }
+
     public void close() {
         this.clawControllerTarget = CLAW_MIN;
     }

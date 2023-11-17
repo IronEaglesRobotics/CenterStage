@@ -21,9 +21,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class Camera {
-    @Getter
-    @Setter
-    private CenterStageCommon.Alliance alliance;
     private PropDetectionPipeline prop;
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
@@ -50,16 +47,17 @@ public class Camera {
     }
 
     public Detection getProp() {
-        if (!initialized || alliance == null) {
+        if (!initialized || getAlliance() == null) {
             return INVALID_DETECTION;
         }
 
-        switch (alliance) {
-
+        switch (getAlliance()) {
             case Blue:
-                return this.prop.getBlue();
+                Detection blue = this.prop.getBlue();
+                return blue != null && blue.isValid() ? blue : INVALID_DETECTION;
             case Red:
-                return this.prop.getRed();
+                Detection red = this.prop.getRed();
+                return red != null && red.isValid() ? red : INVALID_DETECTION;
         }
 
         return INVALID_DETECTION;
@@ -67,7 +65,7 @@ public class Camera {
 
     public CenterStageCommon.PropLocation getPropLocation() {
         Detection prop = this.getProp();
-        if (!prop.isValid()) {
+        if (prop == null || !prop.isValid()) {
             return CenterStageCommon.PropLocation.Unknown;
         }
 
@@ -92,5 +90,13 @@ public class Camera {
                 .filter(x -> x.id == id)
                 .findFirst()
                 .orElse(null);
+    }
+
+    public void setAlliance(CenterStageCommon.Alliance alliance) {
+        this.prop.setAlliance(alliance);
+    }
+
+    public CenterStageCommon.Alliance getAlliance() {
+        return this.prop != null ? this.prop.getAlliance() : null;
     }
 }
