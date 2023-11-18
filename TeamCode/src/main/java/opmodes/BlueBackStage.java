@@ -9,32 +9,28 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 
-@Autonomous(name = "BlueFrontStage", preselectTeleOp = "MainTeleOp")
-public class BlueFrontStage extends AutoBase {
-    private final Pose2d rendezvous = new Pose2d(-36, 11);
+@Autonomous(name = "BlueBackStage", preselectTeleOp = "MainTeleOp")
+public class BlueBackStage extends AutoBase {
+    private final Pose2d rendezvous = new Pose2d(12, 11);
 
-    public BlueFrontStage() {
+    public BlueBackStage() {
         super(
                 CenterStageCommon.Alliance.Blue,
-                new Pose2d(-36, 63, Math.toRadians(-90)),
-                new Pose2d(62, 12));
+                new Pose2d(12, 63, Math.toRadians(-90)),
+                new Pose2d(62, 62));
     }
 
     protected void propLeft() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-        builder.lineToLinearHeading(new Pose2d(-52, 31, Math.toRadians(-180)));
-        builder.lineToConstantHeading(new Vector2d(-42, 31));
-        builder.addTemporalMarker(0.2, () -> {
+        builder.lineToLinearHeading(new Pose2d(36, 25, Math.toRadians(-33)));
+        builder.addDisplacementMarker(10, () -> {
             this.robot.getClaw().setArmPosition(PICKUP_ARM_MIN);
         });
         this.robot.getDrive().followTrajectorySequence(builder.build());
 
         openAndLiftClaw();
-
-        builder = this.robot.getTrajectorySequenceBuilder();
-        builder.lineToLinearHeading(rendezvous);
-        this.robot.getDrive().followTrajectorySequence(builder.build());
     }
+
     protected void propCenter() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.lineToConstantHeading(rendezvous.vec());
@@ -49,18 +45,16 @@ public class BlueFrontStage extends AutoBase {
         builder.turn(Math.toRadians(90));
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
+
     protected void propRight() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-        builder.lineToLinearHeading(new Pose2d(-54, 17, Math.toRadians(-123)));
-        builder.addDisplacementMarker(10, () -> {
+        builder.lineToLinearHeading(new Pose2d(32, 34, Math.toRadians(0)));
+        builder.lineToConstantHeading(new Vector2d(19, 34));
+        builder.addTemporalMarker(0.5, () -> {
             this.robot.getClaw().setArmPosition(PICKUP_ARM_MIN);
         });
         this.robot.getDrive().followTrajectorySequence(builder.build());
 
         openAndLiftClaw();
-
-        builder = this.robot.getTrajectorySequenceBuilder();
-        builder.lineToLinearHeading(this.rendezvous);
-        this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 }
