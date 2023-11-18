@@ -12,7 +12,7 @@ public class LeftAuto extends AutoBase {
         super(
                 CenterStageCommon.Alliance.Blue,
                 new Pose2d(-36, 63, Math.toRadians(-90)),
-                new Vector2d(-36, 11));
+                new Pose2d(-36, 11));
     }
 
     @Override

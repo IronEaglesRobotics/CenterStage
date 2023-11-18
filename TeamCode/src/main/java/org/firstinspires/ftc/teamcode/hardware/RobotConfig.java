@@ -66,5 +66,5 @@ public class RobotConfig {
     public static double DETECTION_LEFT_X = 0;
     public static double DETECTION_CENTER_X = .5;
     public static double DETECTION_RIGHT_X = 1;
-    public static double SCORING_DISTANCE_FROM_APRIL_TAG = 6.5;
+    public static double SCORING_DISTANCE_FROM_APRIL_TAG = 6f;
 }

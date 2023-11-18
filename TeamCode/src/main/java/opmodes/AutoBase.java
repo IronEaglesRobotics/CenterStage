@@ -23,15 +23,18 @@ import org.firstinspires.ftc.teamcode.vision.Detection;
 public abstract class AutoBase extends LinearOpMode {
     public static int DEPOSIT_HEIGHT = 100;
     public static double SCORING_DURATION_S =  5f;
+    public static double APRIL_TAG_RIGHT_DELTA = -8.5;
+    public static double APRIL_TAG_LEFT_DELTA = 4.0;
+
     protected Robot robot;
     protected FtcDashboard dashboard;
     protected Telemetry dashboardTelemetry;
     protected CenterStageCommon.PropLocation propLocation;
     protected final Pose2d initialPosition;
     protected final CenterStageCommon.Alliance alliance;
-    protected final Vector2d rendezvous;
+    protected final Pose2d rendezvous;
 
-    protected AutoBase(CenterStageCommon.Alliance alliance, Pose2d initialPosition, Vector2d rendezvous) {
+    protected AutoBase(CenterStageCommon.Alliance alliance, Pose2d initialPosition, Pose2d rendezvous) {
         this.alliance = alliance;
         this.initialPosition = initialPosition;
         this.rendezvous = rendezvous;
@@ -53,17 +56,26 @@ public abstract class AutoBase extends LinearOpMode {
         // If the prop is visible at this point, then it must be in the center (2) position
         determinePropLocation();
 
+        TrajectorySequenceBuilder builder;
         switch (this.propLocation) {
             case Left:
                 // TODO Tommy: Place the pixel on the left tape and move to rendezvous position
                 return;
             case Unknown:
             case Center:
-                dislodgePropAndPlacePixel();
+                dislodgePropAndPlacePixelCenter();
+
+                builder = this.robot.getTrajectorySequenceBuilder();
+                builder.turn(Math.toRadians(90));
+                this.robot.getDrive().followTrajectorySequence(builder.build());
                 break;
             case Right:
-                // TODO Tommy: Place the pixel on the right tape and move to rendezvous position
-                return;
+                dislodgePropAndPlacePixelRight();
+
+                builder = this.robot.getTrajectorySequenceBuilder();
+                builder.lineToLinearHeading(this.rendezvous);
+                this.robot.getDrive().followTrajectorySequence(builder.build());
+                break;
         }
 
         moveToBackstage();
@@ -71,6 +83,19 @@ public abstract class AutoBase extends LinearOpMode {
         scorePreloadedPixel();
 
         // TODO Tommy: Park
+    }
+
+
+    private void dislodgePropAndPlacePixelRight() {
+        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+        builder.lineToLinearHeading(new Pose2d(-54, 17, Math.toRadians(-123)));
+        builder.addDisplacementMarker(10, () -> {
+            this.robot.getClaw().setArmPosition(PICKUP_ARM_MIN);
+        });
+        this.robot.getDrive().followTrajectorySequence(builder.build());
+        this.robot.getClaw().openSync();
+        this.sleep(100);
+        this.robot.getClaw().setArmPosition(PICKUP_ARM_MAX);
     }
 
     private void scorePreloadedPixel() {
@@ -92,23 +117,40 @@ public abstract class AutoBase extends LinearOpMode {
     }
 
     private void prepareToScore() {
+        // At this point we know that Y = 38
+        // For 2 -> Ydelta = 0
+        // For 3 -> 3 5/8
+        // For 1 -> - 3 5/8
+        double delta = 0;
+        switch (this.propLocation) {
+            case Left:
+                delta = APRIL_TAG_LEFT_DELTA;
+                break;
+            case Unknown:
+            case Center:
+                delta = 0;
+                break;
+            case Right:
+                delta = APRIL_TAG_RIGHT_DELTA;
+                break;
+        }
         double distance = this.robot.getCamera().getDistanceToAprilTag(2, 25, 5);
+        Vector2d target = new Vector2d(this.robot.getDrive().getPoseEstimate().getX() + (distance - SCORING_DISTANCE_FROM_APRIL_TAG), this.robot.getDrive().getPoseEstimate().getY() + delta);
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-        builder.forward(distance - SCORING_DISTANCE_FROM_APRIL_TAG);
+        builder.lineToConstantHeading(target);
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 
     private void moveToBackstage() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-        builder.turn(Math.toRadians(90));
         builder.lineToLinearHeading(new Pose2d(36, 11, 0));
         builder.lineToLinearHeading(new Pose2d(36, 38, 0));
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 
-    private void dislodgePropAndPlacePixel() {
+    private void dislodgePropAndPlacePixelCenter() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-        builder.lineToConstantHeading(rendezvous);
+        builder.lineToLinearHeading(rendezvous);
         builder.addDisplacementMarker(10, () -> {
             this.robot.getClaw().setArmPosition(PICKUP_ARM_MIN);
         });
