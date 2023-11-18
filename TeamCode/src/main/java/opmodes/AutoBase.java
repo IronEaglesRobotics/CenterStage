@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.SCORING_DISTAN
 import static org.firstinspires.ftc.teamcode.util.CenterStageCommon.PropLocation.Center;
 import static org.firstinspires.ftc.teamcode.util.CenterStageCommon.PropLocation.Left;
 import static org.firstinspires.ftc.teamcode.util.CenterStageCommon.PropLocation.Right;
+import static org.firstinspires.ftc.teamcode.util.CenterStageCommon.PropLocation.Unknown;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -167,7 +168,7 @@ public abstract class AutoBase extends LinearOpMode {
 
     private void dislodgePropAndPlacePixelCenter() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-        builder.lineToLinearHeading(rendezvous);
+        builder.lineToConstantHeading(rendezvous.vec());
         builder.addDisplacementMarker(10, () -> {
             this.robot.getClaw().setArmPosition(PICKUP_ARM_MIN);
         });
@@ -178,7 +179,7 @@ public abstract class AutoBase extends LinearOpMode {
     }
 
     private void determinePropLocation() {
-        setPropLocationIfVisible(Center, null);
+        setPropLocationIfVisible(Center, Unknown);
         if (this.propLocation != Center) {
             peekRight();
         }
@@ -191,20 +192,6 @@ public abstract class AutoBase extends LinearOpMode {
         builder.turn(Math.toRadians(-33));
         this.robot.getDrive().followTrajectorySequence(builder.build());
         setPropLocationIfVisible(Right, Left);
-    }
-
-    protected static int getExpectedAprilTagId(CenterStageCommon.PropLocation propLocation) {
-        switch (propLocation) {
-            case Left:
-                return 1;
-            case Unknown:
-            case Center:
-                return 2;
-            case Right:
-                return 3;
-        }
-
-        return 2;
     }
 
     protected void setPropLocationIfVisible(CenterStageCommon.PropLocation ifVisible, CenterStageCommon.PropLocation ifNotVisible) {

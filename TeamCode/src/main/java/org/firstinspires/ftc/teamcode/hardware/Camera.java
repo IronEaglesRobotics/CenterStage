@@ -18,7 +18,8 @@ import org.opencv.core.Point;
 
 @Config
 public class Camera {
-    public static float PROP_REJECTION_VERTICAL = 300;
+    public static float PROP_REJECTION_VERTICAL_UPPER = 175;
+    public static float PROP_REJECTION_VERTICAL_LOWER = 300;
     private PropDetectionPipeline prop;
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
@@ -49,23 +50,13 @@ public class Camera {
             return INVALID_DETECTION;
         }
 
-        Detection detection = null;
         switch (getAlliance()) {
             case Blue:
                 Detection blue = this.prop.getBlue();
-                detection = blue != null && blue.isValid() ? blue : INVALID_DETECTION;
-                break;
+                return blue != null && blue.isValid() ? blue : INVALID_DETECTION;
             case Red:
                 Detection red = this.prop.getRed();
-                detection =  red != null && red.isValid() ? red : INVALID_DETECTION;
-                break;
-        }
-
-        if (detection != null && detection.isValid()) {
-            Point center = detection.getCenterPx();
-            if (center.y < PROP_REJECTION_VERTICAL) {
-                return detection;
-            }
+                return red != null && red.isValid() ? red : INVALID_DETECTION;
         }
 
         return INVALID_DETECTION;
