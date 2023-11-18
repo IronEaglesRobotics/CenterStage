@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DETECTION_CENTER_X;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DETECTION_LEFT_X;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DETECTION_RIGHT_X;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.WEBCAM_NAME;
 import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_DETECTION;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -16,8 +14,11 @@ import org.firstinspires.ftc.teamcode.vision.PropDetectionPipeline;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.opencv.core.Point;
 
+@Config
 public class Camera {
+    public static float PROP_REJECTION_VERTICAL = 300;
     private PropDetectionPipeline prop;
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
@@ -48,37 +49,26 @@ public class Camera {
             return INVALID_DETECTION;
         }
 
+        Detection detection = null;
         switch (getAlliance()) {
             case Blue:
                 Detection blue = this.prop.getBlue();
-                return blue != null && blue.isValid() ? blue : INVALID_DETECTION;
+                detection = blue != null && blue.isValid() ? blue : INVALID_DETECTION;
+                break;
             case Red:
                 Detection red = this.prop.getRed();
-                return red != null && red.isValid() ? red : INVALID_DETECTION;
+                detection =  red != null && red.isValid() ? red : INVALID_DETECTION;
+                break;
+        }
+
+        if (detection != null && detection.isValid()) {
+            Point center = detection.getCenterPx();
+            if (center.y < PROP_REJECTION_VERTICAL) {
+                return detection;
+            }
         }
 
         return INVALID_DETECTION;
-    }
-
-    public CenterStageCommon.PropLocation getPropLocation() {
-        Detection prop = this.getProp();
-        if (prop == null || !prop.isValid()) {
-            return CenterStageCommon.PropLocation.Unknown;
-        }
-
-        double x = prop.getCenter().x + 50;
-
-        if (x <= DETECTION_LEFT_X) {
-            return CenterStageCommon.PropLocation.Left;
-        }
-        if (x <= DETECTION_CENTER_X) {
-            return CenterStageCommon.PropLocation.Center;
-        }
-        if (x <= DETECTION_RIGHT_X) {
-            return CenterStageCommon.PropLocation.Right;
-        }
-
-        return CenterStageCommon.PropLocation.Unknown;
     }
 
     public AprilTagDetection getAprilTag(int id) {

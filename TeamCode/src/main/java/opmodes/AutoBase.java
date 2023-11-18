@@ -24,7 +24,7 @@ public abstract class AutoBase extends LinearOpMode {
     public static int DEPOSIT_HEIGHT = 100;
     public static double SCORING_DURATION_S =  5f;
     public static double APRIL_TAG_RIGHT_DELTA = -8.5;
-    public static double APRIL_TAG_LEFT_DELTA = 4.0;
+    public static double APRIL_TAG_LEFT_DELTA = 8.0;
 
     protected Robot robot;
     protected FtcDashboard dashboard;
@@ -59,8 +59,12 @@ public abstract class AutoBase extends LinearOpMode {
         TrajectorySequenceBuilder builder;
         switch (this.propLocation) {
             case Left:
-                // TODO Tommy: Place the pixel on the left tape and move to rendezvous position
-                return;
+                dislodgePropAndPlacePixelLeft();
+
+                builder = this.robot.getTrajectorySequenceBuilder();
+                builder.lineToLinearHeading(rendezvous);
+                this.robot.getDrive().followTrajectorySequence(builder.build());
+                break;
             case Unknown:
             case Center:
                 dislodgePropAndPlacePixelCenter();
@@ -83,6 +87,19 @@ public abstract class AutoBase extends LinearOpMode {
         scorePreloadedPixel();
 
         // TODO Tommy: Park
+    }
+
+    private void dislodgePropAndPlacePixelLeft() {
+        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+        builder.lineToLinearHeading(new Pose2d(-52, 31, Math.toRadians(-180)));
+        builder.lineToConstantHeading(new Vector2d(-42, 31));
+        builder.addTemporalMarker(0.2, () -> {
+            this.robot.getClaw().setArmPosition(PICKUP_ARM_MIN);
+        });
+        this.robot.getDrive().followTrajectorySequence(builder.build());
+        this.robot.getClaw().openSync();
+        this.sleep(100);
+        this.robot.getClaw().setArmPosition(PICKUP_ARM_MAX);
     }
 
 

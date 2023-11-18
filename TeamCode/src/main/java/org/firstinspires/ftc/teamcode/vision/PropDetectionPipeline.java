@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.vision;
 
+import static org.firstinspires.ftc.teamcode.hardware.Camera.PROP_REJECTION_VERTICAL;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DETECTION_AREA_MAX;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DETECTION_AREA_MIN;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DETECTION_CENTER_X;
@@ -8,6 +9,7 @@ import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DETECTION_RIGH
 import static org.firstinspires.ftc.teamcode.util.Colors.FTC_BLUE_RANGE;
 import static org.firstinspires.ftc.teamcode.util.Colors.FTC_RED_RANGE_1;
 import static org.firstinspires.ftc.teamcode.util.Colors.FTC_RED_RANGE_2;
+import static org.firstinspires.ftc.teamcode.util.Colors.RED;
 import static org.firstinspires.ftc.teamcode.util.Colors.WHITE;
 import static org.firstinspires.ftc.teamcode.util.Constants.ANCHOR;
 import static org.firstinspires.ftc.teamcode.util.Constants.BLUR_SIZE;
@@ -24,6 +26,7 @@ import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
@@ -99,20 +102,24 @@ public class PropDetectionPipeline implements VisionProcessor {
 
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
-        int detectionLeftXPx = (int)((DETECTION_LEFT_X / 100) * onscreenWidth);
-        int detectionCenterXPx = (int)((DETECTION_CENTER_X / 100) * onscreenWidth);
-        int detectionRightXPx = (int)((DETECTION_RIGHT_X / 100) * onscreenWidth);
+        canvas.drawLine(0, PROP_REJECTION_VERTICAL, canvas.getWidth(), PROP_REJECTION_VERTICAL, WHITE);
 
-        canvas.drawLine(detectionLeftXPx, 0, detectionLeftXPx, canvas.getHeight(), WHITE);
-        canvas.drawLine(detectionCenterXPx, 0, detectionCenterXPx, canvas.getHeight(), WHITE);
-        canvas.drawLine(detectionRightXPx, 0, detectionRightXPx, canvas.getHeight(), WHITE);
-
-        if (red.isValid()) {
-            canvas.drawCircle((float)red.getCenterPx().x, (float)red.getCenterPx().y, 10, WHITE);
+        if (red != null && red.isValid()) {
+            Point center = red.getCenterPx();
+            if (center.y < PROP_REJECTION_VERTICAL) {
+                canvas.drawCircle((float)red.getCenterPx().x, (float)red.getCenterPx().y, 10, WHITE);
+            } else {
+                canvas.drawCircle((float)red.getCenterPx().x, (float)red.getCenterPx().y, 10, RED);
+            }
         }
 
-        if (blue.isValid()) {
-            canvas.drawCircle((float)blue.getCenterPx().x, (float)blue.getCenterPx().y, 10, WHITE);
+        if (blue != null && blue.isValid()) {
+            Point center = blue.getCenterPx();
+            if (center.y < PROP_REJECTION_VERTICAL) {
+                canvas.drawCircle((float)blue.getCenterPx().x, (float)blue.getCenterPx().y, 10, WHITE);
+            } else {
+                canvas.drawCircle((float)blue.getCenterPx().x, (float)blue.getCenterPx().y, 10, RED);
+            }
         }
     }
 }
