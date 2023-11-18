@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CLAW_ARM_LEFT_NAME;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CLAW_KP;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.PICKUP_ARM_MAX;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.PICKUP_ARM_MIN;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CLAW_ARM_RIGHT_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CLAW_KP;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CLAW_MAX;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CLAW_MIN;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CLAW_NAME;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.PICKUP_ARM_MAX;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.PICKUP_ARM_MIN;
 
 import com.arcrobotics.ftclib.controller.PController;
 import com.qualcomm.robotcore.hardware.HardwareMap;

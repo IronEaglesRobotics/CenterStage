@@ -1,12 +1,5 @@
 package org.firstinspires.ftc.teamcode.vision;
 
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
-import org.opencv.imgproc.Imgproc;
-
 import static org.firstinspires.ftc.teamcode.util.Constants.GREEN;
 import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_AREA;
 import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_POINT;
@@ -16,6 +9,13 @@ import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.fillConvexHull;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getBottomLeftOfContour;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getBottomRightOfContour;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getCenterOfContour;
+
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
 
 // Class for a Detection
 public class Detection {

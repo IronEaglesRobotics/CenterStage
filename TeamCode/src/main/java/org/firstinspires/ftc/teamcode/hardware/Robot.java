@@ -4,9 +4,10 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
+import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
+import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 
 import lombok.Getter;
 
@@ -27,11 +28,20 @@ public class Robot {
     @Getter
     private Camera camera;
 
+    @Getter
+    CenterStageCommon.Alliance alliance;
+
     private final Telemetry telemetry;
 
     public Robot(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
         this.init(hardwareMap);
+    }
+
+    public Robot(HardwareMap hardwareMap, Telemetry telemetry, Pose2d initialPosition, CenterStageCommon.Alliance alliance) {
+        this(hardwareMap, telemetry);
+        this.getDrive().setPoseEstimate(initialPosition);
+        this.setAlliance(alliance);
     }
 
     private void init(HardwareMap hardwareMap) {
@@ -41,6 +51,15 @@ public class Robot {
         this.claw = new Claw(hardwareMap, telemetry);
         this.lift = new RobotLift(hardwareMap, telemetry);
         this.camera = new Camera(hardwareMap, telemetry);
+    }
+
+    public TrajectorySequenceBuilder getTrajectorySequenceBuilder() {
+        return this.drive.trajectorySequenceBuilder(this.drive.getPoseEstimate());
+    }
+
+    public void setAlliance(CenterStageCommon.Alliance alliance) {
+        this.alliance = alliance;
+        this.camera.setAlliance(alliance);
     }
 
     public void update() {

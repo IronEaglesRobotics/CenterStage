@@ -18,68 +18,62 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 import org.firstinspires.ftc.teamcode.vision.Detection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.opencv.core.Point;
 
 @Config
 public abstract class AutoBase extends LinearOpMode {
     public static int DEPOSIT_HEIGHT = 100;
-
+    public static int SCORING_DURATION_MS =  5000;
     protected Robot robot;
     protected FtcDashboard dashboard;
     protected Telemetry dashboardTelemetry;
     protected CenterStageCommon.PropLocation propLocation;
+    protected final Pose2d initialPosition;
+    protected final CenterStageCommon.Alliance alliance;
+    protected final Vector2d rendezvous;
+
+    protected AutoBase(CenterStageCommon.Alliance alliance, Pose2d initialPosition, Vector2d rendezvous) {
+        this.alliance = alliance;
+        this.initialPosition = initialPosition;
+        this.rendezvous = rendezvous;
+    }
 
     @Override
     public void runOpMode() {
-        this.robot = new Robot(hardwareMap, telemetry);
+        // Initialize Robot and Dashboard
+        this.robot = new Robot(hardwareMap, telemetry, initialPosition, alliance);
         this.dashboard = FtcDashboard.getInstance();
         this.dashboardTelemetry = dashboard.getTelemetry();
 
-        this.robot.getCamera().setAlliance(CenterStageCommon.Alliance.Blue);
-
-        this.robot.getDrive().setPoseEstimate(new Pose2d(-36, 63, Math.toRadians(-90)));
-
+        // Wait for match to start
         while(!isStarted() && !isStopRequested()) {
             this.robot.update();
             this.sleep(20);
         }
 
-        setPropLocationIfVisible(Center, null);
+        // If the prop is visible at this point, then it must be in the center (2) position
+        determinePropLocation();
 
-        TrajectorySequenceBuilder builder = this.robot.getDrive()
-                .trajectorySequenceBuilder(new Pose2d(-36, 63, Math.toRadians(-90)));
-        if (this.propLocation != CenterStageCommon.PropLocation.Center) {
-            builder.forward(5);
-            builder.turn(Math.toRadians(-33));
-            this.robot.getDrive().followTrajectorySequence(builder.build());
-
-            setPropLocationIfVisible(Right, Left);
-            return;
-        } else {
-            // Center
-            builder.lineToConstantHeading(new Vector2d(-36, 11));
-            builder.addDisplacementMarker(10, () -> {
-                this.robot.getClaw().setArmPosition(PICKUP_ARM_MIN);
-            });
-            this.robot.getDrive().followTrajectorySequence(builder.build());
-
-            this.robot.getClaw().openSync();
-            this.sleep(100);
-            this.robot.getClaw().setArmPosition(PICKUP_ARM_MAX);
+        switch (this.propLocation) {
+            case Left:
+                // TODO Tommy: Place the pixel on the left tape and move to rendezvous position
+                break;
+            case Unknown:
+            case Center:
+                dislodgePropAndPlacePixel();
+                break;
+            case Right:
+                // TODO Tommy: Place the pixel on the right tape and move to rendezvous position
+                break;
         }
 
-        builder = this.robot.getDrive().trajectorySequenceBuilder(new Pose2d(-36, 11));
-        builder.lineToLinearHeading(new Pose2d(36, 11, 0));
-        builder.lineToLinearHeading(new Pose2d(36, 38, 0));
-        this.robot.getDrive().followTrajectorySequence(builder.build());
+        moveToBackstage();
+        prepareToScore();
+        scorePreloadedPixel();
 
-        double distance = getDistanceToAprilTag();
+        // TODO Tommy: Park
+    }
 
-        builder = this.robot.getDrive().trajectorySequenceBuilder(new Pose2d(36, 38, 0));
-        builder.forward(distance - SCORING_DISTANCE_FROM_APRIL_TAG);
-        this.robot.getDrive().followTrajectorySequence(builder.build());
-
+    private void scorePreloadedPixel() {
         this.robot.getGantry().setSlideTarget(DEPOSIT_HEIGHT);
         this.robot.getGantry().armOut();
         while(this.robot.getGantry().isIn()) {
@@ -87,33 +81,50 @@ public abstract class AutoBase extends LinearOpMode {
             sleep(20);
         }
         this.robot.getGantry().deposit();
+        this.sleep(SCORING_DURATION_MS);
+        this.robot.getGantry().stop();
+    }
 
-        while(opModeIsActive()) {
-            this.robot.update();
-            AprilTagDetection aprilTagDetection = this.robot.getCamera().getAprilTag(2);
-            if (aprilTagDetection != null) {
-                Point center = aprilTagDetection.center;
-                this.dashboardTelemetry.addData("center", center);
-                this.dashboardTelemetry.addData("x", aprilTagDetection.ftcPose.x);
-                this.dashboardTelemetry.addData("y", aprilTagDetection.ftcPose.y);
-                this.dashboardTelemetry.addData("z", aprilTagDetection.ftcPose.z);
-                this.dashboardTelemetry.update();
-            }
-            sleep(20);
+    private void prepareToScore() {
+        double distance = this.robot.getCamera().getDistanceToAprilTag(2, 25, 5);
+        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+        builder.forward(distance - SCORING_DISTANCE_FROM_APRIL_TAG);
+        this.robot.getDrive().followTrajectorySequence(builder.build());
+    }
+
+    private void moveToBackstage() {
+        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+        builder.lineToLinearHeading(new Pose2d(36, 11, 0));
+        builder.lineToLinearHeading(new Pose2d(36, 38, 0));
+        this.robot.getDrive().followTrajectorySequence(builder.build());
+    }
+
+    private void dislodgePropAndPlacePixel() {
+        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+        builder.lineToConstantHeading(rendezvous);
+        builder.addDisplacementMarker(10, () -> {
+            this.robot.getClaw().setArmPosition(PICKUP_ARM_MIN);
+        });
+        this.robot.getDrive().followTrajectorySequence(builder.build());
+        this.robot.getClaw().openSync();
+        this.sleep(100);
+        this.robot.getClaw().setArmPosition(PICKUP_ARM_MAX);
+    }
+
+    private void determinePropLocation() {
+        setPropLocationIfVisible(Center, null);
+        if (this.propLocation != Center) {
+            peekRight();
         }
     }
 
-    private double getDistanceToAprilTag() {
-        double minDistance = Double.MAX_VALUE;
-        for (int i = 0; i < 10; i++) {
-            AprilTagDetection aprilTagDetection = this.robot.getCamera().getAprilTag(2);
-            if (aprilTagDetection != null) {
-                if (aprilTagDetection.ftcPose.y < minDistance) {
-                    minDistance = aprilTagDetection.ftcPose.y;
-                }
-            }
-        }
-        return minDistance;
+    private void peekRight() {
+        TrajectorySequenceBuilder builder = this.robot.getDrive()
+                .trajectorySequenceBuilder(initialPosition);
+        builder.forward(5);
+        builder.turn(Math.toRadians(-33));
+        this.robot.getDrive().followTrajectorySequence(builder.build());
+        setPropLocationIfVisible(Right, Left);
     }
 
     protected static int getExpectedAprilTagId(CenterStageCommon.PropLocation propLocation) {
