@@ -34,11 +34,13 @@ public abstract class AutoBase extends LinearOpMode {
     protected final Pose2d initialPosition;
     protected final CenterStageCommon.Alliance alliance;
     protected final Pose2d rendezvous;
+    protected final Pose2d park;
 
-    protected AutoBase(CenterStageCommon.Alliance alliance, Pose2d initialPosition, Pose2d rendezvous) {
+    protected AutoBase(CenterStageCommon.Alliance alliance, Pose2d initialPosition, Pose2d rendezvous, Pose2d park) {
         this.alliance = alliance;
         this.initialPosition = initialPosition;
         this.rendezvous = rendezvous;
+        this.park = park;
     }
 
     @Override
@@ -86,8 +88,7 @@ public abstract class AutoBase extends LinearOpMode {
         moveToBackstage();
         prepareToScore();
         scorePreloadedPixel();
-
-        // TODO Tommy: Park
+        park();
     }
 
     private void dislodgePropAndPlacePixelLeft() {
@@ -102,8 +103,17 @@ public abstract class AutoBase extends LinearOpMode {
         this.sleep(100);
         this.robot.getClaw().setArmPosition(PICKUP_ARM_MAX);
     }
-
-
+    private void dislodgePropAndPlacePixelCenter() {
+        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+        builder.lineToConstantHeading(rendezvous.vec());
+        builder.addDisplacementMarker(10, () -> {
+            this.robot.getClaw().setArmPosition(PICKUP_ARM_MIN);
+        });
+        this.robot.getDrive().followTrajectorySequence(builder.build());
+        this.robot.getClaw().openSync();
+        this.sleep(100);
+        this.robot.getClaw().setArmPosition(PICKUP_ARM_MAX);
+    }
     private void dislodgePropAndPlacePixelRight() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.lineToLinearHeading(new Pose2d(-54, 17, Math.toRadians(-123)));
@@ -166,17 +176,6 @@ public abstract class AutoBase extends LinearOpMode {
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 
-    private void dislodgePropAndPlacePixelCenter() {
-        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-        builder.lineToConstantHeading(rendezvous.vec());
-        builder.addDisplacementMarker(10, () -> {
-            this.robot.getClaw().setArmPosition(PICKUP_ARM_MIN);
-        });
-        this.robot.getDrive().followTrajectorySequence(builder.build());
-        this.robot.getClaw().openSync();
-        this.sleep(100);
-        this.robot.getClaw().setArmPosition(PICKUP_ARM_MAX);
-    }
 
     private void determinePropLocation() {
         setPropLocationIfVisible(Center, Unknown);
@@ -208,5 +207,13 @@ public abstract class AutoBase extends LinearOpMode {
         } else {
             this.propLocation = ifNotVisible;
         }
+    }
+
+    public void park() {
+        double currentX = this.robot.getDrive().getPoseEstimate().getX();
+        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+        builder.strafeTo(new Vector2d(currentX, park.getY()));
+        builder.lineToConstantHeading(park.vec());
+        this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 }
