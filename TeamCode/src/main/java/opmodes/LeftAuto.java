@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 public class LeftAuto extends AutoBase {
     public LeftAuto() {
         super(
-                CenterStageCommon.Alliance.Red,
+                CenterStageCommon.Alliance.Blue,
                 new Pose2d(-36, 63, Math.toRadians(-90)),
                 new Vector2d(-36, 11));
     }

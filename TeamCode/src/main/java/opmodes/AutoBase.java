@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.vision.Detection;
 @Config
 public abstract class AutoBase extends LinearOpMode {
     public static int DEPOSIT_HEIGHT = 100;
-    public static int SCORING_DURATION_MS =  5000;
+    public static double SCORING_DURATION_S =  5f;
     protected Robot robot;
     protected FtcDashboard dashboard;
     protected Telemetry dashboardTelemetry;
@@ -56,14 +56,14 @@ public abstract class AutoBase extends LinearOpMode {
         switch (this.propLocation) {
             case Left:
                 // TODO Tommy: Place the pixel on the left tape and move to rendezvous position
-                break;
+                return;
             case Unknown:
             case Center:
                 dislodgePropAndPlacePixel();
                 break;
             case Right:
                 // TODO Tommy: Place the pixel on the right tape and move to rendezvous position
-                break;
+                return;
         }
 
         moveToBackstage();
@@ -77,12 +77,18 @@ public abstract class AutoBase extends LinearOpMode {
         this.robot.getGantry().setSlideTarget(DEPOSIT_HEIGHT);
         this.robot.getGantry().armOut();
         while(this.robot.getGantry().isIn()) {
-            this.robot.getGantry().update();
+            this.robot.update();
             sleep(20);
         }
         this.robot.getGantry().deposit();
-        this.sleep(SCORING_DURATION_MS);
+        double startTime = this.getRuntime();
+        while (this.getRuntime() < (startTime + SCORING_DURATION_S)) {
+            this.robot.update();
+        }
         this.robot.getGantry().stop();
+        this.robot.getGantry().setSlideTarget(0);
+        this.robot.getGantry().armInSync();
+
     }
 
     private void prepareToScore() {
@@ -94,6 +100,7 @@ public abstract class AutoBase extends LinearOpMode {
 
     private void moveToBackstage() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+        builder.turn(Math.toRadians(90));
         builder.lineToLinearHeading(new Pose2d(36, 11, 0));
         builder.lineToLinearHeading(new Pose2d(36, 38, 0));
         this.robot.getDrive().followTrajectorySequence(builder.build());
