@@ -33,18 +33,18 @@ import java.util.List;
  *
  */
 public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
-    public static double TICKS_PER_REV = 8192;
-    public static double WHEEL_RADIUS = 0.6889764; // in
+    public static double TICKS_PER_REV = 2000;
+    public static double WHEEL_RADIUS = 0.944882; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double PARALLEL_X = -4.48818897638; // X is the up and down direction
-    public static double PARALLEL_Y = 3.10679133858; // Y is the strafe direction
+    public static double PARALLEL_X = -1.5; // X is the up and down direction
+    public static double PARALLEL_Y = 7.25; // Y is the strafe direction
 
-    public static double PERPENDICULAR_X = 2.21801181102;
+    public static double PERPENDICULAR_X = -6.1;
     public static double PERPENDICULAR_Y = 0;
 
-    public static double MULTIPLIER_X = 1.4;
-    public static double MULTIPLIER_Y = 1.4;
+    public static double MULTIPLIER_X = 1.0;
+    public static double MULTIPLIER_Y = 1.0;
 
     // Parallel/Perpendicular to the forward axis
     // Parallel wheel is parallel to the forward axis
@@ -61,12 +61,12 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
         this.drive = drive;
 
-//        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "parallel"));
+        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "backLeft"));
 //        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "backRight"));
-//        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "perpendicular"));
+        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "Intake Motor"));
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
-//        perpendicularEncoder.setDirection(Encoder.Direction.REVERSE);
+        perpendicularEncoder.setDirection(Encoder.Direction.REVERSE);
 //        parallelEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 

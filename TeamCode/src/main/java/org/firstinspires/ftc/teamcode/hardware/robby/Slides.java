@@ -18,33 +18,28 @@ public class Slides {
     public static double pTolerance = 20;
     public static PIDController controller = new PIDController(p, i, d);
 
-    public static int[] heights = {0, (int)(190/4.0), 2*(int)(190/4.0), 3*(int)(190/4.0), 4*(int)(180/4)};
-
-    public static int heightOffset = 0;
     public static int targetMin = -10;
-    public static int targetMax = 770;
+    public static int targetMax = 1000;
 
-    public static int highPos = 720 + heightOffset; // ALSO DEFINED IN UPDATE SLIDES
-    public static int midPos = 350 + heightOffset; // ALSO DEFINED IN UPDATE SLIDES
-    public static int lowPos = heightOffset; // ALSO DEFINED IN UPDATE SLIDES
-    public static int pickupPos = 220 + heightOffset; // ALSO DEFINED IN UPDATE SLIDES
-    public static int downPos = heightOffset;
+    public static int down = 0;
+    public static int tier1 = 200;
+    public static int tier2 = 350;
+    public static int tier3 = 500;
 
     private int target = 0;
 
     public static int manualSpeed = 20;
-    public static int zeroPower = 5;
 
-    public enum Position { HIGH, MEDIUM, LOW, PICKUP, DOWN }
+    public enum Position { DOWN, TIER1, TIER2, TIER3 }
 
     public Slides(HardwareMap hardwareMap) {
-        slide = hardwareMap.get(DcMotor.class, "slide");
+        slide = hardwareMap.get(DcMotor.class, "Right Slide Motor");
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        slide.setDirection(DcMotorSimple.Direction.REVERSE);
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        slide2 = hardwareMap.get(DcMotor.class, "slide2");
+        slide2 = hardwareMap.get(DcMotor.class, "Left Slide Motor");
         slide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slide2.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -56,16 +51,14 @@ public class Slides {
     }
 
     public void setTarget(Position pos) {
-        if (pos == Position.HIGH) {
-            target = Math.min(Math.max(highPos, targetMin), targetMax);
-        } else if (pos == Position.MEDIUM) {
-            target = Math.min(Math.max(midPos, targetMin), targetMax);
-        } else if (pos == Position.LOW) {
-            target = Math.min(Math.max(lowPos, targetMin), targetMax);
-        } else if (pos == Position.PICKUP) {
-            target = Math.min(Math.max(pickupPos, targetMin), targetMax);
-        } else if (pos == Position.DOWN) {
-            target = Math.min(Math.max(downPos, targetMin), targetMax);
+        if (pos == Position.DOWN) {
+            target = Math.min(Math.max(down, targetMin), targetMax);
+        } else if (pos == Position.TIER1) {
+            target = Math.min(Math.max(tier1, targetMin), targetMax);
+        } else if (pos == Position.TIER2) {
+            target = Math.min(Math.max(tier2, targetMin), targetMax);
+        } else if (pos == Position.TIER3) {
+            target = Math.min(Math.max(tier3, targetMin), targetMax);
         }
     }
 
@@ -121,6 +114,6 @@ public class Slides {
     }
 
     public String getTelemetry() {
-        return String.format("Position: %s %s\nTarget: %s %s\nPower: %s %s\nHeightOffset: %s", slide.getCurrentPosition(), slide2.getCurrentPosition(), target, target, slide.getPower(), slide2.getPower(), heightOffset);
+        return String.format("Position: %s %s\nTarget: %s %s\nPower: %s %s\nHeightOffset: %s", slide.getCurrentPosition(), slide2.getCurrentPosition(), target, target, slide.getPower(), slide2.getPower());
     }
 }

@@ -21,8 +21,8 @@ public class Arm {
     private double ARM_KP = 0.001;
 
 
-    public enum APosition {
-        SDOWN, SCORE, SAFTEYDOWN, SAFTEYUP;
+    public enum Position {
+        INTAKE, SCORE;
     }
 
     public Arm(HardwareMap hardwareMap) {
@@ -34,17 +34,36 @@ public class Arm {
         rAServo.setDirection(Servo.Direction.REVERSE);
         dServo.setDirection(Servo.Direction.REVERSE);
 //        wristServo.setDirection(Servo.Direction.REVERSE);
+
+        setArmPos(Position.INTAKE);
+        setWristPos(Position.INTAKE);
     }
 
-    public static double armScorePos = 1;
     public static double doorOpenpos = 0.5;
     public static double doorClosePos = 0.85;
-    public static double startingWristPos = 0.735;
-    public static double startingArmPos = 0.325;
-    public static double safteyDownPos = 0.4;
-    public static double safteyUpPos = 0.9;
-    public static double wristScorePos = 0.98;
-    public static double safeWrist = 0.8;
+
+    public static double armStart = 0.325;
+    public static double armScore = 1;
+    public static double wristStart = 0.735;
+    public static double wristScore = 0.98;
+
+    public void setArmPos(Position pos) {
+       if (pos == Position.INTAKE) {
+           rAServo.setPosition(armStart);
+           lAServo.setPosition(armStart);
+       } else if (pos == Position.SCORE) {
+           rAServo.setPosition(armScore);
+           lAServo.setPosition(armScore);
+       }
+    }
+
+    public void setWristPos(Position pos) {
+        if (pos == Position.INTAKE) {
+            wristServo.setPosition(wristStart);
+        } else if (pos == Position.SCORE) {
+            wristServo.setPosition(wristScore);
+        }
+    }
 
     public void openDoor(DoorPos.DoorPosition pos) {
         if (pos == DoorPos.DoorPosition.OPEN) {
@@ -54,48 +73,10 @@ public class Arm {
         }
     }
 
-    public void setPos(APosition tape) {
-        if (tape == APosition.SDOWN) {
-            this.armControllerTarget = startingArmPos;
-            lAServo.setPosition(startingArmPos);
-            rAServo.setPosition(startingArmPos);
-            wristServo.setPosition(startingWristPos);
-        } else if (tape == APosition.SCORE) {
-            this.armControllerTarget = armScorePos;
-            lAServo.setPosition(armScorePos);
-            rAServo.setPosition(armScorePos);
-            wristServo.setPosition(wristScorePos);
-        } else if (tape == APosition.SAFTEYDOWN) {
-            lAServo.setPosition(safteyDownPos);
-            rAServo.setPosition(safteyDownPos);
-            wristServo.setPosition(wristScorePos);
-        } else if (tape == APosition.SAFTEYUP) {
-            lAServo.setPosition(safteyUpPos);
-            rAServo.setPosition(safteyUpPos);
-            wristServo.setPosition(wristScorePos);
-        }
-    }
-
-
-//    public void setHopper(HopperPos.hopperPos hopper) {
-//        if (hopper == HopperPos.hopperPos.UP) {
-//                wristServo.setPosition(wristScorePos);
-//        } else if (hopper == HopperPos.hopperPos.DOWN) {
-//            wristServo.setPosition(startingWristPos);
-//        }
-//    }
-
     public String getTelemetry() {
         return "Wrist Servo: "+wristServo.getPosition()+"Left Arm Servo: "+lAServo.getPosition()+"Right Arm Servo: "+rAServo.getPosition()+"Door Servo: "+dServo.getPosition();
     }
 
     public void update() {
-        armController.setP(0.01);
-        this.armController.setSetPoint(this.armControllerTarget);
-
-        double output = this.armController.calculate(this.lAServo.getPosition());
-
-        this.lAServo.setPosition(this.lAServo.getPosition() + output);
-        this.rAServo.setPosition(this.rAServo.getPosition() + output);
     }
 }

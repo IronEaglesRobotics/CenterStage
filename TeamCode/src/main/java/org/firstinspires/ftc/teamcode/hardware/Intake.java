@@ -11,6 +11,7 @@ public class Intake {
     private Servo lServo;
     private DcMotor dcMotor;
     private Position pos = Position.UP;
+
     public enum Position {
         STACK1, STACK2, STACK3, STACK4, STACK5, UP;
 
@@ -61,6 +62,14 @@ public class Intake {
             lServo.setPosition(up);
             rServo.setPosition(up);
         }
+    }
+
+    public void incrementPos() {
+        pos = pos.nextPosition();
+    }
+
+    public void decrementPos() {
+        pos = pos.previousPosition();
     }
 
     public void setDcMotor(double pwr) {
