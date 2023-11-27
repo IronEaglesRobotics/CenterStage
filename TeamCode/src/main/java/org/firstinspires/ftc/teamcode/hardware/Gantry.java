@@ -82,8 +82,22 @@ public class Gantry {
         this.armControllerTarget = GANTRY_ARM_MAX;
     }
 
+    public void armOutSync() {
+        this.armOut();
+        while (this.armServo.getPosition() < this.armControllerTarget - 0.001) {
+            this.update();
+        }
+    }
+
     public void armIn() {
         this.armControllerTarget = GANTRY_ARM_MIN;
+    }
+
+    public void armInSync() {
+        this.armIn();
+        while (this.armServo.getPosition() > this.armControllerTarget + 0.001) {
+            this.update();
+        }
     }
 
     public void intake() {

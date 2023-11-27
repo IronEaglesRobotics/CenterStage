@@ -41,7 +41,7 @@ public class RobotConfig {
     public static double GANTRY_ARM_MIN = 0.435;
     public static double GANTRY_ARM_MAX = 0.94;
     public static int GANTRY_LIFT_DELTA = 50;
-    public static double GANTRY_ARM_KP = 0.06;
+    public static double GANTRY_ARM_KP = 0.1;
     public static double X_KP = 0.1;
     public static double X_MAX = 0.84;
     public static double X_MIN = 0.16;
@@ -66,5 +66,5 @@ public class RobotConfig {
     public static double DETECTION_LEFT_X = 0;
     public static double DETECTION_CENTER_X = .5;
     public static double DETECTION_RIGHT_X = 1;
-    public static double SCORING_DISTANCE_FROM_APRIL_TAG = 6.5;
+    public static double SCORING_DISTANCE_FROM_APRIL_TAG = 6f;
 }

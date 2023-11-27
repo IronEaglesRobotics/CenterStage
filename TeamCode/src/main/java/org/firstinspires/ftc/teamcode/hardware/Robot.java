@@ -54,6 +54,7 @@ public class Robot {
     }
 
     public TrajectorySequenceBuilder getTrajectorySequenceBuilder() {
+        this.drive.update();
         return this.drive.trajectorySequenceBuilder(this.drive.getPoseEstimate());
     }
 
