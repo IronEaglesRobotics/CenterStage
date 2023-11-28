@@ -54,6 +54,7 @@ public class Robot {
         this.claw = new Claw(hardwareMap, telemetry);
         this.lift = new RobotLift(hardwareMap, telemetry);
         this.camera = new Camera(hardwareMap, telemetry);
+        this.drone = new Drone(hardwareMap);
     }
 
     public TrajectorySequenceBuilder getTrajectorySequenceBuilder() {
