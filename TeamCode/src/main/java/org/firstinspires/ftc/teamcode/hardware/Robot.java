@@ -29,6 +29,9 @@ public class Robot {
     private Camera camera;
 
     @Getter
+    private Drone drone;
+
+    @Getter
     CenterStageCommon.Alliance alliance;
 
     private final Telemetry telemetry;
@@ -68,7 +71,6 @@ public class Robot {
         this.lift.update();
         this.drive.update();
         this.claw.update();
-
         this.telemetry.update();
     }
 }

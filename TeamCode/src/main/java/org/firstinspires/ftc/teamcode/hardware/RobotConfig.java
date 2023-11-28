@@ -16,6 +16,7 @@ public class RobotConfig {
     public static final String GANTRY_X_NAME = "gantry_x";
     public static final String GANTRY_ARM_NAME = "gantryArm";
     public static final String GANTRY_SCREW_NAME = "screw";
+    public static final String DRONE_ROTATION_UP_NAME = "droneUp";
     public static final String ROBOT_LIFT_ROTATION_NAME = "liftRotation";
     public static final String ROBOT_LIFT_LIFT_NAME = "liftLift";
     public static final String WEBCAM_NAME = "webcam";
@@ -38,8 +39,8 @@ public class RobotConfig {
     public static double CLAW_KP = 0.3;
 
     // Gantry
-    public static double GANTRY_ARM_MIN = 0.435;
-    public static double GANTRY_ARM_MAX = 0.94;
+    public static double GANTRY_ARM_MIN = 0.42;
+    public static double GANTRY_ARM_MAX = 0.96;
     public static int GANTRY_LIFT_DELTA = 50;
     public static double GANTRY_ARM_KP = 0.1;
     public static double X_KP = 0.1;
@@ -50,6 +51,8 @@ public class RobotConfig {
     public static int SLIDE_UP = 820;
     public static double SLIDE_POWER = 0.5;
 
+    // Robot Drone Launch
+    public static double DRONE_ROTATION_UP = 0.2;
 
     // Robot Lift
     public static double LIFT_ROTATION_UP = 0.4;

@@ -49,6 +49,9 @@ public class MainTeleOp extends OpMode {
         boolean clawDownSafe = gamepad2.dpad_down; // dpad-down
         boolean clawDown = gamepad2.a || clawDownSafe; // A
 
+        // Robot Drone Launch
+        boolean robotDroneLaunch = gamepad1.right_bumper; // Change if Merck wants (RT)
+
         // Robot Lift
         boolean robotLiftRotation = gamepad2.right_trigger > 0.05; // RT
         boolean robotLiftExtend = gamepad2.right_trigger > 0.5; // RT
@@ -114,6 +117,11 @@ public class MainTeleOp extends OpMode {
         gantryXPosition = Math.max(X_MIN, Math.min(gantryXPosition, X_MAX));
         this.robot.getGantry().setX(gantryXPosition);
 
+        // Robot Drone
+
+        if (robotDroneLaunch) {
+            this.robot.getDrone().raise();
+        }
         // Robot Lift
 
         if (robotLiftRotation || this.liftArmShouldBeUp) {

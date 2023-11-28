@@ -20,6 +20,7 @@ public class RedFrontStage extends AutoBase {
                 new Pose2d(-12, 62));
     }
 
+    // propLeft will be a reverse of BlueFrontpropRight
     protected void propLeft() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.lineToLinearHeading(new Pose2d(-54, -17, Math.toRadians(123)));
@@ -50,6 +51,7 @@ public class RedFrontStage extends AutoBase {
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 
+    // propRight will be the reverse of BlueFrontpropRight
     protected void propRight() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.lineToLinearHeading(new Pose2d(-52, -31, Math.toRadians(-180)));
@@ -60,5 +62,9 @@ public class RedFrontStage extends AutoBase {
         this.robot.getDrive().followTrajectorySequence(builder.build());
 
         openAndLiftClaw();
+
+        builder = this.robot.getTrajectorySequenceBuilder();
+        builder.lineToLinearHeading(this.rendezvous);
+        this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 }
