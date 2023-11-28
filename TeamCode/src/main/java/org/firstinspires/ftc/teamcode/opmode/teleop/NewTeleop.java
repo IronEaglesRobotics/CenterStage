@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+import static org.firstinspires.ftc.teamcode.hardware.DoorPos.DoorPosition.CLOSE;
+import static org.firstinspires.ftc.teamcode.hardware.DoorPos.DoorPosition.OPEN;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.controller.Controller;
 import org.firstinspires.ftc.teamcode.hardware.Intake;
@@ -63,7 +65,7 @@ public class NewTeleop extends OpMode {
 
         // macros
         switch (robot.runningMacro) {
-            case(0): // manual mode
+            case (0): // manual mode
                 robot.slides.increaseTarget(controller2.getLeftStick().getY());
                 if (controller2.getX().isJustPressed()) {
                     robot.runningMacro = 1;
@@ -74,17 +76,22 @@ public class NewTeleop extends OpMode {
                 } else if (controller2.getA().isJustPressed()) {
                     robot.runningMacro = 4;
                 }
+                if (robot.intake.getPower() >= 0.01) {
+                    robot.arm.setDoor(OPEN);
+                } else {
+                    robot.arm.setDoor(CLOSE);
+                }
                 break;
-            case(1):
+            case (1):
                 robot.extendMacro(Slides.Position.TIER1, getRuntime());
                 break;
-            case(2):
+            case (2):
                 robot.extendMacro(Slides.Position.TIER2, getRuntime());
                 break;
-            case(3):
+            case (3):
                 robot.extendMacro(Slides.Position.TIER3, getRuntime());
                 break;
-            case(4):
+            case (4):
                 robot.resetMacro(Slides.Position.DOWN, getRuntime());
                 break;
         }

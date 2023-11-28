@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.UP;
+import static org.firstinspires.ftc.teamcode.hardware.DoorPos.DoorPosition.CLOSE;
+import static org.firstinspires.ftc.teamcode.hardware.DoorPos.DoorPosition.OPEN;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -41,6 +43,7 @@ public class Robot {
             case(0):
                 macroStartTime = runTime;
                 slides.setTarget(slidePos);
+                arm.setDoor(CLOSE);
                 macroState ++;
                 break;
             case(1):
@@ -63,16 +66,27 @@ public class Robot {
         switch(macroState) {
             case(0):
                 macroStartTime = runTime;
-                arm.setArmPos(Arm.Position.INTAKE);
-                arm.setWristPos(Arm.Position.INTAKE);
+                arm.setDoor(OPEN);
                 macroState++;
                 break;
+                //Ind_sleeper
             case(1):
-                if (runTime > macroStartTime + 1) {
+                if (runTime > macroStartTime + 2) {
                     macroState ++;
                 }
                 break;
             case(2):
+                macroStartTime = runTime;
+                arm.setArmPos(Arm.Position.INTAKE);
+                arm.setWristPos(Arm.Position.INTAKE);
+                macroState++;
+                break;
+            case(3):
+                if (runTime > macroStartTime + 1.1) {
+                    macroState ++;
+                }
+                break;
+            case(4):
                 macroStartTime = runTime;
                 slides.setTarget(pos);
                 macroState = 0;

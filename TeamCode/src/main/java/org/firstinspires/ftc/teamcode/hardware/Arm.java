@@ -65,7 +65,7 @@ public class Arm {
         }
     }
 
-    public void openDoor(DoorPos.DoorPosition pos) {
+    public void setDoor(DoorPos.DoorPosition pos) {
         if (pos == DoorPos.DoorPosition.OPEN) {
             dServo.setPosition(doorOpenpos);
         } else if (pos == DoorPos.DoorPosition.CLOSE) {

@@ -76,6 +76,10 @@ public class Intake {
         dcMotor.setPower(pwr);
     }
 
+    public double getPower() {
+        return dcMotor.getPower();
+    }
+
     public String getTelemetry() {
         return "lServo: "+lServo.getPosition()+"rServo: "+rServo.getPosition()+"dcMotor: "+dcMotor.getPower();
     }

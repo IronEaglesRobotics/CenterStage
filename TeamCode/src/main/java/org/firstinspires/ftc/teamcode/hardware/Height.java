@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-public class Hieght {
+public class Height {
     public enum height {
         ASCEND, HOLD, DESCEND, RESET
     }
