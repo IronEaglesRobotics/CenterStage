@@ -50,7 +50,7 @@ public class MainTeleOp extends OpMode {
         boolean clawDown = gamepad2.a || clawDownSafe; // A
 
         // Robot Drone Launch
-        boolean robotDroneLaunch = gamepad1.right_bumper; // Change if Merck wants (RT)
+        boolean robotDroneLaunch = gamepad1.left_bumper; // Change if Merck wants (LT)
 
         // Robot Lift
         boolean robotLiftRotation = gamepad2.right_trigger > 0.05; // RT
@@ -121,6 +121,8 @@ public class MainTeleOp extends OpMode {
 
         if (robotDroneLaunch) {
             this.robot.getDrone().raise();
+        } else {
+            this.robot.getDrone().reset();
         }
         // Robot Lift
 

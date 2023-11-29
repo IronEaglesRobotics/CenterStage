@@ -16,7 +16,7 @@ public class RobotConfig {
     public static final String GANTRY_X_NAME = "gantry_x";
     public static final String GANTRY_ARM_NAME = "gantryArm";
     public static final String GANTRY_SCREW_NAME = "screw";
-    public static final String DRONE_ROTATION_UP_NAME = "droneUp";
+    public static final String DRONE_ROTATION_UP_NAME = "droneLaunch";
     public static final String ROBOT_LIFT_ROTATION_NAME = "liftRotation";
     public static final String ROBOT_LIFT_LIFT_NAME = "liftLift";
     public static final String WEBCAM_NAME = "webcam";
@@ -53,6 +53,8 @@ public class RobotConfig {
 
     // Robot Drone Launch
     public static double DRONE_ROTATION_UP = 0.2;
+    public static double DRONE_LAUNCH_POS = 0.3;
+    public static double DRONE_STOW_POS = 0.2;
 
     // Robot Lift
     public static double LIFT_ROTATION_UP = 0.4;
