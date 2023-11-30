@@ -38,29 +38,24 @@ public class BlueRightAuto_Drivepathonly_ extends LinearOpMode {
                 .lineToLinearHeading(dropMiddle)
                 .build();
 
-        Trajectory stack= drive.trajectoryBuilder(dropMiddle)
+        Trajectory mid_drop = drive.trajectoryBuilder(dropMiddle)
+                .lineToLinearHeading(nine)
+                .build();
+        Trajectory stack = drive.trajectoryBuilder(nine)
                 .lineToLinearHeading(stack1)
                 .build();
-
-
-        Trajectory back_to_mid= drive.trajectoryBuilder(stack1)
+        Trajectory back_to_mid = drive.trajectoryBuilder(start)
                 .lineToLinearHeading(dropMiddle2)
                 .build();
-
-        Trajectory front_gate= drive.trajectoryBuilder(dropMiddle2)
+        Trajectory front_gate = drive.trajectoryBuilder(dropMiddle2)
                 .lineToLinearHeading(bmid)
                 .build();
-
-        Trajectory front_gate_pt_2= drive.trajectoryBuilder(bmid)
-                .lineToLinearHeading(bmid2)
-                .build();
-
-        Trajectory about_to_score= drive.trajectoryBuilder(bmid2)
-
-
+        Trajectory front_gate_pt_2 = drive.trajectoryBuilder(bmid2)
                 .lineToLinearHeading(alimb)
                 .build();
-
+        Trajectory about_to_score = drive.trajectoryBuilder(alimb)
+                .lineToLinearHeading(score)
+                .build();
 // the scorePurple. should be whatever the start pose2d thing was
         Trajectory scoreYellow = drive.trajectoryBuilder(scorePurple.end())
                 .lineToLinearHeading(score)
@@ -71,6 +66,7 @@ public class BlueRightAuto_Drivepathonly_ extends LinearOpMode {
         if(isStopRequested()) return;
 //      add this per trajectories
         drive.followTrajectory(scorePurple);
+        drive.followTrajectory(mid_drop);
         drive.followTrajectory(stack);
         drive.followTrajectory(back_to_mid);
         drive.followTrajectory(front_gate);
