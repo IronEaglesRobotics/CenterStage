@@ -16,16 +16,17 @@ public class BlueRightAuto_Drivepathonly_ extends LinearOpMode {
         Pose2d start = new Pose2d(-24, 61.5, Math.toRadians(-90));
 
 //        Pose2d dropLeft = new Pose2d(24, 60, Math.toRadians(-90));
-        Pose2d dropMiddle = new Pose2d(-24, 40.5, Math.toRadians(-180));
-//        Pose2d dropRight = new Pose2d(24, 60, Math.toRadians(-90));
+        Pose2d dropMiddle = new Pose2d(-36, 40.5, Math.toRadians(-90));
+//
+        Pose2d nine = new Pose2d(-36, 40.5, Math.toRadians(-180));
 
         Pose2d stack1 = new Pose2d(-68, 40.5, Math.toRadians(-180));
 
-        Pose2d dropMiddle2 = new Pose2d(-24, 40.5, Math.toRadians(-180));
+        Pose2d dropMiddle2 = new Pose2d(-36, 40.5, Math.toRadians(-180));
 
-        Pose2d bmid = new Pose2d(-24, 5, Math.toRadians(-180));
+        Pose2d bmid = new Pose2d(-36, 5, Math.toRadians(-180));
 
-        Pose2d bmid2 = new Pose2d(24, 5, Math.toRadians(-180));
+        Pose2d bmid2 = new Pose2d(36, 5, Math.toRadians(-180));
 
         Pose2d alimb = new Pose2d(60, 40.5, Math.toRadians(-180));
 
@@ -40,6 +41,7 @@ public class BlueRightAuto_Drivepathonly_ extends LinearOpMode {
         Trajectory stack= drive.trajectoryBuilder(dropMiddle)
                 .lineToLinearHeading(stack1)
                 .build();
+
 
         Trajectory back_to_mid= drive.trajectoryBuilder(stack1)
                 .lineToLinearHeading(dropMiddle2)

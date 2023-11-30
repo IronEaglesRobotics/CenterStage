@@ -42,9 +42,9 @@ public class Arm {
     public static double doorOpenpos = 0.5;
     public static double doorClosePos = 0.85;
 
-    public static double armStart = 0.325;
+    public static double armStart = 0.22;
     public static double armScore = 1;
-    public static double wristStart = 0.735;
+    public static double wristStart = 0.9;
     public static double wristScore = 0.98;
 
     public void setArmPos(Position pos) {
