@@ -74,7 +74,6 @@ public abstract class AutoBase extends LinearOpMode {
                 propRight();
                 break;
         }
-
         moveToBackstage();
         prepareToScore();
         scorePreloadedPixel();
@@ -129,7 +128,7 @@ public abstract class AutoBase extends LinearOpMode {
                 delta = APRIL_TAG_RIGHT_DELTA;
                 break;
         }
-        double distance = this.robot.getCamera().getDistanceToAprilTag(2, 25, 5);
+        double distance = this.robot.getCamera().getDistanceToAprilTag(this.alliance == CenterStageCommon.Alliance.Blue ? 2:5, 25, 5);
         Vector2d target = new Vector2d(this.robot.getDrive().getPoseEstimate().getX() + (distance - SCORING_DISTANCE_FROM_APRIL_TAG), this.robot.getDrive().getPoseEstimate().getY() + delta);
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.lineToConstantHeading(target);

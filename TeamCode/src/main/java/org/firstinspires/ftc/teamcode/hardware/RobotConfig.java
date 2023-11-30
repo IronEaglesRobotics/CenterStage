@@ -66,8 +66,8 @@ public class RobotConfig {
 
     // Vision
     public static double CAMERA_OFFSET_X = 0f;
-    public static double DETECTION_AREA_MIN = 0.02f;
-    public static double DETECTION_AREA_MAX = 0.3f;
+    public static double DETECTION_AREA_MIN = 0.01f;
+    public static double DETECTION_AREA_MAX = 0.2f;
     public static double DETECTION_LEFT_X = 0;
     public static double DETECTION_CENTER_X = .5;
     public static double DETECTION_RIGHT_X = 1;

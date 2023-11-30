@@ -18,8 +18,8 @@ import org.opencv.core.Point;
 
 @Config
 public class Camera {
-    public static float PROP_REJECTION_VERTICAL_UPPER = 175;
-    public static float PROP_REJECTION_VERTICAL_LOWER = 300;
+    public static float PROP_REJECTION_VERTICAL_UPPER = 250;
+    public static float PROP_REJECTION_VERTICAL_LOWER = 370;
     private PropDetectionPipeline prop;
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
