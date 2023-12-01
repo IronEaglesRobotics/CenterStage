@@ -74,6 +74,9 @@ public class Intake {
 
     public void setDcMotor(double pwr) {
         dcMotor.setPower(pwr);
+        if (pwr >= 0.01) {
+            this.setpos(this.pos);
+        }
     }
 
     public double getPower() {
