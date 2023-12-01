@@ -18,10 +18,10 @@ public class Configurables {
     public static double LOCKSPEED = .25;
     public static double UNLOCK = .6;
     public static double LOCK = 0.4;
-    public static double ARMREST = .88;
-    public static double ARMSCORE = 0.15;
-    public static double ARMACCSCORE = 0.02;
-    public static double PICKUP = .935;
+    public static double ARMREST = .91;
+    public static double ARMSCORE = 0.14    ;
+    public static double ARMACCSCORE = 0.04;
+    public static double PICKUP = 0.97;
     public static double WRISTPICKUP = 0.28;
     public static double WRISTSCORE = .96;
     public static double OPEN = 0.53;
@@ -34,6 +34,6 @@ public class Configurables {
     public static double SPEED = 1;
     public static double SLOWMODE_SPEED = 0.5;
     public static double TURN = 1;
-    public static double SLOWMODE_TURN = 0.5;
+    public static double SLOWMODE_TURN = 0.3;
 
 }

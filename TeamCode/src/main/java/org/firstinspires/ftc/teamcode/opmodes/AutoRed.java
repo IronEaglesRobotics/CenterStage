@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 
-@Autonomous(name = "ThisIsTheLongestFlippingOpModeNameEverLolIamSeahorse!")
-public class Auto extends LinearOpMode {
+@Autonomous(name = "autoRed")
+public class AutoRed extends LinearOpMode {
     protected Pose2d initialPosition;
 
     protected Trajectory preloadOne;
@@ -32,6 +32,12 @@ public class Auto extends LinearOpMode {
 
     protected Trajectory park1;
     protected Trajectory park2;
+
+    protected Trajectory goGate;
+    protected Trajectory goStack;
+    protected Trajectory backGate;
+    protected Trajectory approachBoard;
+    protected Trajectory scoreStack;
 
 
     private Robot robot;
@@ -58,13 +64,13 @@ public class Auto extends LinearOpMode {
                 .build();
 
         this.boardOne = this.robot.getDrive().trajectoryBuilder(scoreOne.end())
-                .lineToLinearHeading(new Pose2d(73, -28, Math.toRadians(360)))
+                .lineToLinearHeading(new Pose2d(72, -28, Math.toRadians(360)))
                 .addTemporalMarker(.2, robot.getArm()::armAccurateScore)
                 .addTemporalMarker(.2, robot.getWrist()::wristScore)
                 .build();
 
         this.backOffOne = this.robot.getDrive().trajectoryBuilder(boardOne.end())
-                .lineToLinearHeading(new Pose2d(60, -26, Math.toRadians(360)))
+                .lineToLinearHeading(new Pose2d(60, -45, Math.toRadians(360)))
                 .build();
 
 
@@ -74,13 +80,13 @@ public class Auto extends LinearOpMode {
                 .build();
 
         this.scoreTwo = this.robot.getDrive().trajectoryBuilder(preloadTwo.end())
-                .lineToLinearHeading(new Pose2d(73, -34.5, Math.toRadians(360)))
+                .lineToLinearHeading(new Pose2d(72, -33.3, Math.toRadians(360)))
                 .addTemporalMarker(.2, robot.getArm()::armAccurateScore)
                 .addTemporalMarker(.2, robot.getWrist()::wristScore)
                 .build();
 
         this.backOffTwo = this.robot.getDrive().trajectoryBuilder(scoreTwo.end())
-                .lineToLinearHeading(new Pose2d(60, -34, Math.toRadians(360)))
+                .lineToLinearHeading(new Pose2d(60, -35, Math.toRadians(360)))
                 .build();
 
         //Randomization Three
@@ -95,18 +101,36 @@ public class Auto extends LinearOpMode {
                 .build();
 
         this.backOffThree = this.robot.getDrive().trajectoryBuilder(scoreThree.end())
-                .lineToLinearHeading(new Pose2d(60, -40, Math.toRadians(360)))
+                .lineToLinearHeading(new Pose2d(60, -45, Math.toRadians(360)))
                 .build();
 
         //Park
         this.park1 = this.robot.getDrive().trajectoryBuilder(backOffTwo.end())
-                .lineToLinearHeading(new Pose2d(65, -10, Math.toRadians(360)))
+                .lineToLinearHeading(new Pose2d(65, -55, Math.toRadians(360)))
                 .addTemporalMarker(.3, robot.getArm()::armRest)
                 .addTemporalMarker(.3, robot.getWrist()::wristPickup)
                 .build();
         this.park2 = this.robot.getDrive().trajectoryBuilder(park1.end())
-                .lineToLinearHeading(new Pose2d(80, -10, Math.toRadians(360)))
+                .lineToLinearHeading(new Pose2d(80, -57, Math.toRadians(360)))
                 .build();
+
+//        //Cycle
+//        this.goGate = this.robot.getDrive().trajectoryBuilder(park1.end())
+//                .lineToLinearHeading(new Pose2d(-37,-7, Math.toRadians(360)))
+//                .addTemporalMarker(.3, robot.getArm()::armRest)
+//                .addTemporalMarker(.3, robot.getWrist()::wristPickup)
+//                .build();
+//        this.backGate = this.robot.getDrive().trajectoryBuilder(goGate.end())
+//                .lineToLinearHeading(new Pose2d(50,-10, Math.toRadians(360)))
+//                .build();
+//        this.approachBoard = this.robot.getDrive().trajectoryBuilder(backGate.end())
+//                .lineToLinearHeading(new Pose2d(68, -28, Math.toRadians(360)))
+//                .addTemporalMarker(.2, robot.getArm()::armAccurateScore)
+//                .addTemporalMarker(.2, robot.getWrist()::wristScore)
+//                .build();
+//        this.scoreStack = this.robot.getDrive().trajectoryBuilder(approachBoard.end())
+//                .lineToLinearHeading(new Pose2d(72.5, -28, Math.toRadians(360)))
+//                .build();
 
         // Do super fancy chinese shit
         while (!this.isStarted()) {
@@ -120,34 +144,58 @@ public class Auto extends LinearOpMode {
                 this.robot.getDrive().followTrajectory(preloadOne);
                 this.robot.getDrive().followTrajectory(scoreOne);
                 this.robot.getDrive().followTrajectory(boardOne);
+                sleep(500);
                 this.robot.getClaw().open();
                 sleep(500);
                 this.robot.getDrive().followTrajectory(backOffOne);
-                sleep(500);
-                this.robot.getDrive().followTrajectory(park1);
-                this.robot.getDrive().followTrajectory(park2);
+                sleep(300);
                 break;
             case "CENTER":
                 this.robot.getDrive().followTrajectory(preloadTwo);
                 this.robot.getDrive().followTrajectory(scoreTwo);
+                sleep(500);
                 this.robot.getClaw().open();
                 sleep(500);
                 this.robot.getDrive().followTrajectory(backOffTwo);
-                sleep(500);
-                this.robot.getDrive().followTrajectory(park1);
-                this.robot.getDrive().followTrajectory(park2);
+                sleep(300);
                 break;
             case "RIGHT":
                 this.robot.getDrive().followTrajectory(preloadThree);
                 this.robot.getDrive().followTrajectory(scoreThree);
+                sleep(500);
                 this.robot.getClaw().open();
                 sleep(500);
                 this.robot.getDrive().followTrajectory(backOffThree);
-                sleep(500);
-                this.robot.getDrive().followTrajectory(park1);
-                this.robot.getDrive().followTrajectory(park2);
+                sleep(300);
                 break;
         }
+        //Cycle
+        this.robot.getDrive().followTrajectory(park1);
+        this.robot.getDrive().followTrajectory(park2);
+//        this.robot.getDrive().followTrajectory(goGate);
+//        sleep(120);
+//        this.robot.getClaw().close();
+//        sleep(120);
+//        this.robot.getDrive().followTrajectory(backGate);
+//        this.robot.getDrive().followTrajectory(approachBoard);
+//        sleep(120);
+//        this.robot.getClaw().open();
+//        sleep(120);
+//
+//        this.robot.getDrive().followTrajectory(park1);
+//        this.robot.getDrive().followTrajectory(goGate);
+//        sleep(120);
+//        this.robot.getClaw().close();
+//        sleep(120);
+//        this.robot.getDrive().followTrajectory(backGate);
+//        this.robot.getDrive().followTrajectory(approachBoard);
+//        sleep(120);
+//        this.robot.getClaw().open();
+//        sleep(120);
+//        this.robot.getDrive().followTrajectory(park1);
+//        this.robot.getDrive().followTrajectory(park2);
+
+
 
 
     }
