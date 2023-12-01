@@ -53,7 +53,7 @@ public abstract class AutoBase extends LinearOpMode {
             this.robot.update();
             this.sleep(20);
         }
-
+        this.sleep(5000);
         if (isStopRequested()) {
             return;
         }

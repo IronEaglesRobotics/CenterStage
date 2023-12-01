@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 
 @Autonomous(name = "RedFrontStage", preselectTeleOp = "MainTeleOp")
 public class RedFrontStage extends AutoBase {
-    private final Pose2d rendezvous = new Pose2d(-36, -11);
+    private final Pose2d rendezvous = new Pose2d(-36, -10);
 
     public RedFrontStage() {
         super(
@@ -23,7 +23,7 @@ public class RedFrontStage extends AutoBase {
     // propLeft will be a reverse of BlueFrontpropRight
     protected void propLeft() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-        builder.lineToLinearHeading(new Pose2d(-54, -17, Math.toRadians(123)));
+        builder.lineToLinearHeading(new Pose2d(-58, -17, Math.toRadians(123)));
         builder.addDisplacementMarker(10, () -> {
             this.robot.getClaw().setArmPosition(PICKUP_ARM_MIN);
         });
