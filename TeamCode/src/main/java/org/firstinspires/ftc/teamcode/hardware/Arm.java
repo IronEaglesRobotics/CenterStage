@@ -35,6 +35,8 @@ public class Arm {
         dServo.setDirection(Servo.Direction.REVERSE);
 //        wristServo.setDirection(Servo.Direction.REVERSE);
 
+        this.armController = new PController(ARM_KP);
+
         setArmPos(Position.INTAKE);
         setWristPos(Position.INTAKE);
     }
@@ -48,13 +50,9 @@ public class Arm {
     public static double wristScore = 0.98;
 
     public void setArmPos(Position pos) {
-       if (pos == Position.INTAKE) {
-           rAServo.setPosition(armStart);
-           lAServo.setPosition(armStart);
-       } else if (pos == Position.SCORE) {
-           rAServo.setPosition(armScore);
-           lAServo.setPosition(armScore);
-       }
+        this.armControllerTarget = pos == Position.INTAKE
+                ? armStart
+                : armScore;
     }
 
     public void setWristPos(Position pos) {
@@ -78,5 +76,16 @@ public class Arm {
     }
 
     public void update() {
+        this.armController.setSetPoint(this.armControllerTarget);
+        this.armController.setTolerance(0.001);
+        this.armController.setP(ARM_KP);
+
+        double output = 0;
+        if (!this.armController.atSetPoint()) {
+            output = Math.max(-1 * armScore, Math.min(armScore, this.armController.calculate(lAServo.getPosition())));
+
+            this.lAServo.setPosition(this.lAServo.getPosition() + output);
+            this.rAServo.setPosition(this.lAServo.getPosition() + output);
+        }
     }
 }
