@@ -39,12 +39,12 @@ public class Arm {
         setWristPos(Position.INTAKE);
     }
 
-    public static double doorOpenpos = 0.5;
+    public static double doorOpenpos = 0.1;
     public static double doorClosePos = 0.85;
 
-    public static double armStart = 0.22;
+    public static double armStart = 0.15;
     public static double armScore = 1;
-    public static double wristStart = 0.9;
+    public static double wristStart = 0.93;
     public static double wristScore = 0.98;
 
     public void setArmPos(Position pos) {

@@ -71,7 +71,7 @@ public class Robot {
                 break;
                 //Ind_sleeper
             case(1):
-                if (runTime > macroStartTime + 2) {
+                if (runTime > macroStartTime + 1) {
                     macroState ++;
                 }
                 break;
