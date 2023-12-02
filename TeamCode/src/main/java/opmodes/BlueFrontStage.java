@@ -21,6 +21,7 @@ public class BlueFrontStage extends AutoBase {
     }
 
     protected void propLeft() {
+        this.sleep(5000);
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.lineToLinearHeading(new Pose2d(-52, 31, Math.toRadians(-180)));
         builder.lineToConstantHeading(new Vector2d(-42, 31));
@@ -36,6 +37,7 @@ public class BlueFrontStage extends AutoBase {
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
     protected void propCenter() {
+        this.sleep(5000);
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.lineToConstantHeading(rendezvous.vec());
         builder.addDisplacementMarker(10, () -> {
@@ -50,6 +52,7 @@ public class BlueFrontStage extends AutoBase {
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
     protected void propRight() {
+        this.sleep(5000);
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.lineToLinearHeading(new Pose2d(-54, 17, Math.toRadians(-123)));
         builder.addDisplacementMarker(10, () -> {

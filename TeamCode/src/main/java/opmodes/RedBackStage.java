@@ -48,8 +48,9 @@ public class RedBackStage extends AutoBase {
     }
 
     protected void propRight() {
+        // red back side
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-        builder.lineToLinearHeading(new Pose2d(36, 25, Math.toRadians(-33)));
+        builder.lineToLinearHeading(new Pose2d(36, -25, Math.toRadians(-33)));
         builder.addDisplacementMarker(10, () -> {
             this.robot.getClaw().setArmPosition(PICKUP_ARM_MIN);
         });

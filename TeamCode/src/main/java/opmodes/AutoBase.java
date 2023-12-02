@@ -26,6 +26,7 @@ public abstract class AutoBase extends LinearOpMode {
     public static double SCORING_DURATION_S =  5f;
     public static double APRIL_TAG_RIGHT_DELTA = -8.5;
     public static double APRIL_TAG_LEFT_DELTA = 7.0;
+    protected static double Delay = 5000;
 
     protected Robot robot;
     protected FtcDashboard dashboard;
@@ -34,6 +35,7 @@ public abstract class AutoBase extends LinearOpMode {
     protected final Pose2d initialPosition;
     protected final CenterStageCommon.Alliance alliance;
     protected final Pose2d park;
+
 
     protected AutoBase(CenterStageCommon.Alliance alliance, Pose2d initialPosition, Pose2d park) {
         this.alliance = alliance;
@@ -53,7 +55,6 @@ public abstract class AutoBase extends LinearOpMode {
             this.robot.update();
             this.sleep(20);
         }
-        this.sleep(5000);
         if (isStopRequested()) {
             return;
         }
