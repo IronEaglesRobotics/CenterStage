@@ -20,6 +20,7 @@ public class Robot {
     public Intake intake;
     public Slides slides;
     public Arm arm;
+    public DroneLauncher droneLauncher;
     public double macroStartTime = 0;
     public int macroState = 0;
     public int runningMacro = 0; // 0 = no macro | 1 = tier 1 | 2 = tier 2 | 3 = tier 3 | 4 = return
@@ -35,6 +36,7 @@ public class Robot {
         intake = new Intake(hardwareMap, UP);
         slides = new Slides(hardwareMap);
         arm = new Arm(hardwareMap);
+        droneLauncher = new DroneLauncher(hardwareMap);
         camEnabled = true;
     }
 

@@ -43,7 +43,7 @@ public class NewTeleop extends OpMode {
         double y = -gamepad1.left_stick_x;
         double z = -gamepad1.right_stick_x;
 
-        if (controller1.getA().isPressed()) {
+        if (controller1.getRightTrigger().getValue() > 0.1) {
             x *= turbo;
             y *= turbo;
             z *= turbo;
@@ -61,6 +61,13 @@ public class NewTeleop extends OpMode {
         }
         if (controller2.getLeftBumper().isJustPressed()) {
             robot.intake.decrementPos();
+        }
+
+        // Drone launcher
+        if (controller1.getA().isPressed()) {
+            this.robot.droneLauncher.launch();
+        } else {
+            this.robot.droneLauncher.reset();
         }
 
         // macros

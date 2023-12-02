@@ -55,4 +55,5 @@ public class Constants {
     public static final String IMU_SENSOR = "imu";
     public static final String lServo = "lServo";
     public static final String rServo = "rServo";
+    public static final String droneLauncher = "droneLauncher";
 }
