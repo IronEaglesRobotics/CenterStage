@@ -21,7 +21,7 @@ public class Intake {
         }
 
         public Position previousPosition() {
-            int backOne = (this.ordinal() - 1) % Position.values().length;
+            int backOne =Math.max(0,(this.ordinal() - 1) % Position.values().length);
             return Position.values()[backOne];
         }
     }
@@ -76,6 +76,9 @@ public class Intake {
         dcMotor.setPower(pwr);
         if (pwr >= 0.01) {
             this.setpos(this.pos);
+        }
+        else {
+            this.setpos(Position.UP);
         }
     }
 

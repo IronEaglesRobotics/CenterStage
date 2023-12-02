@@ -18,7 +18,7 @@ public class Arm {
     private Slides.Position pos = Slides.Position.DOWN;
     private PController armController;
     private double armControllerTarget;
-    private double ARM_KP = 0.001;
+    public static double ARM_KP = 0.01;
 
 
     public enum Position {
