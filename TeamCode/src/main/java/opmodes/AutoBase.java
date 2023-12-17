@@ -140,11 +140,11 @@ public abstract class AutoBase extends LinearOpMode {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
 
         if (this.alliance == CenterStageCommon.Alliance.Blue) {
-            builder.lineToLinearHeading(new Pose2d(36, 11, 0));
-            builder.lineToLinearHeading(new Pose2d(36, 38, 0));
+            builder.lineToLinearHeading(new Pose2d(35, 11, 0));
+            builder.lineToLinearHeading(new Pose2d(35, 38, 0));
         } else {
-            builder.lineToLinearHeading(new Pose2d(36, -11, 0));
-            builder.lineToLinearHeading(new Pose2d(36, -38, 0));
+            builder.lineToLinearHeading(new Pose2d(35, -11, 0));
+            builder.lineToLinearHeading(new Pose2d(35, -36, 0));
         }
 
         this.robot.getDrive().followTrajectorySequence(builder.build());

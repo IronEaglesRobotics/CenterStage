@@ -17,7 +17,7 @@ public class RedFrontStage extends AutoBase {
         super(
                 CenterStageCommon.Alliance.Red,
                 new Pose2d(-36, -63, Math.toRadians(90)),
-                new Pose2d(62, -12));
+                new Pose2d(61, -12));
     }
 
     // propLeft will be a reverse of BlueFrontpropRight

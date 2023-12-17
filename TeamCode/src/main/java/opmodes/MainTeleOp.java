@@ -8,10 +8,12 @@ import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.X_MAX;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.X_MIN;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
+import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 @TeleOp(name = "MainTeleOp", group = "Main")
 public class MainTeleOp extends OpMode {
@@ -50,7 +52,7 @@ public class MainTeleOp extends OpMode {
         boolean clawDown = gamepad2.a || clawDownSafe; // A
 
         // Robot Drone Launch
-        boolean robotDroneLaunch = gamepad1.left_bumper; // Change if Merck wants (LT)
+        boolean robotDroneLaunch = gamepad1.left_bumper && gamepad1.right_bumper; // Change if Merck wants (LT)
 
         // Robot Lift
         boolean robotLiftRotation = gamepad2.right_trigger > 0.05; // RT

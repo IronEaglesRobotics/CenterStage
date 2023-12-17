@@ -101,7 +101,7 @@ public class Gantry {
     }
 
     public void intake() {
-        this.screwServo.setPower(-1);
+        this.screwServo.setPower(1);
     }
 
     public void deposit() {
