@@ -1,15 +1,13 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.UP;
-import static org.firstinspires.ftc.teamcode.hardware.DoorPos.DoorPosition.CLOSE;
-import static org.firstinspires.ftc.teamcode.hardware.DoorPos.DoorPosition.OPEN;
+import static org.firstinspires.ftc.teamcode.hardware.Arm.DoorPosition.CLOSE;
+import static org.firstinspires.ftc.teamcode.hardware.Arm.DoorPosition.OPEN;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.hardware.robby.Slides;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.roadrunner.util.Encoder;
 
 @Config
 public class Robot {
@@ -21,12 +19,17 @@ public class Robot {
     public Slides slides;
     public Arm arm;
     public DroneLauncher droneLauncher;
+
     public double macroStartTime = 0;
     public int macroState = 0;
     public int runningMacro = 0; // 0 = no macro | 1 = tier 1 | 2 = tier 2 | 3 = tier 3 | 4 = return
     public int lastMacro = 0;
 
     private boolean camEnabled = true;
+
+    public static double slideWait = 1.5;
+    public static double scoreWait = 1.25;
+    public static double armWait = 2.0;
 
     //Name the objects
     public Robot(HardwareMap hardwareMap) {
@@ -49,12 +52,11 @@ public class Robot {
                 macroState ++;
                 break;
             case(1):
-                if (runTime > macroStartTime + 1) {
+                if (runTime > macroStartTime + slideWait || slides.atTarget()) {
                     macroState ++;
                 }
                 break;
             case(2):
-                macroStartTime = runTime;
                 arm.setArmPos(Arm.Position.SCORE);
                 arm.setWristPos(Arm.Position.SCORE);
                 macroState = 0;
@@ -71,9 +73,8 @@ public class Robot {
                 arm.setDoor(OPEN);
                 macroState++;
                 break;
-                //Ind_sleeper
             case(1):
-                if (runTime > macroStartTime + 1) {
+                if (runTime > macroStartTime + scoreWait) {
                     macroState ++;
                 }
                 break;
@@ -84,12 +85,11 @@ public class Robot {
                 macroState++;
                 break;
             case(3):
-                if (runTime > macroStartTime + 1.1) {
+                if (/*runTime > macroStartTime + armWait || */arm.armAtPosition()) {
                     macroState ++;
                 }
                 break;
             case(4):
-                macroStartTime = runTime;
                 slides.setTarget(pos);
                 macroState = 0;
                 lastMacro = runningMacro;
@@ -104,6 +104,6 @@ public class Robot {
     }
 
     public String getTelemetry() {
-        return "Telemetry?";
+        return arm.getTelemetry();
     }
 }

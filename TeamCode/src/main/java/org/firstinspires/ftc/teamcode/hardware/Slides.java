@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.hardware.robby;
+package org.firstinspires.ftc.teamcode.hardware;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDController;
@@ -19,12 +19,12 @@ public class Slides {
     public static PIDController controller = new PIDController(p, i, d);
 
     public static int targetMin = -10;
-    public static int targetMax = 1000;
+    public static int targetMax = 555;
 
     public static int down = 0;
-    public static int tier1 = 200;
-    public static int tier2 = 350;
-    public static int tier3 = 500;
+    public static int tier1 = 350;
+    public static int tier2 = 450;
+    public static int tier3 = 550;
 
     private int target = 0;
 
@@ -36,13 +36,13 @@ public class Slides {
         slide = hardwareMap.get(DcMotor.class, "Right Slide Motor");
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        slide.setDirection(DcMotorSimple.Direction.REVERSE);
+        slide.setDirection(DcMotorSimple.Direction.REVERSE);
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         slide2 = hardwareMap.get(DcMotor.class, "Left Slide Motor");
         slide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        slide2.setDirection(DcMotorSimple.Direction.REVERSE);
+//        slide2.setDirection(DcMotorSimple.Direction.REVERSE);
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 

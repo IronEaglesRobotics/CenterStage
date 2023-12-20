@@ -4,7 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.hardware.robby.Slides;
+import org.firstinspires.ftc.teamcode.hardware.Slides;
 
 @Autonomous(name = "Blue Left Auto")
 public class BlueLeftAuto extends AbstractAuto {

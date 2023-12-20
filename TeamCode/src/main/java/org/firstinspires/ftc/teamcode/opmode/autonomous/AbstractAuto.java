@@ -3,8 +3,10 @@ package org.firstinspires.ftc.teamcode.opmode.autonomous;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.hardware.Arm;
+import org.firstinspires.ftc.teamcode.hardware.Intake;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
-import org.firstinspires.ftc.teamcode.hardware.robby.Slides;
+import org.firstinspires.ftc.teamcode.hardware.Slides;
 import org.firstinspires.ftc.teamcode.util.CameraPosition;
 
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ public abstract class AbstractAuto extends LinearOpMode {
     public void runOpMode() {
 //        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        telemetry.addLine("Initializing Robot...");
+        telemetry.addLine("Initializing...");
         telemetry.update();
 
         setCameraPosition();
@@ -32,9 +34,9 @@ public abstract class AbstractAuto extends LinearOpMode {
 
         makeTrajectories();
 
-//        while (robot.camera.getFrameCount() < 1) {
-//            idle();
-//        }
+        while (robot.camera.getFrameCount() < 1) {
+            idle();
+        }
 
         // wait for start
         while (!(isStarted() || isStopRequested())) {
@@ -218,6 +220,54 @@ public abstract class AbstractAuto extends LinearOpMode {
             @Override
             public boolean isFinished() {
                 return !robot.drive.isBusy() && robot.runningMacro == 0;
+            }
+        });
+    }
+
+    public void intakeStack(Intake.Position stackHeight1, Intake.Position stackHeight2) {
+        steps.add(new Step("Intaking Stack") {
+            @Override
+            public void start() {
+                robot.intake.setDcMotor(0.5);
+                robot.arm.setDoor(Arm.DoorPosition.OPEN);
+            }
+
+            @Override
+            public void whileRunning() {
+                switch(macroState) {
+                    case 0:
+                        macroStart = currentRuntime;
+                        robot.intake.setpos(stackHeight1);
+                        macroState++;
+                        break;
+                    case 1:
+                        if (currentRuntime > macroStart + 1.0) {
+                            macroState++;
+                        }
+                        break;
+                    case 2:
+                        robot.intake.setpos(stackHeight2);
+                        macroState++;
+                        break;
+                    case 3:
+                        if (currentRuntime > macroStart + 1.0) {
+                            macroState++;
+                        }
+                        break;
+                    case 4:
+                        macroState = 0;
+                }
+            }
+
+            @Override
+            public void end() {
+                robot.intake.setDcMotor(0);
+                robot.arm.setDoor(Arm.DoorPosition.CLOSE);
+            }
+
+            @Override
+            public boolean isFinished() {
+                return macroState == 0;
             }
         });
     }

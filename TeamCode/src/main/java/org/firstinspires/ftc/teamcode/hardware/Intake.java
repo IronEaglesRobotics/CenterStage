@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import static org.firstinspires.ftc.teamcode.hardware.Arm.DoorPosition.CLOSE;
+import static org.firstinspires.ftc.teamcode.hardware.Arm.DoorPosition.OPEN;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -36,9 +39,9 @@ public class Intake {
     public static double motorPower = 0;
 
     public Intake(HardwareMap hardwareMap, Position up) {
-        lServo = hardwareMap.get(Servo.class, "Left Servo");
+        lServo = hardwareMap.get(Servo.class, "Left Intake Servo");
         lServo.setDirection(Servo.Direction.REVERSE);
-        rServo = hardwareMap.get(Servo.class, "Right Servo");
+        rServo = hardwareMap.get(Servo.class, "Right Intake Servo");
         dcMotor = hardwareMap.get(DcMotor.class, "Intake Motor");
     }
 

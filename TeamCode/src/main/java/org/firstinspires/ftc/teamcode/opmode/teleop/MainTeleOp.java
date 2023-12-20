@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
-import static org.firstinspires.ftc.teamcode.hardware.DoorPos.DoorPosition.CLOSE;
-import static org.firstinspires.ftc.teamcode.hardware.DoorPos.DoorPosition.OPEN;
+import static org.firstinspires.ftc.teamcode.hardware.Arm.DoorPosition.CLOSE;
+import static org.firstinspires.ftc.teamcode.hardware.Arm.DoorPosition.OPEN;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -11,14 +11,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.controller.Controller;
 import org.firstinspires.ftc.teamcode.hardware.Intake;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
-import org.firstinspires.ftc.teamcode.hardware.robby.Slides;
+import org.firstinspires.ftc.teamcode.hardware.Slides;
 
 @Config
 @TeleOp(name = "Main TeleOp", group = "OpModes")
-public class NewTeleop extends OpMode {
+public class MainTeleOp extends OpMode {
 
     public static double normal = 0.5;
     public static double turbo = 1;
+    public static double intakeMax = 0.65;
 
     private Robot robot;
     private Controller controller1;
@@ -30,9 +31,14 @@ public class NewTeleop extends OpMode {
         controller2 = new Controller(gamepad2);
 
         this.robot = new Robot(hardwareMap);
-        robot.intake.setpos(Intake.Position.STACK1);
+//        robot.intake.setpos(Intake.Position.STACK1);
 
-        telemetry.addLine("Started");
+        while (robot.camera.getFrameCount() < 1) {
+            telemetry.addLine("Initializing...");
+            telemetry.update();
+        }
+
+        telemetry.addLine("Initialized");
         telemetry.update();
     }
 
@@ -55,7 +61,7 @@ public class NewTeleop extends OpMode {
         robot.drive.setWeightedDrivePower(new Pose2d(x, y, z));
 
         // Driver 2
-        robot.intake.setDcMotor(gamepad2.right_trigger);
+        robot.intake.setDcMotor(controller2.getRightTrigger().getValue()*intakeMax);
         if (controller2.getRightBumper().isJustPressed()) {
             robot.intake.incrementPos();
         }
@@ -64,7 +70,7 @@ public class NewTeleop extends OpMode {
         }
 
         // Drone launcher
-        if (controller1.getA().isPressed()) {
+        if (controller1.getA().isPressed() && !controller1.getStart().isPressed() && !controller2.getStart().isPressed()) {
             this.robot.droneLauncher.launch();
         } else {
             this.robot.droneLauncher.reset();
@@ -74,19 +80,20 @@ public class NewTeleop extends OpMode {
         switch (robot.runningMacro) {
             case (0): // manual mode
                 robot.slides.increaseTarget(controller2.getLeftStick().getY());
-                if (controller2.getX().isJustPressed()) {
-                    robot.runningMacro = 1;
-                } else if (controller2.getY().isJustPressed()) {
-                    robot.runningMacro = 2;
-                } else if (controller2.getB().isJustPressed()) {
-                    robot.runningMacro = 3;
-                } else if (controller2.getA().isJustPressed()) {
-                    robot.runningMacro = 4;
-                }
                 if (robot.intake.getPower() >= 0.01) {
                     robot.arm.setDoor(OPEN);
                 } else {
                     robot.arm.setDoor(CLOSE);
+                }
+
+                if (controller2.getX().isJustPressed()) {
+                    robot.runningMacro = 1;
+                } else if (controller2.getY().isJustPressed()) {
+                    robot.runningMacro = 2;
+                } else if (controller2.getB().isJustPressed() && !controller1.getStart().isPressed() && !controller2.getStart().isPressed()) {
+                    robot.runningMacro = 3;
+                } else if (controller2.getA().isJustPressed() && !controller1.getStart().isPressed() && !controller2.getStart().isPressed()) {
+                    robot.runningMacro = 4;
                 }
                 break;
             case (1):

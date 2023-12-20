@@ -11,7 +11,7 @@ public class DroneLauncher {
     public static double launchPos = 0.5;
 
     public DroneLauncher(HardwareMap hardwareMap) {
-        this.servo = hardwareMap.get(Servo.class, Constants.droneLauncher);
+        this.servo = hardwareMap.get(Servo.class, "Drone Launcher");
         this.servo.setPosition(initPos);
     }
 

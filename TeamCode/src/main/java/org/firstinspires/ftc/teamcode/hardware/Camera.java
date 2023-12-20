@@ -17,20 +17,22 @@ import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+
 import java.util.ArrayList;
 
 // Class for the camera
 public class Camera {
+    private HardwareMap hardwareMap;
+    private OpenCvCamera targetingCamera;
+    private TargetingPipeline targetingPipeline;
+    private boolean targetingCameraInitialized;
 
     private float decimation;
     private boolean needToSetDecimation;
     int numFramesWithoutDetection = 0;
     private boolean signalWebcamInitialized;
     private OpenCvCamera signalWebcam;
-    private HardwareMap hardwareMap;
-    private OpenCvCamera targetingCamera;
-    private TargetingPipeline targetingPipeline;
-    private boolean targetingCameraInitialized;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
     ArrayList<AprilTagDetection> detections;
     static final double FEET_PER_METER = 3.28084;
@@ -57,6 +59,7 @@ public class Camera {
             public void onOpened() {
                 targetingCamera.startStreaming(WEBCAM_WIDTH, WEBCAM_HEIGHT, WEBCAM_ROTATION);
                 targetingCameraInitialized = true;
+                FtcDashboard.getInstance().startCameraStream(signalWebcam, 0);
             }
 
             @Override
@@ -85,8 +88,8 @@ public class Camera {
 
     //return frame rate
     public int getFrameCount() {
-        if (signalWebcamInitialized) {
-            return signalWebcam.getFrameCount();
+        if (targetingCameraInitialized) {
+            return targetingCamera.getFrameCount();
         } else {
             return 0;
         }

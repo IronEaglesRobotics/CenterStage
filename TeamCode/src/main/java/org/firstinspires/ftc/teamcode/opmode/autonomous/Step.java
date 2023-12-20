@@ -8,14 +8,9 @@ public abstract class Step {
     private final double timeout;
     private String telemetry;
 
-    // variables when moving
-    public double x;
-    public double y;
-    public double stepTime;
-    double tempTime = stepTime;
-
-    // variables when shooting
-    public Detection teamProp;
+    // macro variables
+    public double macroStart;
+    public int macroState;
 
     // Constructors
     public Step(String telemetry) {
