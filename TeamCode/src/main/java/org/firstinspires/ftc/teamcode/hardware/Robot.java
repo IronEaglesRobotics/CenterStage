@@ -26,7 +26,6 @@ public class Robot {
     public int lastMacro = 0;
 
     private boolean camEnabled = true;
-
     public static double slideWait = 1.5;
     public static double scoreWait = 0.65;
     public static double armWait = 2.0;
