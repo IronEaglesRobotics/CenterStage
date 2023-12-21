@@ -15,6 +15,8 @@ public class RedRightAuto extends AbstractAuto {
     public Trajectory scoreYellow;
     public Trajectory load1;
     public Trajectory score1;
+    public Trajectory load2;
+    public Trajectory score2;
     public Trajectory parkRobot;
 
     @Override
@@ -31,6 +33,12 @@ public class RedRightAuto extends AbstractAuto {
         Pose2d driveup1 = new Pose2d(12-6, -14, Math.toRadians(180));
         Pose2d deposit1 = new Pose2d(48-6, -36-4, Math.toRadians(180));
 
+        Pose2d lineup2 = new Pose2d(12, -14, Math.toRadians(180));
+        Pose2d pickup2 = new Pose2d(-58, -14, Math.toRadians(180));
+
+        Pose2d driveup2 = new Pose2d(12-6, -14, Math.toRadians(180));
+        Pose2d deposit2 = new Pose2d(48-6, -36-4, Math.toRadians(180));
+
         Pose2d park = new Pose2d(48, -12, Math.toRadians(180));
 
         scorePurple = robot.drive.trajectoryBuilder(start)
@@ -41,29 +49,53 @@ public class RedRightAuto extends AbstractAuto {
                 .lineToLinearHeading(depositPreload)
                 .build();
 
+        int driveSpeed = 45;
+
         load1 = robot.drive.trajectoryBuilder(scoreYellow.end())
                 .splineToConstantHeading(lineup1.vec(), lineup1.getHeading(),
-                        SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getVelocityConstraint(driveSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
                 )
                 .lineToLinearHeading(pickup1,
-                        SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getVelocityConstraint(driveSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
                 )
                 .build();
 
         score1 = robot.drive.trajectoryBuilder(load1.end(), true)
                 .lineToLinearHeading(driveup1,
-                        SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getVelocityConstraint(driveSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
                 )
                 .splineToConstantHeading(deposit1.vec(), deposit1.getHeading(),
-                        SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getVelocityConstraint(driveSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
                 )
                 .build();
 
-        parkRobot = robot.drive.trajectoryBuilder(score1.end())
+        load2 = robot.drive.trajectoryBuilder(score1.end())
+                .splineToConstantHeading(lineup1.vec(), lineup1.getHeading(),
+                        SampleMecanumDrive.getVelocityConstraint(driveSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .lineToLinearHeading(pickup1,
+                        SampleMecanumDrive.getVelocityConstraint(driveSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .build();
+
+        score2 = robot.drive.trajectoryBuilder(load2.end(), true)
+                .lineToLinearHeading(driveup1,
+                        SampleMecanumDrive.getVelocityConstraint(driveSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .splineToConstantHeading(deposit1.vec(), deposit1.getHeading(),
+                        SampleMecanumDrive.getVelocityConstraint(driveSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .build();
+
+        parkRobot = robot.drive.trajectoryBuilder(score2.end())
                 .lineToLinearHeading(park)
                 .build();
 
@@ -72,14 +104,19 @@ public class RedRightAuto extends AbstractAuto {
 
     @Override
     public void initializeSteps(int location) {
+        // score preloads
         followTrajectory(scorePurple);
         runIntake(-0.4, 0.5);
-//        followAndExtend(scoreYellow, Slides.Position.TIER1);
-//        followAndRetract(load1, Slides.Position.DOWN);
-        followTrajectory(scoreYellow);
-        followTrajectory(load1);
+        followAndExtend(scoreYellow, Slides.Position.TIER1);
+
+        // cycle
+        followAndRetract(load1, Slides.Position.DOWN);
         intakeStack(Intake.Position.STACK5, Intake.Position.STACK4);
         followAndExtend(score1, Slides.Position.TIER1);
+        followAndRetract(load2, Slides.Position.DOWN);
+        intakeStack(Intake.Position.STACK3, Intake.Position.STACK2);
+        followAndExtend(score2, Slides.Position.TIER1);
+
         followAndRetract(parkRobot, Slides.Position.DOWN);
     }
 

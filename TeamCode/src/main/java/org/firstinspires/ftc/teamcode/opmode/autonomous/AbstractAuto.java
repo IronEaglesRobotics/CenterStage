@@ -84,10 +84,6 @@ public abstract class AbstractAuto extends LinearOpMode {
                 step.start();
             }
 
-//            // update turret and slides position
-//            PoseStorage.slidesPosition = robot.actuators.getSlides();
-//            PoseStorage.turretPosition = robot.actuators.getTurret();
-
             // while the step is running display telemetry
             step.whileRunning();
             robot.update(currentRuntime);
@@ -262,6 +258,7 @@ public abstract class AbstractAuto extends LinearOpMode {
             @Override
             public void end() {
                 robot.intake.setDcMotor(0);
+                robot.intake.setpos(Intake.Position.UP);
                 robot.arm.setDoor(Arm.DoorPosition.CLOSE);
             }
 

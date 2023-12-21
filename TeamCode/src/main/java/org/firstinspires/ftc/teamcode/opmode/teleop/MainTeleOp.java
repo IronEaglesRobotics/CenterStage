@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.controller.Controller;
-import org.firstinspires.ftc.teamcode.hardware.Intake;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.Slides;
 
@@ -19,7 +18,9 @@ public class MainTeleOp extends OpMode {
 
     public static double normal = 0.5;
     public static double turbo = 1;
+    public static double slow_mode = 0.15;
     public static double intakeMax = 0.65;
+    public static double intakeMax2 = -0.65;
 
     private Robot robot;
     private Controller controller1;
@@ -32,7 +33,7 @@ public class MainTeleOp extends OpMode {
 
         this.robot = new Robot(hardwareMap);
 //        robot.intake.setpos(Intake.Position.STACK1);
-
+        this.robot.endGameMechs.hold();
         while (robot.camera.getFrameCount() < 1) {
             telemetry.addLine("Initializing...");
             telemetry.update();
@@ -40,6 +41,8 @@ public class MainTeleOp extends OpMode {
 
         telemetry.addLine("Initialized");
         telemetry.update();
+
+
     }
 
     @Override
@@ -53,6 +56,11 @@ public class MainTeleOp extends OpMode {
             x *= turbo;
             y *= turbo;
             z *= turbo;
+        }
+        else if (controller1.getLeftTrigger().getValue() > 0.1) {
+            x *= slow_mode;
+            y *= slow_mode;
+            z *= slow_mode;
         } else {
             x *= normal;
             y *= normal;
@@ -61,7 +69,16 @@ public class MainTeleOp extends OpMode {
         robot.drive.setWeightedDrivePower(new Pose2d(x, y, z));
 
         // Driver 2
-        robot.intake.setDcMotor(controller2.getRightTrigger().getValue()*intakeMax);
+        if (controller2.getRightTrigger().getValue()>=0.1){
+            robot.intake.setDcMotor(controller2.getRightTrigger().getValue()*intakeMax);
+        }
+        else if(controller2.getLeftTrigger().getValue()>=0.1){
+            robot.intake.setDcMotor(controller2.getLeftTrigger().getValue()*intakeMax2);
+        }
+        else {
+            robot.intake.setDcMotor(0);
+        }
+
         if (controller2.getRightBumper().isJustPressed()) {
             robot.intake.incrementPos();
         }
@@ -71,10 +88,15 @@ public class MainTeleOp extends OpMode {
 
         // Drone launcher
         if (controller1.getA().isPressed() && !controller1.getStart().isPressed() && !controller2.getStart().isPressed()) {
-            this.robot.droneLauncher.launch();
+            this.robot.endGameMechs.launch();
         } else {
-            this.robot.droneLauncher.reset();
+            this.robot.endGameMechs.reset();
         }
+        //Hang Servos
+        if (controller1.getX().isPressed() && !controller1.getStart().isPressed() && !controller2.getStart().isPressed()) {
+            this.robot.endGameMechs.release();
+        }
+
 
         // macros
         switch (robot.runningMacro) {

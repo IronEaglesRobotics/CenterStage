@@ -18,7 +18,7 @@ public class Robot {
     public Intake intake;
     public Slides slides;
     public Arm arm;
-    public DroneLauncher droneLauncher;
+    public endGame_Mechs endGameMechs;
 
     public double macroStartTime = 0;
     public int macroState = 0;
@@ -28,7 +28,7 @@ public class Robot {
     private boolean camEnabled = true;
 
     public static double slideWait = 1.5;
-    public static double scoreWait = 1.25;
+    public static double scoreWait = 0.65;
     public static double armWait = 2.0;
 
     //Name the objects
@@ -39,7 +39,7 @@ public class Robot {
         intake = new Intake(hardwareMap, UP);
         slides = new Slides(hardwareMap);
         arm = new Arm(hardwareMap);
-        droneLauncher = new DroneLauncher(hardwareMap);
+        endGameMechs = new endGame_Mechs(hardwareMap);
         camEnabled = true;
     }
 
@@ -71,6 +71,7 @@ public class Robot {
             case(0):
                 macroStartTime = runTime;
                 arm.setDoor(OPEN);
+                slides.setTarget(slides.getTarget()+70);
                 macroState++;
                 break;
             case(1):
@@ -104,6 +105,6 @@ public class Robot {
     }
 
     public String getTelemetry() {
-        return arm.getTelemetry();
+        return String.format("Arm:\n------------\n%s\nSlides:\n------------\n%s", arm.getTelemetry(), slides.getTelemetry());
     }
 }

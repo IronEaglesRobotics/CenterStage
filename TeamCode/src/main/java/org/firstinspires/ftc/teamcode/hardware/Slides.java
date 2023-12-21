@@ -19,12 +19,12 @@ public class Slides {
     public static PIDController controller = new PIDController(p, i, d);
 
     public static int targetMin = -10;
-    public static int targetMax = 555;
+    public static int targetMax = 830;
 
     public static int down = 0;
     public static int tier1 = 350;
-    public static int tier2 = 450;
-    public static int tier3 = 550;
+    public static int tier2 = 500;
+    public static int tier3 = 760;
 
     private int target = 0;
 
@@ -71,6 +71,8 @@ public class Slides {
         return target;
     }
 
+
+
     public boolean atTarget() {
         return controller.atSetPoint();
     }
@@ -114,6 +116,6 @@ public class Slides {
     }
 
     public String getTelemetry() {
-        return String.format("Position: %s %s\nTarget: %s %s\nPower: %s %s\nHeightOffset: %s", slide.getCurrentPosition(), slide2.getCurrentPosition(), target, target, slide.getPower(), slide2.getPower());
+        return String.format("Position: %s %s\nTarget: %s %s\nPower: %s %s", slide.getCurrentPosition(), slide2.getCurrentPosition(), target, target, slide.getPower(), slide2.getPower());
     }
 }
