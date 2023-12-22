@@ -42,7 +42,7 @@ public class Robot {
         camEnabled = true;
     }
 
-    public void extendMacro(Slides.Position slidePos, double runTime) {
+    public void extendMacro(int slidePos, double runTime) {
         switch(macroState) {
             case(0):
                 macroStartTime = runTime;
@@ -58,14 +58,19 @@ public class Robot {
             case(2):
                 arm.setArmPos(Arm.Position.SCORE);
                 arm.setWristPos(Arm.Position.SCORE);
-                macroState = 0;
-                lastMacro = runningMacro;
-                runningMacro = 0;
+                macroState++;
+                break;
+            case (3):
+                if(arm.armAtPosition()){
+                    macroState = 0;
+                    lastMacro = runningMacro;
+                    runningMacro = 0;
+                }
                 break;
         }
     }
 
-    public void resetMacro(Slides.Position pos, double runTime) {
+    public void resetMacro(int slidePos, double runTime) {
         switch(macroState) {
             case(0):
                 macroStartTime = runTime;
@@ -75,7 +80,7 @@ public class Robot {
                 break;
             case(1):
                 if (runTime > macroStartTime + scoreWait) {
-                    macroState ++;
+                        macroState ++;
                 }
                 break;
             case(2):
@@ -90,10 +95,16 @@ public class Robot {
                 }
                 break;
             case(4):
-                slides.setTarget(pos);
-                macroState = 0;
-                lastMacro = runningMacro;
-                runningMacro = 0;
+                slides.setTarget(slidePos);
+                macroState++;
+                break;
+            case (5):
+                if (slides.atTarget()){
+                    macroState = 0;
+                    lastMacro = runningMacro;
+                    runningMacro = 0;
+                }
+                break;
         }
     }
 

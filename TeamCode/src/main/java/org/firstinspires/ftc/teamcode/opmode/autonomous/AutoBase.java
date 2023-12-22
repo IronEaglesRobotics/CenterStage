@@ -31,12 +31,12 @@ public abstract class AutoBase extends LinearOpMode {
         createTrajectories();
 
         // wait for start
-        while (!isStarted() || !isStopRequested()) {
+        while (!isStarted() && !isStopRequested()) {
             if (robot.camera.getFrameCount() < 1) {
                 telemetry.addLine("Initializing...");
             } else {
                 telemetry.addLine("Initialized");
-                teamPropLocation = robot.camera.getMarkerId(); // or whatever method you end up using
+                //teamPropLocation = robot.camera.getMarkerId(); // or whatever method you end up using
                 telemetry.addData("Team Prop Location", teamPropLocation);
             }
             telemetry.update();
@@ -51,6 +51,7 @@ public abstract class AutoBase extends LinearOpMode {
             robot.update(getRuntime());
 
             // update telemetry
+            telemetry.addData("Macro State", macroState);
             telemetry.addLine(robot.getTelemetry());
             telemetry.update();
         }

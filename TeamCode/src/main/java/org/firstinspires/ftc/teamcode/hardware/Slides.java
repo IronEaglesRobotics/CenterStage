@@ -22,6 +22,7 @@ public class Slides {
     public static int targetMax = 830;
 
     public static int down = 0;
+    public static int mini_tier1 = 155;
     public static int tier1 = 350;
     public static int tier2 = 500;
     public static int tier3 = 760;

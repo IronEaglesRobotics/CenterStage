@@ -119,16 +119,16 @@ public class MainTeleOp extends OpMode {
                 }
                 break;
             case (1):
-                robot.extendMacro(Slides.Position.TIER1, getRuntime());
+                robot.extendMacro(Slides.tier1, getRuntime());
                 break;
             case (2):
-                robot.extendMacro(Slides.Position.TIER2, getRuntime());
+                robot.extendMacro(Slides.tier2, getRuntime());
                 break;
             case (3):
-                robot.extendMacro(Slides.Position.TIER3, getRuntime());
+                robot.extendMacro(Slides.tier3, getRuntime());
                 break;
             case (4):
-                robot.resetMacro(Slides.Position.DOWN, getRuntime());
+                robot.resetMacro(0, getRuntime());
                 break;
         }
 

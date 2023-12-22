@@ -29,13 +29,13 @@ public class RedBackStageAuto extends AutoBase {
         // create pose2d variables
         // you might not need 3 instances of the deposit position, for example, however based on localization accuracy
         // you might need them for each one to be slightly different
-        Pose2d drop1 = new Pose2d(12, -40.5, Math.toRadians(90));
-        Pose2d drop2 = new Pose2d(12, -40.5, Math.toRadians(90));
-        Pose2d drop3 = new Pose2d(12, -40.5, Math.toRadians(90));
+        Pose2d drop1 = new Pose2d(12, -39.5, Math.toRadians(90));
+        Pose2d drop2 = new Pose2d(12, -39.5, Math.toRadians(90));
+        Pose2d drop3 = new Pose2d(12, -39.5, Math.toRadians(90));
 
-        Pose2d depositPreload1 = new Pose2d(46, -36, Math.toRadians(180));
-        Pose2d depositPreload2 = new Pose2d(46, -36, Math.toRadians(180));
-        Pose2d depositPreload3 = new Pose2d(46, -36, Math.toRadians(180));
+        Pose2d depositPreload1 = new Pose2d(50.5, -32, Math.toRadians(187));
+        Pose2d depositPreload2 = new Pose2d(50.5, -32, Math.toRadians(187));
+        Pose2d depositPreload3 = new Pose2d(50.5, -32, Math.toRadians(187));
 
         Pose2d park1 = new Pose2d(48, -12, Math.toRadians(180));
         Pose2d park2 = new Pose2d(48, -12, Math.toRadians(180));
@@ -77,49 +77,59 @@ public class RedBackStageAuto extends AutoBase {
     public void followTrajectories() {
         switch (macroState) {
             case 0:
-                // start drive to tape
                 robot.drive.followTrajectoryAsync(teamPropLocation==1?scorePurple1:(teamPropLocation==2?scorePurple2:scorePurple3));
                 macroState++;
                 break;
+            // DRIVE TO TAPE
             case 1:
-                // wait until robot is at tape
+                // if drive is done move on
                 if (!robot.drive.isBusy()) {
                     macroTime = getRuntime();
                     macroState++;
                 }
+                break;
+            // RUN INTAKE
             case 2:
-                // run intake
+                // intake
                 if (getRuntime() < macroTime + 0.5) {
-                    robot.intake.setDcMotor(-0.3);
+                    robot.intake.setDcMotor(-0.26);
                 }
-                // start drive to backdrop
+                // if intake is done move on
                 else {
-                    robot.extendMacro(Slides.Position.TIER1, getRuntime());
+                    robot.intake.setDcMotor(0);
+                    robot.extendMacro(Slides.mini_tier1, getRuntime());
                     robot.drive.followTrajectoryAsync(teamPropLocation==1?scoreYellow1:(teamPropLocation==2?scoreYellow2:scoreYellow3));
                     macroState++;
                 }
                 break;
+            // EXTEND AND MOVE TO BACKBOARD
             case 3:
                 // extend macro
                 if (robot.macroState != 0) {
-                    robot.extendMacro(Slides.Position.TIER1, getRuntime());
+                    robot.extendMacro(Slides.mini_tier1, getRuntime());
                 }
-                // if macro and drive are done, start park
-                else if (!robot.drive.isBusy()) {
-                    robot.resetMacro(Slides.Position.DOWN, getRuntime());
+                // if macro and drive are done, move on
+                if (robot.macroState == 0 && !robot.drive.isBusy()) {
+                    robot.resetMacro(0, getRuntime());
+                    macroState++;
+                }
+                break;
+            case 4:
+                robot.resetMacro(0, getRuntime());
+                if (robot.macroState >= 2){
                     robot.drive.followTrajectoryAsync(teamPropLocation==1?parkRobot1:(teamPropLocation==2?parkRobot2:parkRobot3));
                     macroState++;
                 }
                 break;
-            // park robot
-            case 4:
-                // reset macro
+            // PARK ROBOT
+            case 5:
+                // reset macro'
                 if (robot.macroState != 0) {
-                    robot.resetMacro(Slides.Position.DOWN, getRuntime());
+                    robot.resetMacro(0, getRuntime());
                 }
                 // if macro and drive are done, end auto
-                if (!robot.drive.isBusy()) {
-                    macroState = -1;
+                if (robot.macroState == 0 && !robot.drive.isBusy()) {
+                    macroState=-1;
                 }
                 break;
         }
