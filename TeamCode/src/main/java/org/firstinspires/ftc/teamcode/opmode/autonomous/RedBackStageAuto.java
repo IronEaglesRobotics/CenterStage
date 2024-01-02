@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.autonomous;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -19,6 +20,10 @@ public class RedBackStageAuto extends AutoBase {
     public Trajectory parkRobot1;
     public Trajectory parkRobot2;
     public Trajectory parkRobot3;
+
+    public Trajectory stackrun1b1;
+    public Trajectory stackrun1b2;
+    public Trajectory stackrun1b3;
 
     @Override
     public void createTrajectories() {
@@ -40,6 +45,10 @@ public class RedBackStageAuto extends AutoBase {
         Pose2d park1 = new Pose2d(48, -12, Math.toRadians(180));
         Pose2d park2 = new Pose2d(48, -12, Math.toRadians(180));
         Pose2d park3 = new Pose2d(48, -12, Math.toRadians(180));
+
+        Pose2d stack_1x1 = new Pose2d(-56, -12, Math.toRadians(180));
+        Pose2d stack_2x1 = new Pose2d(-56, -12, Math.toRadians(180));
+        Pose2d stack_3x1 = new Pose2d(-56, -12, Math.toRadians(180));
 
         // create trajectories
         scorePurple1 = robot.drive.trajectoryBuilder(start)
@@ -70,6 +79,19 @@ public class RedBackStageAuto extends AutoBase {
                 .build();
         parkRobot3 = robot.drive.trajectoryBuilder(scoreYellow3.end())
                 .lineToLinearHeading(park3)
+                .build();
+
+        stackrun1b1 = robot.drive.trajectoryBuilder(scoreYellow1.end())
+                .splineToConstantHeading(new Vector2d(30, -12), Math.toRadians(0))
+                .lineToLinearHeading(stack_1x1)
+                .build();
+        stackrun1b2 = robot.drive.trajectoryBuilder(scoreYellow2.end())
+                .splineToConstantHeading(new Vector2d(30, -12), Math.toRadians(0))
+                .lineToLinearHeading(stack_2x1)
+                .build();
+        stackrun1b3 = robot.drive.trajectoryBuilder(scoreYellow1.end())
+                .splineToConstantHeading(new Vector2d(30, -12), Math.toRadians(0))
+                .lineToLinearHeading(stack_1x1)
                 .build();
     }
 
@@ -117,21 +139,30 @@ public class RedBackStageAuto extends AutoBase {
             case 4:
                 robot.resetMacro(0, getRuntime());
                 if (robot.macroState >= 2){
-                    robot.drive.followTrajectoryAsync(teamPropLocation==1?parkRobot1:(teamPropLocation==2?parkRobot2:parkRobot3));
+                   // robot.drive.followTrajectoryAsync(teamPropLocation==1?parkRobot1:(teamPropLocation==2?parkRobot2:parkRobot3));
+                    robot.drive.followTrajectoryAsync(stackrun1b2);
                     macroState++;
                 }
                 break;
-            // PARK ROBOT
+
             case 5:
-                // reset macro'
-                if (robot.macroState != 0) {
-                    robot.resetMacro(0, getRuntime());
+                if(!robot.drive.isBusy()){
+                    macroState =-1;
                 }
-                // if macro and drive are done, end auto
-                if (robot.macroState == 0 && !robot.drive.isBusy()) {
-                    macroState=-1;
-                }
+
+                //macroState++;
                 break;
+                // PARK ROBOT
+//            case 6:
+//                // reset macro'
+//                if (robot.macroState != 0) {
+//                    robot.resetMacro(0, getRuntime());
+//                }
+//                // if macro and drive are done, end auto
+//                if (robot.macroState == 0 && !robot.drive.isBusy()) {
+//                    macroState=-1;
+//                }
+//                break;
         }
     }
 }

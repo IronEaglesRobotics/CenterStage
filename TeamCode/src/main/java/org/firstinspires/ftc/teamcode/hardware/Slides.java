@@ -5,18 +5,20 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 @Config
 public class Slides {
     private DcMotor slide;
     private DcMotor slide2;
 
-    public static double p = 0.0014;
-    public static double i = 0.02;
-    public static double d = 0;
-    public static double f = 0.01;
+//    public static double p = 0.0014;
+//    public static double i = 0.02;
+//    public static double d = 0;
+//    public static double f = 0.01;
+    public static PIDFCoefficients coefficients = new PIDFCoefficients(0.0014,0.02,0,0.01);
     public static double pTolerance = 20;
-    public static PIDController controller = new PIDController(p, i, d);
+    private PIDController controller = new PIDController(coefficients.p, coefficients.i, coefficients.d);
 
     public static int targetMin = -10;
     public static int targetMax = 830;
@@ -102,15 +104,15 @@ public class Slides {
 //                slide2.setPower(0);
 //            } else {
         double pid, ff;
-        controller.setPID(p, i, d);
+        controller.setPID(coefficients.p, coefficients.i, coefficients.d);
         controller.setTolerance(pTolerance);
 
         pid = controller.calculate(slide.getCurrentPosition(), target);
-        ff = f;
+        ff = coefficients.f;
         slide.setPower(pid + ff);
 
         pid = controller.calculate(slide2.getCurrentPosition(), target);
-        ff = f;
+        ff = coefficients.f;
         slide2.setPower(pid + ff);
 //            }
 //        }

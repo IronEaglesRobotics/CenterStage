@@ -75,7 +75,6 @@ public class Robot {
             case(0):
                 macroStartTime = runTime;
                 arm.setDoor(OPEN);
-                slides.setTarget(slides.getTarget()+70);
                 macroState++;
                 break;
             case(1):
