@@ -82,15 +82,15 @@ public class RedBackStageAuto extends AutoBase {
                 .build();
 
         stackrun1b1 = robot.drive.trajectoryBuilder(scoreYellow1.end())
-                .splineToConstantHeading(new Vector2d(30, -12), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(30, -12), Math.toRadians(180))
                 .lineToLinearHeading(stack_1x1)
                 .build();
         stackrun1b2 = robot.drive.trajectoryBuilder(scoreYellow2.end())
-                .splineToConstantHeading(new Vector2d(30, -12), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(30, -12), Math.toRadians(180))
                 .lineToLinearHeading(stack_2x1)
                 .build();
         stackrun1b3 = robot.drive.trajectoryBuilder(scoreYellow1.end())
-                .splineToConstantHeading(new Vector2d(30, -12), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(30, -12), Math.toRadians(180))
                 .lineToLinearHeading(stack_1x1)
                 .build();
     }
