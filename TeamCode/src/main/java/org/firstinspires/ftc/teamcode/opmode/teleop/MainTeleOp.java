@@ -34,10 +34,10 @@ public class MainTeleOp extends OpMode {
         this.robot = new Robot(hardwareMap);
 //        robot.intake.setpos(Intake.Position.STACK1);
         this.robot.endGameMechs.hold();
-        while (robot.camera.getFrameCount() < 1) {
-            telemetry.addLine("Initializing...");
-            telemetry.update();
-        }
+//        while (robot.camera.getFrameCount() < 1) {
+//            telemetry.addLine("Initializing...");
+//            telemetry.update();
+//        }
 
         telemetry.addLine("Initialized");
         telemetry.update();

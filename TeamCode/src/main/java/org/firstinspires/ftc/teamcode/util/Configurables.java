@@ -78,4 +78,12 @@ public class Configurables {
     public static double CV_GOAL_SIDE_ALLOWABLE_SIZE_ERROR = 100;
     public static Size CV_GOAL_SIDE_ASPECT_RATIO = new Size(6.5,15.5);
     public static double CV_GOAL_SIDE_ALLOWABLE_ASPECT_ERROR = 10;
+
+    public static double CAMERA_OFFSET_X = 0f;
+    public static double DETECTION_AREA_MIN = 0.02f;
+    public static double DETECTION_AREA_MAX = 0.3f;
+    public static double DETECTION_LEFT_X = 0;
+    public static double DETECTION_CENTER_X = .5;
+    public static double DETECTION_RIGHT_X = 1;
+    public static double SCORING_DISTANCE_FROM_APRIL_TAG = 6f;
 }

@@ -41,10 +41,10 @@ public class Arm {
     }
 
     public Arm(HardwareMap hardwareMap) {
-        wristServo = hardwareMap.get(Servo.class, "Wrist Servo");
-        doorServo = hardwareMap.get(Servo.class, "Door Servo");
-        lAServo = hardwareMap.get(Servo.class, "Left Arm Servo");
-        rAServo = hardwareMap.get(Servo.class, "Right Arm Servo ");
+        wristServo = hardwareMap.get(Servo.class, "Wrist");
+        doorServo = hardwareMap.get(Servo.class, "Door");
+        lAServo = hardwareMap.get(Servo.class, "LeftArm");
+        rAServo = hardwareMap.get(Servo.class, "RightArm");
 //        lAServo.setDirection(Servo.Direction.REVERSE);
         rAServo.setDirection(Servo.Direction.REVERSE);
         doorServo.setDirection(Servo.Direction.REVERSE);

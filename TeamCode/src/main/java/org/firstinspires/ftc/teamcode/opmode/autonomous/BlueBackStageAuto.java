@@ -1,18 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmode.autonomous;
 
-import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.STACK4;
-import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.STACK5;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.hardware.Slides;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
-@Autonomous(name = "Red Backstage Auto", group = "Competition", preselectTeleOp = "Main TeleOp")
-public class RedBackStageAuto extends AutoBase {
+@Autonomous(name = "Blue Backstage Auto", group = "Competition", preselectTeleOp = "Main TeleOp")
+public class BlueBackStageAuto extends AutoBase {
     public Trajectory scorePurple1;
     public Trajectory scorePurple2;
     public Trajectory scorePurple3;
@@ -29,36 +25,30 @@ public class RedBackStageAuto extends AutoBase {
     public Trajectory stackrun1b2;
     public Trajectory stackrun1b3;
 
-    public Trajectory returnstackrun1b1;
-    public Trajectory returnstackrun1b2;
-    public Trajectory returnstackrun1b3;
-
     @Override
     public void createTrajectories() {
         // set start position
-        Pose2d start = new Pose2d(12, -61.5, Math.toRadians(90));
+        Pose2d start = new Pose2d(12, 61.5, Math.toRadians(-90));
         robot.drive.setPoseEstimate(start);
 
         // create pose2d variables
         // you might not need 3 instances of the deposit position, for example, however based on localization accuracy
         // you might need them for each one to be slightly different
-        Pose2d drop1 = new Pose2d(12, -37.5, Math.toRadians(90));
-        Pose2d drop2 = new Pose2d(12, -37.5, Math.toRadians(90));
-        Pose2d drop3 = new Pose2d(12, -37.5, Math.toRadians(90));
+        Pose2d drop1 = new Pose2d(12, 39.5, Math.toRadians(-90));
+        Pose2d drop2 = new Pose2d(12, 39.5, Math.toRadians(-90));
+        Pose2d drop3 = new Pose2d(12, 39.5, Math.toRadians(-90));
 
-        Pose2d depositPreload1 = new Pose2d(52.5, -32, Math.toRadians(180));
-        Pose2d depositPreload2 = new Pose2d(52.5, -32, Math.toRadians(180));
-        Pose2d depositPreload3 = new Pose2d(52.5, -32, Math.toRadians(180));
+        Pose2d depositPreload1 = new Pose2d(50.5, 32, Math.toRadians(-187));
+        Pose2d depositPreload2 = new Pose2d(50.5, 32, Math.toRadians(-187));
+        Pose2d depositPreload3 = new Pose2d(50.5, 32, Math.toRadians(-187));
 
-//        Pose2d park1 = new Pose2d(48, -12, Math.toRadians(180));
-//        Pose2d park2 = new Pose2d(48, -12, Math.toRadians(180));
-//        Pose2d park3 = new Pose2d(48, -12, Math.toRadians(180));
-//
-//        Pose2d toStack = new Pose2d(40,-36, Math.toRadians(180));
+        Pose2d park1 = new Pose2d(48, 12, Math.toRadians(0));
+        Pose2d park2 = new Pose2d(48, 12, Math.toRadians(0));
+        Pose2d park3 = new Pose2d(48, 12, Math.toRadians(0));
 
-        Pose2d stack_1x1 = new Pose2d(-56, -11, Math.toRadians(180));//-36
-        Pose2d stack_2x1 = new Pose2d(-56, -11, Math.toRadians(180));
-        Pose2d stack_3x1 = new Pose2d(-56, -11, Math.toRadians(180));
+        Pose2d stack_1x1 = new Pose2d(-56, 12, Math.toRadians(0));
+        Pose2d stack_2x1 = new Pose2d(-56, 12, Math.toRadians(0));
+        Pose2d stack_3x1 = new Pose2d(-56, 12, Math.toRadians(0));
 
         // create trajectories
         scorePurple1 = robot.drive.trajectoryBuilder(start)
@@ -81,41 +71,27 @@ public class RedBackStageAuto extends AutoBase {
                 .lineToLinearHeading(depositPreload3)
                 .build();
 
-//        parkRobot1 = robot.drive.trajectoryBuilder(scoreYellow1.end())
-//                .lineToLinearHeading(park1)
-//                .build();
-//        parkRobot2 = robot.drive.trajectoryBuilder(scoreYellow2.end())
-//                .lineToLinearHeading(park2)
-//                .build();++
-
-//        parkRobot3 = robot.drive.trajectoryBuilder(scoreYellow3.end())
-//                .lineToLinearHeading(park3)
-//                .build();
+        parkRobot1 = robot.drive.trajectoryBuilder(scoreYellow1.end())
+                .lineToLinearHeading(park1)
+                .build();
+        parkRobot2 = robot.drive.trajectoryBuilder(scoreYellow2.end())
+                .lineToLinearHeading(park2)
+                .build();
+        parkRobot3 = robot.drive.trajectoryBuilder(scoreYellow3.end())
+                .lineToLinearHeading(park3)
+                .build();
 
         stackrun1b1 = robot.drive.trajectoryBuilder(scoreYellow1.end())
-                .splineToConstantHeading(new Vector2d(12, -10.5), Math.toRadians(180))
-                .lineToConstantHeading(stack_1x1.vec())
+                .splineToConstantHeading(new Vector2d(30, 12), Math.toRadians(0))
+                .lineToLinearHeading(stack_1x1)
                 .build();
         stackrun1b2 = robot.drive.trajectoryBuilder(scoreYellow2.end())
-                .splineToConstantHeading(new Vector2d(12, -10.5), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(30, 12), Math.toRadians(0))
                 .lineToLinearHeading(stack_2x1)
                 .build();
-        stackrun1b3 = robot.drive.trajectoryBuilder(scoreYellow3.end())
-                .splineToConstantHeading(new Vector2d(12, -10.5), Math.toRadians(180))
-                .lineToLinearHeading(stack_3x1)
-                .build();
-
-        returnstackrun1b1 = robot.drive.trajectoryBuilder(stackrun1b1.end())
+        stackrun1b3 = robot.drive.trajectoryBuilder(scoreYellow1.end())
+                .splineToConstantHeading(new Vector2d(30, 12), Math.toRadians(0))
                 .lineToLinearHeading(stack_1x1)
-                .splineToConstantHeading(new Vector2d(12, -10.5), Math.toRadians(180))
-                .build();
-        returnstackrun1b2 = robot.drive.trajectoryBuilder(stackrun1b2.end())
-                .lineToLinearHeading(stack_2x1)
-                .splineToConstantHeading(new Vector2d(12, -10.5), Math.toRadians(180))
-                .build();
-        returnstackrun1b3 = robot.drive.trajectoryBuilder(stackrun1b3.end())
-                .lineToLinearHeading(stack_3x1)
-                .splineToConstantHeading(new Vector2d(12, -10.5), Math.toRadians(180))
                 .build();
     }
 
@@ -138,7 +114,7 @@ public class RedBackStageAuto extends AutoBase {
             case 2:
                 // intake
                 if (getRuntime() < macroTime + 0.5) {
-                    robot.intake.setDcMotor(-0.46);
+                    robot.intake.setDcMotor(-0.26);
                 }
                 // if intake is done move on
                 else {
@@ -162,36 +138,21 @@ public class RedBackStageAuto extends AutoBase {
                 break;
             case 4:
                 robot.resetMacro(0, getRuntime());
-                if (robot.macroState >= 4){
-                    robot.drive.followTrajectoryAsync(teamPropLocation==1?stackrun1b1:(teamPropLocation==2?stackrun1b2:stackrun1b3));
+                if (robot.macroState >= 2){
+                    // robot.drive.followTrajectoryAsync(teamPropLocation==1?parkRobot1:(teamPropLocation==2?parkRobot2:parkRobot3));
+                    robot.drive.followTrajectoryAsync(stackrun1b2);
                     macroState++;
                 }
                 break;
+
             case 5:
-                robot.resetMacro(0, getRuntime());
                 if(!robot.drive.isBusy()){
-                    macroState ++;
+                    macroState =-1;
                 }
+
                 //macroState++;
                 break;
-            case 6:
-
-                robot.intake.setDcMotor(0.46);
-                robot.intake.setpos(STACK5);
-                macroTime = getRuntime();
-                macroState ++;
-                break;
-
-            case 7:
-                if (getRuntime() > macroTime + 1.5) {
-                robot.drive.followTrajectoryAsync(returnstackrun1b1);
-                    macroState++;
-                }
-                break;
-
-            case 8:
-                macroState = -1;
-                // PARK ROBOT
+            // PARK ROBOT
 //            case 6:
 //                // reset macro'
 //                if (robot.macroState != 0) {

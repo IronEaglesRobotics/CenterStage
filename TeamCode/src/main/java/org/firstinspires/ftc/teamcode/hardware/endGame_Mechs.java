@@ -9,20 +9,20 @@ public class endGame_Mechs {
     private Servo servo;
     private Servo hang1;
     private Servo hang2;
-    public static double initPos = 0;
-    public static double launchPos = 0.5;
-    public static double hold = 0;
+    public static double initPos = 0.4;
+    public static double launchPos = 0.8;
+    public static double hold = 0.8;
     public static double release = 0.5;
-    public static double hold2 = 0;
-    public static double release2 = 0.5;
+    public static double hold2 = 0.8;
+    public static double release2 = 0.8;
 
     public endGame_Mechs(HardwareMap hardwareMap) {
-        this.servo = hardwareMap.get(Servo.class, "Drone Launcher");
+        this.servo = hardwareMap.get(Servo.class, "Drone");
         this.servo.setPosition(initPos);
-        this.hang1 = hardwareMap.get(Servo.class, "Hanger 1");
-        this.hang1.setPosition(hold);
-        this.hang2 = hardwareMap.get(Servo.class, "Hanger 2");
-        this.hang2.setPosition(hold);
+//        this.hang1 = hardwareMap.get(Servo.class, "Hanger 1");
+//        this.hang1.setPosition(hold);
+//        this.hang2 = hardwareMap.get(Servo.class, "Hanger 2");
+//        this.hang2.setPosition(hold);
 
     }
 

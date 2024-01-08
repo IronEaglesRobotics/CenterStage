@@ -1,12 +1,5 @@
 package org.firstinspires.ftc.teamcode.vision;
 
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
-import org.opencv.imgproc.Imgproc;
-
 import static org.firstinspires.ftc.teamcode.util.Constants.GREEN;
 import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_AREA;
 import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_POINT;
@@ -16,6 +9,13 @@ import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.fillConvexHull;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getBottomLeftOfContour;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getBottomRightOfContour;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getCenterOfContour;
+
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
 
 // Class for a Detection
 public class Detection {
@@ -35,10 +35,10 @@ public class Detection {
         this.maxAreaPx = frameSize.area();
     }
 
-    public Detection(Size frameSize, double minAreaFactor, double maxSizeFactor) {
+    public Detection(Size frameSize, double minAreaFactor, double maxAreaFactor) {
         this.maxSizePx = frameSize;
         this.minAreaPx = frameSize.area() * minAreaFactor;
-        this.maxAreaPx = frameSize.area() * maxSizeFactor;
+        this.maxAreaPx = frameSize.area() * maxAreaFactor;
     }
 
     public void setMinArea(double minAreaFactor) {
@@ -54,8 +54,6 @@ public class Detection {
         if (isValid()) {
             drawConvexHull(img, contour, color);
             drawPoint(img, centerPx, GREEN);
-//            drawPoint(img, bottomLeftPx, GREEN);
-//            drawPoint(img, bottomRightPx, GREEN);
         }
     }
 
@@ -64,15 +62,12 @@ public class Detection {
         if (isValid()) {
             fillConvexHull(img, contour, color);
             drawPoint(img, centerPx, GREEN);
-//            drawPoint(img, bottomLeftPx, GREEN);
-//            drawPoint(img, bottomRightPx, GREEN);
         }
     }
 
     // Check if the current Detection is valid
     public boolean isValid() {
-//        return true;
-        return (this.contour != null) && (this.centerPx != INVALID_POINT) && (this.areaPx != INVALID_AREA);
+        return (this.contour != null) && (this.areaPx != INVALID_AREA);
     }
 
     // Get the current contour

@@ -34,7 +34,6 @@ public class Robot {
     public Robot(HardwareMap hardwareMap) {
         drive = new SampleMecanumDrive(hardwareMap);
         camera = new Camera(hardwareMap);
-        camera.initTargetingCamera();
         intake = new Intake(hardwareMap, UP);
         slides = new Slides(hardwareMap);
         arm = new Arm(hardwareMap);

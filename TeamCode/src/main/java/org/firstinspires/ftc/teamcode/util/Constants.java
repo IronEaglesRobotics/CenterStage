@@ -43,6 +43,7 @@ public class Constants {
     public static final String WHEEL_FRONT_RIGHT = "frontRight";
     public static final String WHEEL_BACK_LEFT = "backLeft";
     public static final String WHEEL_BACK_RIGHT = "backRight";
+    public static final String WEBCAM_NAME = "Targeting Webcam";
     public static final String ARM = "wobbler";
     public static final String CLAW = "claw";
     public static final String INTAKE = "intake";

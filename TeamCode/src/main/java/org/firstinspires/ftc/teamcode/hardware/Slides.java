@@ -31,18 +31,18 @@ public class Slides {
 
     private int target = 0;
 
-    public static int manualSpeed = 20;
+    public static int manualSpeed = 50;
 
     public enum Position { DOWN, TIER1, TIER2, TIER3 }
 
     public Slides(HardwareMap hardwareMap) {
-        slide = hardwareMap.get(DcMotor.class, "Right Slide Motor");
+        slide = hardwareMap.get(DcMotor.class, "Rightslide");
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slide.setDirection(DcMotorSimple.Direction.REVERSE);
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        slide2 = hardwareMap.get(DcMotor.class, "Left Slide Motor");
+        slide2 = hardwareMap.get(DcMotor.class, "Leftslide");
         slide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        slide2.setDirection(DcMotorSimple.Direction.REVERSE);

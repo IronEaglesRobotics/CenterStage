@@ -34,15 +34,15 @@ public class Intake {
     public static double stack2 = 0.03;
     public static double stack3 = 0.06;
     public static double stack4 = 0.09;
-    public static double stack5 = 0.12;
+    public static double stack5 = 0.1;
     public static double up = 0.30;
     public static double motorPower = 0;
 
     public Intake(HardwareMap hardwareMap, Position up) {
-        lServo = hardwareMap.get(Servo.class, "Left Intake Servo");
+        lServo = hardwareMap.get(Servo.class, "LeftIntake");
         lServo.setDirection(Servo.Direction.REVERSE);
         rServo = hardwareMap.get(Servo.class, "Right Intake Servo");
-        dcMotor = hardwareMap.get(DcMotor.class, "Intake Motor");
+        dcMotor = hardwareMap.get(DcMotor.class, "Intakemotor");
     }
 
     public void setpos(Position stack) {
