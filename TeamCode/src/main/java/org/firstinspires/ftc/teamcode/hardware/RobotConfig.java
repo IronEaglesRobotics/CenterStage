@@ -72,4 +72,6 @@ public class RobotConfig {
     public static double DETECTION_CENTER_X = .5;
     public static double DETECTION_RIGHT_X = 1;
     public static double SCORING_DISTANCE_FROM_APRIL_TAG = 6f;
+    public static final double FORWARD_OFFSET_IN = 7.75;
+    public static final double SIDE_OFFSET_IN = 0.5;
 }

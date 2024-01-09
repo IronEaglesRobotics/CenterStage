@@ -209,7 +209,11 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
 
     public void breakFollowing() {
         trajectorySequenceRunner.breakFollowing();
+        if (trajectorySequenceRunner.isBusy()) {
+            setWeightedDrivePower(new Pose2d());
+        }
     }
+
     public Pose2d getLastError() {
         return trajectorySequenceRunner.getLastPoseError();
     }

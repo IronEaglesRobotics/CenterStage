@@ -1,7 +1,10 @@
 package opmodes;
 
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CLAW_ARM_DELTA;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.FORWARD_OFFSET_IN;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.PICKUP_ARM_MAX;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.SCORING_DISTANCE_FROM_APRIL_TAG;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.SIDE_OFFSET_IN;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.SLIDE_UP;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.X_CENTER;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.X_MAX;
@@ -9,9 +12,11 @@ import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.X_MIN;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.hardware.Camera;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
@@ -28,7 +33,9 @@ public class MainTeleOp extends OpMode {
     private boolean liftArmShouldBeUp = false;
     private boolean screwArmIsMoving = false;
     private FtcDashboard dashboard;
-
+    private boolean leftWasPressed;
+    private boolean rightWasPressed;
+    private boolean isGantryFlipped = false;
     @Override
     public void init() {
         this.dashboard = FtcDashboard.getInstance();
@@ -45,12 +52,14 @@ public class MainTeleOp extends OpMode {
         this.robot.getDrive().setInput(gamepad1, gamepad2, slowmode);
 
         // Button Mappings
+        // Drive
+        boolean leftPressed = gamepad1.dpad_left;
+        boolean rightPressed = gamepad1.dpad_right;
         // Claw / Pickup
         boolean openClaw = gamepad2.b; // B
         boolean clawUp = gamepad2.y; // Y
         boolean clawDownSafe = gamepad2.dpad_down; // dpad-down
         boolean clawDown = gamepad2.a || clawDownSafe; // A
-
         // Robot Drone Launch
         boolean robotDroneLaunch = gamepad1.left_bumper && gamepad1.right_bumper; // Change if Merck wants (LT)
 
@@ -71,7 +80,7 @@ public class MainTeleOp extends OpMode {
         if (openClaw) {
             this.robot.getClaw().open();
             this.screwArmIsMoving = false;
-        } else if (!clawUp && !clawDown && !this.screwArmIsMoving){
+        } else if (!clawUp && !clawDown && !this.screwArmIsMoving) {
             this.robot.getClaw().close();
         }
         if (clawUp) {
@@ -88,13 +97,15 @@ public class MainTeleOp extends OpMode {
         }
 
         // Gantry
-        if (!previousScrewArmToggle && screwArmToggle) {
+        if (!previousScrewArmToggle && screwArmToggle  ) {
             this.screwArmIsMoving = true;
             if (screwArmPos) {
                 this.robot.getGantry().armIn();
+                this.isGantryFlipped = false;
             } else {
                 this.robot.getClaw().open();
                 this.robot.getGantry().armOut();
+                this.isGantryFlipped = true;
             }
             this.robot.getClaw().open();
             screwArmPos = !screwArmPos;
@@ -107,17 +118,22 @@ public class MainTeleOp extends OpMode {
             this.robot.getGantry().stop();
         }
 
-        if (slideUp) {
+        if (slideUp && isGantryFlipped) {
             this.robot.getGantry().setSlideTarget(SLIDE_UP);
         } else if (slideDown) {
             this.robot.getGantry().setSlideTarget(0);
-        } else if (previousSlideUp || previousSlideDown){
+        } else if (previousSlideUp || previousSlideDown) {
             this.robot.getGantry().setSlideTarget(this.robot.getGantry().getSlidePosition());
-        }
+        } else if (!isGantryFlipped)
+            this.telemetry.addData("GantryNotFlipped!", "Null");
 
-        double gantryXPosition = X_CENTER + (gantryXInput * 0.5);
-        gantryXPosition = Math.max(X_MIN, Math.min(gantryXPosition, X_MAX));
-        this.robot.getGantry().setX(gantryXPosition);
+        if (isGantryFlipped) {
+            double gantryXPosition = X_CENTER + (gantryXInput * 0.5);
+            gantryXPosition = Math.max(X_MIN, Math.min(gantryXPosition, X_MAX));
+            this.robot.getGantry().setX(gantryXPosition);
+        } else {
+            this.telemetry.addData("GantryNotFlippedGoober", "Null");
+        }
 
         // Robot Drone
 
@@ -151,6 +167,22 @@ public class MainTeleOp extends OpMode {
             this.robot.getLift().stopReset();
         }
 
+        Vector2d poseFromAprilTag = this.robot.getCamera().getPoseFromAprilTag(2, 5);
+
+        if (poseFromAprilTag != null) {
+            if (leftPressed && !leftWasPressed) {
+                macroToScore(poseFromAprilTag, true);
+            } else if (rightPressed && !rightWasPressed) {
+                macroToScore(poseFromAprilTag, false);
+            }
+        }
+
+        if (!leftPressed && !rightPressed) { // breaks drive as makes it so it continuously brakes, added !this.robot.getDrive().isBusy just for placement
+            this.robot.getDrive().breakFollowing();
+        }
+
+        this.leftWasPressed = leftPressed;
+        this.rightWasPressed = rightPressed;
 
         this.previousSlideUp = slideUp;
         this.previousScrewArmToggle = screwArmToggle;
@@ -159,4 +191,18 @@ public class MainTeleOp extends OpMode {
 
         this.robot.update();
     }
+
+    private void macroToScore(Vector2d poseFromAprilTag, boolean left) {
+        Pose2d target;  // defines a new pose2d named target, position not yet given
+        Pose2d poseEstimate = new Pose2d(poseFromAprilTag.getX(), poseFromAprilTag.getY(), this.robot.getDrive().getPoseEstimate().getHeading());
+        double y = poseEstimate.getY() > 0
+                ? left ? 40 : 30
+                : left ? -30 : -40;
+        this.robot.getDrive().setPoseEstimate(poseEstimate);
+        target = new Pose2d(Camera.tag2Pose.getX() - SCORING_DISTANCE_FROM_APRIL_TAG - FORWARD_OFFSET_IN, y - SIDE_OFFSET_IN, 0);
+        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+        builder.lineToLinearHeading(target);
+        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
+    }
+
 }
