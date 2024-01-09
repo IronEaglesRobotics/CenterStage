@@ -8,6 +8,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 @Config
 public class Robot {
@@ -114,5 +115,9 @@ public class Robot {
 
     public String getTelemetry() {
         return String.format("Arm:\n------------\n%s\nSlides:\n------------\n%s", arm.getTelemetry(), slides.getTelemetry());
+    }
+
+    public TrajectorySequenceBuilder getTrajectorySequenceBuilder() {
+        return this.drive.trajectorySequenceBuilder(this.drive.getPoseEstimate());
     }
 }
