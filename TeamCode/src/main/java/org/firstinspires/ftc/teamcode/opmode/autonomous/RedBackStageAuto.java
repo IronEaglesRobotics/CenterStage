@@ -107,6 +107,7 @@ public class RedBackStageAuto extends AutoBase {
                 break;
             // EXTEND AND MOVE TO BACKBOARD
             case 3:
+
                 // extend macro
                 if (robot.macroState != 0) {
                     robot.extendMacro(Slides.mini_tier1, getRuntime());
@@ -160,6 +161,17 @@ public class RedBackStageAuto extends AutoBase {
                 }
                 break;
             case 9:
+                // extend macro
+                if (robot.macroState != 0) {
+                    robot.extendMacro(Slides.mini_tier1, getRuntime());
+                }
+                // if macro and drive are done, move on
+                if (robot.macroState == 0 && !robot.drive.isBusy()) {
+                    robot.resetMacro(0, getRuntime());
+                    macroState++;
+                }
+                break;
+            case 10:
                 macroState = -1;
                 // PARK ROBOT
 //            case 6:

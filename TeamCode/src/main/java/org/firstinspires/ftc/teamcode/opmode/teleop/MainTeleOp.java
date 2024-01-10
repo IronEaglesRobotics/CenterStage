@@ -19,7 +19,7 @@ public class MainTeleOp extends OpMode {
     public static double normal = 0.5;
     public static double turbo = 1;
     public static double slow_mode = 0.15;
-    public static double intakeMax = 0.65;
+    public static double intakeMax = 0.5;
     public static double intakeMax2 = -0.65;
 
     private Robot robot;
