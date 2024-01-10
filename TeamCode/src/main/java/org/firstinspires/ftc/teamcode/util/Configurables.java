@@ -14,19 +14,16 @@ public class Configurables {
     public static Color FTC_WHITE_UPPER = new Color(180, 30, 255);
 
     //Servo Positions
-    public static double UNLOCKSPEED = .1;
-    public static double LOCKSPEED = .25;
-    public static double UNLOCK = .6;
-    public static double LOCK = 0.4;
-    public static double ARMREST = .91;
-    public static double ARMSCORE = 0.14    ;
-    public static double ARMACCSCORE = 0.04;
-    public static double PICKUP = 0.97;
+    public static double ARMREST = 0.8;
+    public static double ARMSCORE = 0.38;
+    public static double ARMACCSCORE = 0.6;
+    public static double ARMACCSCOREAUTO = 0.6;
+    public static double PICKUP = 0.84;
     public static double WRISTPICKUP = 0.28;
     public static double WRISTSCORE = .96;
-    public static double OPEN = 0.53;
+    public static double OPEN = 0.85;
     public static double BIGOPEN = 0.45;
-    public static double CLOSE = 0.6;
+    public static double CLOSE = 0.95;
     public static double PLANELOCK = 0.1;
     public static double PLANELAUNCH = 0.9;
 
@@ -35,5 +32,14 @@ public class Configurables {
     public static double SLOWMODE_SPEED = 0.5;
     public static double TURN = 1;
     public static double SLOWMODE_TURN = 0.3;
+
+    //Motor Positions
+    public static double SLIDE_POWER_UP = 1;
+    public static double SLIDE_POWER_DOWN = .7;
+    public static int SLIDEUP = 1150;
+    public static int HANGRELEASE = 2500;
+    public static int HANG = 1000;
+    public static int HANGPLANE = 1900;
+
 
 }

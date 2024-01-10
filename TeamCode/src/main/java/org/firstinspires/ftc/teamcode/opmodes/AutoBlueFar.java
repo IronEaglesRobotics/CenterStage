@@ -71,7 +71,7 @@ public class AutoBlueFar extends LinearOpMode {
                 .build();
 
         this.boardOne = this.robot.getDrive().trajectoryBuilder(passGate.end())
-                .lineToLinearHeading(new Pose2d(-49.25, -28, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-50, -28, Math.toRadians(180)))
                 .addTemporalMarker(.2, robot.getArm()::armAccurateScore)
                 .addTemporalMarker(.2, robot.getWrist()::wristScore)
                 .build();

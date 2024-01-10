@@ -76,12 +76,12 @@ public class AutoRed extends LinearOpMode {
 
         //Randomization Two
         this.preloadTwo = this.robot.getDrive().trajectoryBuilder(initialPosition)
-                .lineToLinearHeading(new Pose2d(35, -28, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(31, -28, Math.toRadians(270)))
                 .build();
 
         this.scoreTwo = this.robot.getDrive().trajectoryBuilder(preloadTwo.end())
-                .lineToLinearHeading(new Pose2d(72, -33.3, Math.toRadians(360)))
-                .addTemporalMarker(.2, robot.getArm()::armAccurateScore)
+                .lineToLinearHeading(new Pose2d(70.75, -36.3, Math.toRadians(360)))
+                .addTemporalMarker(.2, robot.getArm()::armAccurateScoreAuto)
                 .addTemporalMarker(.2, robot.getWrist()::wristScore)
                 .build();
 

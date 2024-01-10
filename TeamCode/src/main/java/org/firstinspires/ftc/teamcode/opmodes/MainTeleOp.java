@@ -17,20 +17,27 @@ public class MainTeleOp extends OpMode {
 
     @Override
     public void loop() {
-        boolean hang = gamepad2.dpad_up;
-        boolean restArm = gamepad2.dpad_right || gamepad2.x;
+        boolean slideUp = gamepad2.dpad_up;
+        boolean restArm = gamepad2.x;
         boolean pickupArm = gamepad2.dpad_down;
-        boolean scoreArm = gamepad2.dpad_left || gamepad2.a;
-        boolean accurateScoreArm = gamepad2.right_bumper;
+        boolean scoreArm = gamepad2.a;
+        boolean plane = gamepad2.right_bumper;
         boolean claw = gamepad2.b;
         boolean pickupWrist = gamepad2.x;
-        boolean scoreWrist = gamepad2.a || gamepad2.left_bumper;
-        boolean launch = gamepad2.y;
+        boolean scoreWrist = gamepad2.a;
+        boolean slideDown = gamepad2.dpad_left;
+        boolean hang = gamepad2.left_bumper;
+        boolean hangRelease = gamepad2.y;
+        boolean hangPlane = gamepad2.dpad_right;
 //Drive
         robot.getDrive().setInput(gamepad1, gamepad2);
-//Hang
-        if (hang) {
-            this.robot.getHang().release();
+//slides
+        if (slideUp) {
+            this.robot.getSlides().slideUp();
+        } else if (slideDown) {
+            this.robot.getSlides().slideDown();
+        } else {
+            this.robot.getSlides().slideStop();
         }
 //Arm
         if (pickupArm) {
@@ -39,8 +46,6 @@ public class MainTeleOp extends OpMode {
             this.robot.getArm().armRest();
         } else if (scoreArm) {
             this.robot.getArm().armScore();
-        } else if (accurateScoreArm) {
-            this.robot.getArm().armAccurateScore();
         }
 //Claw
         if (claw) {
@@ -54,10 +59,23 @@ public class MainTeleOp extends OpMode {
         } else if (scoreWrist) {
             this.robot.getWrist().wristScore();
         }
-//Plane
-        if (launch) {
-            this.robot.getPlane().planeLaunch();
+//Hang
+        if (hang) {
+            this.robot.getHang().hang();
+        } else if (hangRelease){
+            this.robot.getHang().hangRelease();
+        } else if (hangPlane) {
+            this.robot.getHang().hangPlane();
         } else {
+            this.robot.getHang().hangIdle();
+        }
+        int Position = this.robot.getHang().hangRight.getCurrentPosition();
+        telemetry.addData("position",(Position));
+        telemetry.update();
+//Plane
+        if (plane) {
+            this.robot.getPlane().planeLaunch();
+        }else {
             this.robot.getPlane().planeLock();
         }
     }

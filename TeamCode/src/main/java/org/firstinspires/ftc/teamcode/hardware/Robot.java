@@ -1,26 +1,31 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARMACCSCORE;
-import static org.firstinspires.ftc.teamcode.util.Configurables.ARMSCORE;
+import static org.firstinspires.ftc.teamcode.util.Configurables.ARMACCSCOREAUTO;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARMREST;
+import static org.firstinspires.ftc.teamcode.util.Configurables.ARMSCORE;
 import static org.firstinspires.ftc.teamcode.util.Configurables.BIGOPEN;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CLOSE;
-import static org.firstinspires.ftc.teamcode.util.Configurables.LOCK;
-import static org.firstinspires.ftc.teamcode.util.Configurables.LOCKSPEED;
+import static org.firstinspires.ftc.teamcode.util.Configurables.HANG;
+import static org.firstinspires.ftc.teamcode.util.Configurables.HANGPLANE;
+import static org.firstinspires.ftc.teamcode.util.Configurables.HANGRELEASE;
 import static org.firstinspires.ftc.teamcode.util.Configurables.OPEN;
 import static org.firstinspires.ftc.teamcode.util.Configurables.PICKUP;
 import static org.firstinspires.ftc.teamcode.util.Configurables.PLANELAUNCH;
 import static org.firstinspires.ftc.teamcode.util.Configurables.PLANELOCK;
-import static org.firstinspires.ftc.teamcode.util.Configurables.UNLOCK;
-import static org.firstinspires.ftc.teamcode.util.Configurables.UNLOCKSPEED;
+import static org.firstinspires.ftc.teamcode.util.Configurables.SLIDEUP;
+import static org.firstinspires.ftc.teamcode.util.Configurables.SLIDE_POWER_DOWN;
+import static org.firstinspires.ftc.teamcode.util.Configurables.SLIDE_POWER_UP;
 import static org.firstinspires.ftc.teamcode.util.Configurables.WRISTPICKUP;
 import static org.firstinspires.ftc.teamcode.util.Configurables.WRISTSCORE;
 import static org.firstinspires.ftc.teamcode.util.Constants.CLAW;
+import static org.firstinspires.ftc.teamcode.util.Constants.HANGLEFT;
+import static org.firstinspires.ftc.teamcode.util.Constants.HANGRIGHT;
 import static org.firstinspires.ftc.teamcode.util.Constants.LEFTARM;
-import static org.firstinspires.ftc.teamcode.util.Constants.LEFTHANG;
 import static org.firstinspires.ftc.teamcode.util.Constants.PLANE;
 import static org.firstinspires.ftc.teamcode.util.Constants.RIGHTARM;
-import static org.firstinspires.ftc.teamcode.util.Constants.RIGHTHANG;
+import static org.firstinspires.ftc.teamcode.util.Constants.SLIDELEFT;
+import static org.firstinspires.ftc.teamcode.util.Constants.SLIDERIGHT;
 import static org.firstinspires.ftc.teamcode.util.Constants.WRIST;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -36,8 +41,8 @@ import lombok.Getter;
 public class Robot {
     @Getter
     private MecanumDrive drive;
-    @Getter
-    private Intake intake;
+//    @Getter
+//    private Intake intake;
     @Getter
     private Arm arm;
     @Getter
@@ -50,64 +55,111 @@ public class Robot {
     private Camera camera;
     @Getter
     private Plane plane;
+    @Getter
+    private Slides slides;
 
     public Robot init(HardwareMap hardwareMap) {
         this.drive = new MecanumDrive(hardwareMap);
         this.hang = new Hang().init(hardwareMap);
-        this.intake = new Intake().init(hardwareMap);
         this.arm = new Arm().init(hardwareMap);
         this.wrist = new Wrist().init(hardwareMap);
         this.claw = new Claw().init(hardwareMap);
         this.camera = new Camera(hardwareMap);
         this.plane = new Plane().init(hardwareMap);
+        this.slides= new Slides().init(hardwareMap);
         return this;
     }
 
-    public static class Intake {
-        private DcMotor intake = null;
+    public static class Slides {
+        private DcMotor slidesRight = null;
+        private DcMotor slidesLeft = null;
 
-        public Intake init(HardwareMap hardwareMap) {
-            this.intake = hardwareMap.dcMotor.get("intake");
-            this.intake.setDirection(DcMotorSimple.Direction.REVERSE);
-            this.intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        public Slides init(HardwareMap hardwareMap) {
+            this.slidesLeft = hardwareMap.get(DcMotor.class, SLIDELEFT);
+            this.slidesRight = hardwareMap.get(DcMotor.class, SLIDERIGHT);
+            this.slidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.slidesRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.slidesRight.setTargetPosition(0);
+            this.slidesLeft.setTargetPosition(0);
+
+            this.slidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.slidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.slidesLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            this.slidesRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            this.slidesLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             return this;
         }
 
-        public void spinIn() {
-            this.intake.setPower(0.7);
+        public void slideTo(int position, double power) {
+            this.slidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.slidesLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            this.slidesLeft.setTargetPosition(position);
+            this.slidesLeft.setPower(power);
+
+            this.slidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.slidesRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            this.slidesRight.setTargetPosition(position);
+            this.slidesRight.setPower(power);
         }
 
-        public void spinOut() {
-            this.intake.setPower(-0.7);
-        }
+        public void slideUp(){this.slideTo(SLIDEUP, SLIDE_POWER_UP);}
 
-        public void stop() {
-            this.intake.setPower(0);
-        }
+        public void slideDown(){this.slideTo(0, SLIDE_POWER_DOWN);}
+
+        public void slideStop() {this.slideTo(slidesRight.getCurrentPosition(), 1.0);}
 
     }
 
     public static class Hang {
-        private Servo hangLeft;
-        private Servo hangRight;
+        public DcMotor hangLeft = null;
+        public DcMotor hangRight = null;
 
         public Hang init(HardwareMap hardwareMap) {
-            this.hangLeft = hardwareMap.get(Servo.class, LEFTHANG);
-            this.hangRight = hardwareMap.get(Servo.class, RIGHTHANG);
-            this.hangLeft.setPosition(LOCKSPEED);
-            this.hangRight.setPosition(LOCK);
+            this.hangLeft = hardwareMap.get(DcMotor.class, HANGLEFT);
+            this.hangRight = hardwareMap.get(DcMotor.class, HANGRIGHT);
+            this.hangLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.hangRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.hangRight.setTargetPosition(0);
+            this.hangLeft.setTargetPosition(0);
+
+            this.hangRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.hangLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.hangLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            this.hangRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            this.hangLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             return this;
         }
 
-        public void lock() {
-            this.hangLeft.setPosition(LOCKSPEED);
-            this.hangRight.setPosition(LOCK);
+        public void hangTo(int hangPos, double daPower) {
+            this.hangLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.hangLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            this.hangLeft.setTargetPosition(hangPos);
+            this.hangLeft.setPower(daPower);
+
+            this.hangRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.hangRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            this.hangRight.setTargetPosition(hangPos);
+            this.hangRight.setPower(daPower);
         }
 
-        public void release() {
-            this.hangLeft.setPosition(UNLOCKSPEED);
-            this.hangRight.setPosition(UNLOCK);
+        public void hangRelease(){
+            this.hangTo(HANGRELEASE,1);
         }
+
+        public void hang(){
+            this.hangTo(HANG,1);
+        }
+        public void hangPlane(){
+            this.hangTo(HANGPLANE,1);
+        }
+
+        public void hangIdle() {
+            this.hangLeft.setPower(0);
+            this.hangRight.setPower(0);
+        }
+
+
+
     }
 
     public static class Arm {
@@ -137,6 +189,12 @@ public class Robot {
         public void armAccurateScore() {
             this.leftArm.setPosition(ARMACCSCORE);
             this.rightArm.setPosition(ARMACCSCORE);
+        }
+
+
+        public void armAccurateScoreAuto() {
+            this.leftArm.setPosition(ARMACCSCOREAUTO);
+            this.rightArm.setPosition(ARMACCSCOREAUTO);
         }
 
         public void armRest() {

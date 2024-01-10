@@ -127,24 +127,24 @@ public class AutoRedFar extends LinearOpMode {
                 .build();
 
         this.boardThree = this.robot.getDrive().trajectoryBuilder(passGate.end())
-                .lineToLinearHeading(new Pose2d(50, -37, Math.toRadians(360)))
+                .lineToLinearHeading(new Pose2d(50, -39, Math.toRadians(360)))
                 .addTemporalMarker(.02, robot.getArm()::armAccurateScore)
                 .addTemporalMarker(.02, robot.getWrist()::wristScore)
                 .build();
 
         this.backOffThree = this.robot.getDrive().trajectoryBuilder(boardThree.end())
-                .lineToLinearHeading(new Pose2d(40, -47, Math.toRadians(360)))
+                .lineToLinearHeading(new Pose2d(40, -42, Math.toRadians(360)))
                 .build();
 
 
         //Park
         this.park1 = this.robot.getDrive().trajectoryBuilder(backOffOne.end())
-                .lineToLinearHeading(new Pose2d(40, -10, Math.toRadians(360)))
+                .lineToLinearHeading(new Pose2d(40, -12, Math.toRadians(360)))
                 .addTemporalMarker(.3, robot.getArm()::armRest)
                 .addTemporalMarker(.3, robot.getWrist()::wristPickup)
                 .build();
         this.park2 = this.robot.getDrive().trajectoryBuilder(park1.end())
-                .lineToLinearHeading(new Pose2d(60, -10, Math.toRadians(360)))
+                .lineToLinearHeading(new Pose2d(60, -10, Math.toRadians(10)))
                 .build();
 
         // Do super fancy chinese shit

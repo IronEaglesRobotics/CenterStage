@@ -57,7 +57,7 @@ public class AutoBlue extends LinearOpMode {
                 .build();
 
         this.boardOne = this.robot.getDrive().trajectoryBuilder(scoreOne.end())
-                .lineToLinearHeading(new Pose2d(-72, -26, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-72, -26.3, Math.toRadians(180)))
                 .addTemporalMarker(.2, robot.getArm()::armAccurateScore)
                 .addTemporalMarker(.2, robot.getWrist()::wristScore)
                 .build();
@@ -99,12 +99,12 @@ public class AutoBlue extends LinearOpMode {
 
         //Park
         this.park1 = this.robot.getDrive().trajectoryBuilder(backOffTwo.end())
-                .lineToLinearHeading(new Pose2d(-65, -10, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-65, -55, Math.toRadians(180)))
                 .addTemporalMarker(.3, robot.getArm()::armRest)
                 .addTemporalMarker(.3, robot.getWrist()::wristPickup)
                 .build();
         this.park2 = this.robot.getDrive().trajectoryBuilder(park1.end())
-                .lineToLinearHeading(new Pose2d(-80, -10, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-80, -60, Math.toRadians(180)))
                 .build();
 
         // Do super fancy chinese shit
