@@ -37,10 +37,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
+import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.vision.Camera;
 
 import lombok.Getter;
-
+@Config
 public class Robot {
     @Getter
     private MecanumDrive drive;
@@ -228,7 +229,6 @@ public class Robot {
         }
     }
 
-    @Config
     public static class Claw {
         private static final double CLAW_KP = 0.15;
 
@@ -276,4 +276,10 @@ public class Robot {
         }
 
     }
+
+    public TrajectorySequenceBuilder getTrajectorySequenceBuilder() {
+        this.drive.update();
+        return this.drive.trajectorySequenceBuilder(this.drive.getPoseEstimate());
+    }
 }
+
