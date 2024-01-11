@@ -14,26 +14,26 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 @Config
 @Autonomous(name = "Red Backstage Auto", group = "Competition", preselectTeleOp = "Main TeleOp")
 public class RedBackStageAuto extends AutoBase {
-    public static final Pose2d DROP_1 = new Pose2d(12, -33.5, Math.toRadians(90));
-    public static final Pose2d DROP_2 = new Pose2d(12, -33.5, Math.toRadians(90));
+    public static final Pose2d DROP_1 = new Pose2d(12, -33.3, Math.toRadians(180));
+    public static final Pose2d DROP_2 = new Pose2d(12, -33.2, Math.toRadians(90));
 
     public static final Pose2d ALINE = new Pose2d(12,-37.5, Math.toRadians(90));
 
-    public static final Pose2d DROP_3 = new Pose2d(12, -33.5, Math.toRadians(90));
-    public static final Pose2d DEPOSIT_PRELOAD_1 = new Pose2d(54.2, -29, Math.toRadians(180));
-    public static final Pose2d DEPOSIT_PRELOAD_2 = new Pose2d(54.2, -34, Math.toRadians(180));
-    public static final Pose2d DEPOSIT_PRELOAD_3 = new Pose2d(54.2, -35, Math.toRadians(180));
+    public static final Pose2d DROP_3 = new Pose2d(12, -33.2, Math.toRadians(0));
+    public static final Pose2d DEPOSIT_PRELOAD_1 = new Pose2d(52.2, -27.5, Math.toRadians(181));
+    public static final Pose2d DEPOSIT_PRELOAD_2 = new Pose2d(52, -32.5, Math.toRadians(181));
+    public static final Pose2d DEPOSIT_PRELOAD_3 = new Pose2d(52.2, -35.5, Math.toRadians(181));
 
-    public static  final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(54, -27, Math.toRadians(187));
+    public static  final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(51.2, -35, Math.toRadians(187));
 
-    public static  final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(54, -27, Math.toRadians(187));
+    public static  final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(51.2, -29, Math.toRadians(187));
 
-    public static  final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(54, -27, Math.toRadians(187));
+    public static  final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(51.2, -29, Math.toRadians(187));
 
 
-    public static final Vector2d POST_SCORING_SPLINE_END = new Vector2d(12, -9);//-36
+    public static final Vector2d POST_SCORING_SPLINE_END = new Vector2d(12, -8.5);//-36
 
-    public static final Pose2d STACK_LOCATION = new Pose2d(-55.3, -12, Math.toRadians(180));
+    public static final Pose2d STACK_LOCATION = new Pose2d(-56.6, -12, Math.toRadians(180));
 
     @Override
     public void createTrajectories() {
@@ -74,7 +74,7 @@ public class RedBackStageAuto extends AutoBase {
             case 2:
                 // intake
                 if (getRuntime() < macroTime + 0.3) {
-                    robot.intake.setDcMotor(-0.2);
+                    robot.intake.setDcMotor(-0.21);
                 }
                 // if intake is done move on
                 else {
@@ -127,7 +127,7 @@ public class RedBackStageAuto extends AutoBase {
                 break;
             //First 2 pixels off the stack are intaken by this
             case 6:
-                robot.intake.setDcMotor(0.46);
+                robot.intake.setDcMotor(0.49);
                 robot.intake.setpos(STACK5);
                 macroTime = getRuntime();
                 macroState++;
@@ -189,7 +189,7 @@ public class RedBackStageAuto extends AutoBase {
                 break;
             //Geting the 2nd and 3rd pixel
             case 12:
-                robot.intake.setDcMotor(0.46);
+                robot.intake.setDcMotor(0.49);
                 robot.intake.setpos(STACK3);
                 macroTime = getRuntime();
                 macroState++;
