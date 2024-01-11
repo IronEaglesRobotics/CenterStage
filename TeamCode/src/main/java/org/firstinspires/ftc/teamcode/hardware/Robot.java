@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARMACCSCORE;
-import static org.firstinspires.ftc.teamcode.util.Configurables.ARMACCSCOREAUTO;
+import static org.firstinspires.ftc.teamcode.util.Configurables.ARMPICKUPSTACK;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARMREST;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARMSCORE;
 import static org.firstinspires.ftc.teamcode.util.Configurables.BIGOPEN;
@@ -13,6 +13,8 @@ import static org.firstinspires.ftc.teamcode.util.Configurables.OPEN;
 import static org.firstinspires.ftc.teamcode.util.Configurables.PICKUP;
 import static org.firstinspires.ftc.teamcode.util.Configurables.PLANELAUNCH;
 import static org.firstinspires.ftc.teamcode.util.Configurables.PLANELOCK;
+import static org.firstinspires.ftc.teamcode.util.Configurables.SLIDEAUTOSTACKS;
+import static org.firstinspires.ftc.teamcode.util.Configurables.SLIDELAYERONE;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SLIDEUP;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SLIDE_POWER_DOWN;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SLIDE_POWER_UP;
@@ -28,6 +30,7 @@ import static org.firstinspires.ftc.teamcode.util.Constants.SLIDELEFT;
 import static org.firstinspires.ftc.teamcode.util.Constants.SLIDERIGHT;
 import static org.firstinspires.ftc.teamcode.util.Constants.WRIST;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -105,6 +108,10 @@ public class Robot {
         public void slideUp(){this.slideTo(SLIDEUP, SLIDE_POWER_UP);}
 
         public void slideDown(){this.slideTo(0, SLIDE_POWER_DOWN);}
+
+        public void slideFirstLayer(){this.slideTo(SLIDELAYERONE, SLIDE_POWER_UP);}
+
+        public void slideAutoStacks(){this.slideTo(SLIDEAUTOSTACKS, SLIDE_POWER_UP);}
 
         public void slideStop() {this.slideTo(slidesRight.getCurrentPosition(), 1.0);}
 
@@ -186,15 +193,15 @@ public class Robot {
             this.rightArm.setPosition(ARMSCORE);
         }
 
-        public void armAccurateScore() {
+        public void armSecondaryScore() {
             this.leftArm.setPosition(ARMACCSCORE);
             this.rightArm.setPosition(ARMACCSCORE);
         }
 
 
-        public void armAccurateScoreAuto() {
-            this.leftArm.setPosition(ARMACCSCOREAUTO);
-            this.rightArm.setPosition(ARMACCSCOREAUTO);
+        public void armPickupStack() {
+            this.leftArm.setPosition(ARMPICKUPSTACK);
+            this.rightArm.setPosition(ARMPICKUPSTACK);
         }
 
         public void armRest() {
@@ -221,7 +228,10 @@ public class Robot {
         }
     }
 
+    @Config
     public static class Claw {
+        private static final double CLAW_KP = 0.15;
+
         private Servo claw;
 
         public Claw init(HardwareMap hardwareMap) {
@@ -238,9 +248,14 @@ public class Robot {
             this.claw.setPosition(OPEN);
         }
 
-        public void openScore() {
+        public void openStack() {
             this.claw.setPosition(BIGOPEN);
         }
+
+        public void setPos(double pos) {
+            this.claw.setPosition(pos);
+        }
+
     }
 
     public static class Plane {

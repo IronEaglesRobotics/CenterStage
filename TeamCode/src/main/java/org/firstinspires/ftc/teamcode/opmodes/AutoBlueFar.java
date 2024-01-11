@@ -72,7 +72,7 @@ public class AutoBlueFar extends LinearOpMode {
 
         this.boardOne = this.robot.getDrive().trajectoryBuilder(passGate.end())
                 .lineToLinearHeading(new Pose2d(-50, -28, Math.toRadians(180)))
-                .addTemporalMarker(.2, robot.getArm()::armAccurateScore)
+                .addTemporalMarker(.2, robot.getArm()::armSecondaryScore)
                 .addTemporalMarker(.2, robot.getWrist()::wristScore)
                 .build();
 
@@ -99,7 +99,7 @@ public class AutoBlueFar extends LinearOpMode {
 
         this.scoreTwo = this.robot.getDrive().trajectoryBuilder(passGate.end())
                 .lineToLinearHeading(new Pose2d(-50, -33, Math.toRadians(180)))
-                .addTemporalMarker(.02, robot.getArm()::armAccurateScore)
+                .addTemporalMarker(.02, robot.getArm()::armSecondaryScore)
                 .addTemporalMarker(.02, robot.getWrist()::wristScore)
                 .build();
 
@@ -126,7 +126,7 @@ public class AutoBlueFar extends LinearOpMode {
 
         this.boardThree = this.robot.getDrive().trajectoryBuilder(passGate.end())
                 .lineToLinearHeading(new Pose2d(-50.5, -39, Math.toRadians(180)))
-                .addTemporalMarker(.2, robot.getArm()::armAccurateScore)
+                .addTemporalMarker(.2, robot.getArm()::armSecondaryScore)
                 .addTemporalMarker(.2, robot.getWrist()::wristScore)
                 .build();
 
