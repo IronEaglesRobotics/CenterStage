@@ -43,6 +43,7 @@ public class Intake {
         lServo.setDirection(Servo.Direction.REVERSE);
         rServo = hardwareMap.get(Servo.class, "Right Intake Servo");
         dcMotor = hardwareMap.get(DcMotor.class, "Intakemotor");
+
     }
 
     public void setpos(Position stack) {
