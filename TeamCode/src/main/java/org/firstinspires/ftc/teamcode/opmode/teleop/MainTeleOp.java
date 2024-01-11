@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.controller.Controller;
+import org.firstinspires.ftc.teamcode.hardware.Arm;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.Slides;
 
@@ -101,8 +102,13 @@ public class MainTeleOp extends OpMode {
         // macros
         switch (robot.runningMacro) {
             case (0): // manual mode
+                if (controller2.getLeftBumper().isPressed()){
+                    robot.arm.setDoor(Arm.DoorPosition.OPEN);
+                }
                 robot.slides.increaseTarget(controller2.getLeftStick().getY());
                 if (robot.intake.getPower() >= 0.01) {
+                    robot.arm.setDoor(OPEN);
+                } else if (robot.intake.getPower() <= -0.01) {
                     robot.arm.setDoor(OPEN);
                 } else {
                     robot.arm.setDoor(CLOSE);
@@ -116,7 +122,10 @@ public class MainTeleOp extends OpMode {
                     robot.runningMacro = 3;
                 } else if (controller2.getA().isJustPressed() && !controller1.getStart().isPressed() && !controller2.getStart().isPressed()) {
                     robot.runningMacro = 4;
+                } else if (controller2.getDDown().isJustPressed() ) {
+                    robot.runningMacro = 5;
                 }
+
                 break;
             case (1):
                 robot.extendMacro(Slides.tier1, getRuntime());
@@ -129,6 +138,9 @@ public class MainTeleOp extends OpMode {
                 break;
             case (4):
                 robot.resetMacro(0, getRuntime());
+                break;
+            case(5):
+                robot.extendMacro(Slides.mini_tier1, getRuntime());
                 break;
         }
 
