@@ -14,17 +14,26 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 @Config
 @Autonomous(name = "Red Backstage Auto", group = "Competition", preselectTeleOp = "Main TeleOp")
 public class RedBackStageAuto extends AutoBase {
-    public static final Pose2d DROP_1 = new Pose2d(12, -37.5, Math.toRadians(90));
-    public static final Pose2d DROP_2 = new Pose2d(12, -34.5, Math.toRadians(90));
+    public static final Pose2d DROP_1 = new Pose2d(12, -33.5, Math.toRadians(90));
+    public static final Pose2d DROP_2 = new Pose2d(12, -33.5, Math.toRadians(90));
 
     public static final Pose2d ALINE = new Pose2d(12,-37.5, Math.toRadians(90));
 
-    public static final Pose2d DROP_3 = new Pose2d(12, -37.5, Math.toRadians(90));
-    public static final Pose2d DEPOSIT_PRELOAD_1 = new Pose2d(54, -29, Math.toRadians(180));
-    public static final Pose2d DEPOSIT_PRELOAD_2 = new Pose2d(54, -32, Math.toRadians(180));
-    public static final Pose2d DEPOSIT_PRELOAD_3 = new Pose2d(54, -35, Math.toRadians(180));
-    public static final Vector2d POST_SCORING_SPLINE_END = new Vector2d(12, -9.5);//-36
-    public static final Pose2d STACK_LOCATION = new Pose2d(-56, -12, Math.toRadians(180));
+    public static final Pose2d DROP_3 = new Pose2d(12, -33.5, Math.toRadians(90));
+    public static final Pose2d DEPOSIT_PRELOAD_1 = new Pose2d(54.2, -29, Math.toRadians(180));
+    public static final Pose2d DEPOSIT_PRELOAD_2 = new Pose2d(54.2, -34, Math.toRadians(180));
+    public static final Pose2d DEPOSIT_PRELOAD_3 = new Pose2d(54.2, -35, Math.toRadians(180));
+
+    public static  final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(54, -27, Math.toRadians(187));
+
+    public static  final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(54, -27, Math.toRadians(187));
+
+    public static  final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(54, -27, Math.toRadians(187));
+
+
+    public static final Vector2d POST_SCORING_SPLINE_END = new Vector2d(12, -9);//-36
+
+    public static final Pose2d STACK_LOCATION = new Pose2d(-55.3, -12, Math.toRadians(180));
 
     @Override
     public void createTrajectories() {
@@ -64,8 +73,8 @@ public class RedBackStageAuto extends AutoBase {
             // RUN INTAKE
             case 2:
                 // intake
-                if (getRuntime() < macroTime + 0.5) {
-                    robot.intake.setDcMotor(-0.46);
+                if (getRuntime() < macroTime + 0.3) {
+                    robot.intake.setDcMotor(-0.2);
                 }
                 // if intake is done move on
                 else {
@@ -125,19 +134,19 @@ public class RedBackStageAuto extends AutoBase {
                 break;
             //gose back to the esile
             case 7:
-                if (getRuntime() > macroTime + 1.5) {
+                if (getRuntime() > macroTime + 1.2) {
                     robot.intake.setDcMotor(0);
                     builder = this.robot.getTrajectorySequenceBuilder();
                     builder.lineToConstantHeading(POST_SCORING_SPLINE_END);
                     switch (teamPropLocation) {
                         case 1:
-                            builder.lineToConstantHeading(DEPOSIT_PRELOAD_1.vec());
+                            builder.lineToConstantHeading(DEPOSIT_WHITE_STACKS_1.vec());
                             break;
                         case 2:
-                            builder.lineToConstantHeading(DEPOSIT_PRELOAD_2.vec());
+                            builder.lineToConstantHeading(DEPOSIT_WHITE_STACKS_2.vec());
                             break;
                         case 3:
-                            builder.lineToConstantHeading(DEPOSIT_PRELOAD_3.vec());
+                            builder.lineToConstantHeading(DEPOSIT_WHITE_STACKS_3.vec());
                             break;
                     }
                     this.robot.drive.followTrajectorySequenceAsync(builder.build());
@@ -186,18 +195,18 @@ public class RedBackStageAuto extends AutoBase {
                 macroState++;
                 break;
             case 13:
-                if (getRuntime() > macroTime + 1.5) {
+                if (getRuntime() > macroTime + 1.2) {
                     builder = this.robot.getTrajectorySequenceBuilder();
                     builder.lineToConstantHeading(POST_SCORING_SPLINE_END);
                     switch (teamPropLocation) {
                         case 1:
-                            builder.lineToConstantHeading(DEPOSIT_PRELOAD_1.vec());
+                            builder.lineToConstantHeading(DEPOSIT_WHITE_STACKS_1.vec());
                             break;
                         case 2:
-                            builder.lineToConstantHeading(DEPOSIT_PRELOAD_2.vec());
+                            builder.lineToConstantHeading(DEPOSIT_WHITE_STACKS_2.vec());
                             break;
                         case 3:
-                            builder.lineToConstantHeading(DEPOSIT_PRELOAD_3.vec());
+                            builder.lineToConstantHeading(DEPOSIT_WHITE_STACKS_3.vec());
                             break;
                     }
                     this.robot.drive.followTrajectorySequenceAsync(builder.build());
