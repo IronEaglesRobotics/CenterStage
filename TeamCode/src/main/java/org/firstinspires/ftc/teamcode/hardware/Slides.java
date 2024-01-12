@@ -16,7 +16,8 @@ public class Slides {
 //    public static double i = 0.02;
 //    public static double d = 0;
 //    public static double f = 0.01;
-    public static PIDFCoefficients coefficients = new PIDFCoefficients(0.0014,0.02,0,0.01);
+    //p was 0.0014
+    public static PIDFCoefficients coefficients = new PIDFCoefficients(0.002,0.02,0,0.01);
     public static double pTolerance = 20;
     private PIDController controller = new PIDController(coefficients.p, coefficients.i, coefficients.d);
 
@@ -24,7 +25,7 @@ public class Slides {
     public static int targetMax = 830;
 
     public static int down = 0;
-    public static int mini_tier1 = 165;
+    public static int mini_tier1 = 170;
     public static int tier1 = 350;
     public static int tier2 = 500;
     public static int tier3 = 720;
