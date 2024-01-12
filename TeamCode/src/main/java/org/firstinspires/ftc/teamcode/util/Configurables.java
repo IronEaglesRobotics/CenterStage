@@ -16,13 +16,13 @@ public class Configurables {
     //Servo Positions
     public static double ARMREST = 0.8;
     public static double ARMSCORE = 0.39;
-    public static double ARMACCSCORE = .39;
-    public static double ARMPICKUPSTACK = 0.825;
+    public static double ARMACCSCORE = .38;
+    public static double ARMPICKUPSTACK = 0.843;
     public static double PICKUP = 0.84;
     public static double WRISTPICKUP = 0.28;
     public static double WRISTSCORE = .96;
     public static double OPEN = 0.85;
-    public static double BIGOPEN = 0.73;
+    public static double BIGOPEN = 0.67;
     public static double CLOSE = 0.95;
     public static double PLANELOCK = 0.1;
     public static double PLANELAUNCH = 0.9;
@@ -38,7 +38,7 @@ public class Configurables {
     public static double SLIDE_POWER_UP = 1;
     public static double SLIDE_POWER_DOWN = .7;
     public static int SLIDELAYERONE = 150;
-    public static int SLIDEAUTOSTACKS = 300;
+    public static int SLIDEAUTOSTACKS = 225;
     public static int SLIDEUP = 1150;
     public static int HANGRELEASE = 2500;
     public static int HANG = 0;

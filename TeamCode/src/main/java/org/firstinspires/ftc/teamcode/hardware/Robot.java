@@ -76,7 +76,7 @@ public class Robot {
 
     public static class Slides {
         private DcMotor slidesRight = null;
-        private DcMotor slidesLeft = null;
+        public DcMotor slidesLeft = null;
 
         public Slides init(HardwareMap hardwareMap) {
             this.slidesLeft = hardwareMap.get(DcMotor.class, SLIDELEFT);
