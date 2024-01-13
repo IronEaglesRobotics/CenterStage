@@ -30,7 +30,7 @@ public abstract class AutoBase extends LinearOpMode {
 
         // initialize robot
         robot = new Robot(hardwareMap);
-        robot.camera.setAlliance(CenterStageCommon.Alliance.Red);
+        //robot.camera.setAlliance(CenterStageCommon.Alliance.Red);
 
         // create trajectories
         createTrajectories();
