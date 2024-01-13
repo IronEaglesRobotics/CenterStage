@@ -8,10 +8,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
+import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 @Config
-@Autonomous(name = "autoBLue2+2")
+@Autonomous(name = "autoBlue2+2")
 public class AutoBlueTwoPlusTwo extends LinearOpMode {
     protected Pose2d initialPosition;
     private Robot robot;
@@ -20,19 +22,19 @@ public class AutoBlueTwoPlusTwo extends LinearOpMode {
     //Pose2ds
     //Preloads
     final static Pose2d RIGHT_PRELOAD_ONE = new Pose2d(-40, -37.5, Math.toRadians(270));
-    final static Pose2d RIGHT_PRELOAD_TWO = new Pose2d(-29.5, -29, Math.toRadians(180));
+    final static Pose2d RIGHT_PRELOAD_TWO = new Pose2d(-29.5, -31, Math.toRadians(180));
     final static Pose2d CENTER_PRELOAD = new Pose2d(-33, -28, Math.toRadians(270));
     final static Pose2d LEFT_PRELOAD = new Pose2d(-43, -35, Math.toRadians(270));
     //Board Scores
-    final static Pose2d RIGHT_BOARD = new Pose2d(-75.3, -24.5, Math.toRadians(185));
-    final static Pose2d CENTER_BOARD = new Pose2d(-75.3, -35, Math.toRadians(185));
-    final static Pose2d LEFT_BOARD = new Pose2d(-75.3, -42, Math.toRadians(185));
+    final static Pose2d RIGHT_BOARD = new Pose2d(-75.7, -25.7, Math.toRadians(185));
+    final static Pose2d CENTER_BOARD = new Pose2d(-75.7, -35, Math.toRadians(185));
+    final static Pose2d LEFT_BOARD = new Pose2d(-75.7, -42, Math.toRadians(185));
     //Stack Cycle
     final static Pose2d LEAVE_BOARD = new Pose2d(-65, -10, Math.toRadians(180));
     final static Pose2d TO_STACK = new Pose2d(40.75, -7.25, Math.toRadians(180));
     final static Pose2d BACK_THROUGH_GATE = new Pose2d(-50, -10, Math.toRadians(180));
     final static Pose2d APPROACHING_BOARD = new Pose2d(-70, -28, Math.toRadians(180));
-    final static Pose2d SCORE_STACK = new Pose2d(-74.5, -28, Math.toRadians(180));
+    final static Pose2d SCORE_STACK = new Pose2d(-73, -31, Math.toRadians(180));
     //Park
     final static Pose2d BACK_OFF =  new Pose2d(-60,-58,Math.toRadians(180));
     final static Pose2d PARK = new Pose2d(-80, -60, Math.toRadians(180));
@@ -76,10 +78,11 @@ public class AutoBlueTwoPlusTwo extends LinearOpMode {
     protected void toStack() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.lineToLinearHeading(LEAVE_BOARD);
-        builder.addTemporalMarker(.3, robot.getArm()::armPickupStack);
+        builder.addTemporalMarker(.3, robot.getArm()::armRest);
         builder.addTemporalMarker(.3, robot.getWrist()::wristPickup);
         builder.addTemporalMarker(.1, robot.getSlides()::slideDown);
         builder.addTemporalMarker(1.5,robot.getClaw()::openStack);
+        builder.addTemporalMarker(1.5, robot.getArm()::pickup);
         builder.lineToLinearHeading(TO_STACK);
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
@@ -92,6 +95,15 @@ public class AutoBlueTwoPlusTwo extends LinearOpMode {
         builder.addTemporalMarker(2.5, robot.getArm()::armSecondaryScore);
         builder.addTemporalMarker(2.5, robot.getWrist()::wristScore);
         builder.addTemporalMarker(2.5, robot.getSlides()::slideAutoStacks);
+        this.robot.getDrive().followTrajectorySequence(builder.build());
+    }
+
+    protected void scoreTest() {
+        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+        builder.lineToLinearHeading(new Pose2d(-77, -31, Math.toRadians(180)),
+                MecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                MecanumDrive.getAccelerationConstraint(20));
+        builder.addTemporalMarker(.2,this::clawSlowOpen);
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 
@@ -138,25 +150,21 @@ public class AutoBlueTwoPlusTwo extends LinearOpMode {
             randomization = String.valueOf(this.robot.getCamera().getStartingPositionBlue());
             this.telemetry.update();
         }
-
         scorePreloadOne();
         boardScore();
 
-        sleep(250);
+        sleep(100);
         this.robot.getClaw().open();
-        sleep(250);
 
         toStack();
 
         sleep(500);
         this.robot.getClaw().close();
-        sleep(500);
+        sleep(250);
         this.robot.getArm().armRest();
         scoreStack();
         this.robot.getClaw().setPos(.86);
-        sleep(150);
-        clawSlowOpen();
-        sleep(300);
+        scoreTest();
         park();
     }
 

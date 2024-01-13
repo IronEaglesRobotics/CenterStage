@@ -76,7 +76,7 @@ public class    MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDr
 
     private TrajectoryFollower follower;
 
-    private DcMotorEx leftFront, leftRear, rightRear, rightFront;
+    public DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
 
     private IMU imu;
