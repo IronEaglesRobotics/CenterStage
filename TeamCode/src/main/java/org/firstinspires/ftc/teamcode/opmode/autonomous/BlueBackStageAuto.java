@@ -18,14 +18,14 @@ import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 @Autonomous(name = "Blue Backstage Auto(2+4)", group = "Competition", preselectTeleOp = "Main TeleOp")
 public class BlueBackStageAuto extends AutoBase {
     public static final Pose2d DROP_3 = new Pose2d(16, 32, Math.toRadians(-180));
-    public static final Pose2d DROP_2 = new Pose2d(13.7, 35, Math.toRadians(-90));
+    public static final Pose2d DROP_2 = new Pose2d(14, 35, Math.toRadians(-90));
 
     public static final Pose2d ALINE = new Pose2d(51,35, Math.toRadians(-180));
 
-    public static final Pose2d DROP_1 = new Pose2d(25, 41.6, Math.toRadians(-90));
+    public static final Pose2d DROP_1 = new Pose2d(25, 43, Math.toRadians(-90));
     public static final Pose2d DEPOSIT_PRELOAD_3 = new Pose2d(54.8, 27.5, Math.toRadians(-180));
-    public static final Pose2d DEPOSIT_PRELOAD_2 = new Pose2d(54, 32.5, Math.toRadians(-180));
-    public static final Pose2d DEPOSIT_PRELOAD_1 = new Pose2d(53.3, 39.5, Math.toRadians(-180));
+    public static final Pose2d DEPOSIT_PRELOAD_2 = new Pose2d(52, 32.5, Math.toRadians(-180));
+    public static final Pose2d DEPOSIT_PRELOAD_1 = new Pose2d(52.2, 39.3, Math.toRadians(-180));
 
     public static  final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(53.4, 35.6, Math.toRadians(-187));
 
@@ -35,9 +35,9 @@ public class BlueBackStageAuto extends AutoBase {
 
 
     //public static final Vector2d POST_SCORING_SPLINE_END = new Vector2d(24, -8.5);//-36
-    public static final Pose2d POST_SCORING_SPLINE_END = new Pose2d(24, 11.6, Math.toRadians(-180));//-36
+    public static final Pose2d POST_SCORING_SPLINE_END = new Pose2d(26, 11.8, Math.toRadians(-180));//-36
 
-    public static final Pose2d STACK_LOCATION = new Pose2d(-55.5, 11.6, Math.toRadians(-180));
+    public static final Pose2d STACK_LOCATION = new Pose2d(-54.7, 11.8, Math.toRadians(-180));
 
     @Override
     public void createTrajectories() {

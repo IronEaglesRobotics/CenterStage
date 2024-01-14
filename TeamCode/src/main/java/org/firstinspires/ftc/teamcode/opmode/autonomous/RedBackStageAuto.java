@@ -22,22 +22,22 @@ public class RedBackStageAuto extends AutoBase {
 
     public static final Pose2d ALINE = new Pose2d(51,-32.5, Math.toRadians(180));
 
-    public static final Pose2d DROP_3 = new Pose2d(25, -41.3, Math.toRadians(90));
+    public static final Pose2d DROP_3 = new Pose2d(25, -45.5, Math.toRadians(90));
     public static final Pose2d DEPOSIT_PRELOAD_1 = new Pose2d(52, -27.5, Math.toRadians(180));
-    public static final Pose2d DEPOSIT_PRELOAD_2 = new Pose2d(52, -32.5, Math.toRadians(180));
+    public static final Pose2d DEPOSIT_PRELOAD_2 = new Pose2d(53.5, -32.5, Math.toRadians(180));
     public static final Pose2d DEPOSIT_PRELOAD_3 = new Pose2d(51.3, -39.5, Math.toRadians(180));
 
-    public static  final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(50.3, -35.3, Math.toRadians(187));
+    public static  final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(50.3, -35.3, Math.toRadians(180));//187
 
-    public static  final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(52, -29, Math.toRadians(187));
+    public static  final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(52, -29, Math.toRadians(180));//187
 
-    public static  final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(50.6, -32, Math.toRadians(187));
+    public static  final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(50.6, -32, Math.toRadians(180));//817
 
 
     //public static final Vector2d POST_SCORING_SPLINE_END = new Vector2d(24, -8.5);//-36
-    public static final Pose2d POST_SCORING_SPLINE_END = new Pose2d(24, -10.6, Math.toRadians(180));//-36
+    public static final Pose2d POST_SCORING_SPLINE_END = new Pose2d(24, -12.5, Math.toRadians(180));//-36
 
-    public static final Pose2d STACK_LOCATION = new Pose2d(-57.4, -10.6, Math.toRadians(180));
+    public static final Pose2d STACK_LOCATION = new Pose2d(-56.8, -12.5, Math.toRadians(180));
 
     @Override
     public void createTrajectories() {

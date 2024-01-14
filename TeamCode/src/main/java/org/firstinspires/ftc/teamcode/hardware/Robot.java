@@ -114,7 +114,7 @@ public class Robot {
     }
 
     public String getTelemetry() {
-        return String.format("Arm:\n------------\n%s\nSlides:\n------------\n%s", arm.getTelemetry(), slides.getTelemetry());
+        return String.format("Arm:\n------------\n%s\nSlides:\n------------\n%s\nIMU:\n------------\n%s" , arm.getTelemetry(), slides.getTelemetry(), drive.getExternalHeadingVelocity());
     }
 
     public TrajectorySequenceBuilder getTrajectorySequenceBuilder() {

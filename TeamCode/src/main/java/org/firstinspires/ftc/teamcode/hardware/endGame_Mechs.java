@@ -9,8 +9,8 @@ public class endGame_Mechs {
     private Servo servo;
     private Servo hang1;
     private Servo hang2;
-    public static double initPos = 0.4;
-    public static double launchPos = 0.8;
+    public static double initPos = 0.8;
+    public static double launchPos = 0.4;
     public static double hold = 0.8;
     public static double release = 0.5;
     public static double hold2 = 0.8;

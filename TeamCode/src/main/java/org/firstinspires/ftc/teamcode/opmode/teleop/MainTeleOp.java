@@ -17,9 +17,9 @@ import org.firstinspires.ftc.teamcode.hardware.Slides;
 @TeleOp(name = "Main TeleOp", group = "OpModes")
 public class MainTeleOp extends OpMode {
 
-    public static double normal = 0.5;
+    public static double normal = 0.7;
     public static double turbo = 1;
-    public static double slow_mode = 0.15;
+    public static double slow_mode = 0.35;
     public static double intakeMax = 0.5;
     public static double intakeMax2 = -0.65;
 
@@ -102,14 +102,14 @@ public class MainTeleOp extends OpMode {
         // macros
         switch (robot.runningMacro) {
             case (0): // manual mode
-                if (controller2.getLeftBumper().isPressed()){
-                    robot.arm.setDoor(Arm.DoorPosition.OPEN);
-                }
+
                 robot.slides.increaseTarget(controller2.getLeftStick().getY());
                 if (robot.intake.getPower() >= 0.01) {
                     robot.arm.setDoor(OPEN);
                 } else if (robot.intake.getPower() <= -0.01) {
                     robot.arm.setDoor(OPEN);
+                } else if (controller2.getLeftBumper().isPressed()) {
+                    robot.arm.setDoor(Arm.DoorPosition.OPEN);
                 } else {
                     robot.arm.setDoor(CLOSE);
                 }
