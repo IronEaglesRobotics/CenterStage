@@ -16,31 +16,37 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 
 @Config
-@Autonomous(name = "Red Backstage Auto(2+4)", group = "Competition", preselectTeleOp = "Main TeleOp")
-public class RedBackStageAuto extends AutoBase {
-    public static final Pose2d DROP_1 = new Pose2d(12, -32.5, Math.toRadians(180));
+@Autonomous(name = "Red FrontStage Auto(2+5)", group = "Competition", preselectTeleOp = "Main TeleOp")
+public class RedFrontStageAuto extends AutoBase {
+    public static final Pose2d DROP_1 = new Pose2d(12, -32.5, Math.toRadians(0));
     public static final Pose2d DROP_2 = new Pose2d(13.7, -33.5, Math.toRadians(90));
 
-    public static final Pose2d ALINE = new Pose2d(51,-32.5, Math.toRadians(180));
+    public static final Pose2d ALINE = new Pose2d(51, -32.5, Math.toRadians(180));
 
     public static final Pose2d DROP_3 = new Pose2d(25, -45.5, Math.toRadians(90));
     public static final Pose2d DEPOSIT_PRELOAD_1 = new Pose2d(52, -27.5, Math.toRadians(180));
     public static final Pose2d DEPOSIT_PRELOAD_2 = new Pose2d(51, -31.5, Math.toRadians(180));
     public static final Pose2d DEPOSIT_PRELOAD_3 = new Pose2d(51.3, -42, Math.toRadians(180));
 
-    public static  final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(50.3, -35.3, Math.toRadians(188));//187
+    public static final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(50.3, -35.3, Math.toRadians(188));//187
 
-    public static  final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(50.5, -30, Math.toRadians(188));//187
+    public static final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(50.5, -30, Math.toRadians(188));//187
 
-    public static  final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(50.6, -32, Math.toRadians(188));//817
+    public static final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(50.6, -32, Math.toRadians(188));//817
 
 
     //public static final Vector2d POST_SCORING_SPLINE_END = new Vector2d(24, -8.5);//-36
     public static final Pose2d POST_SCORING_SPLINE_END = new Pose2d(24, -12.4, Math.toRadians(190));//-36
 
-    public static final Pose2d STACK_LOCATION = new Pose2d(-57.9, -12.4, Math.toRadians(190));
+    public static final Pose2d STACK_LOCATION = new Pose2d(-57.9, -36.4, Math.toRadians(190));
 
-    public static final Pose2d STACK_LOCATION_TWO = new Pose2d(-58.5, -12.4, Math.toRadians(190));
+    public static final Pose2d STACK_LOCATION_TWO = new Pose2d(-58.5, -36.4, Math.toRadians(190));
+
+    public static final Pose2d STACK_LOCATION_THREE = new Pose2d(-59.5, -36.4, Math.toRadians(190));
+
+    public static final Pose2d POST_DROP_POS = new Pose2d(51, -51.5, Math.toRadians(180));
+
+    public static final Pose2d PRE_DEPOSIT_POS = new Pose2d(51, -51.5, Math.toRadians(180));
 
     @Override
     public void createTrajectories() {
@@ -52,7 +58,7 @@ public class RedBackStageAuto extends AutoBase {
 
     @Override
     public void followTrajectories() {
-        TrajectorySequenceBuilder builder;
+        TrajectorySequenceBuilder builder = null;
         switch (macroState) {
             case 0:
                 builder = this.robot.getTrajectorySequenceBuilder();
@@ -72,6 +78,7 @@ public class RedBackStageAuto extends AutoBase {
                 break;
             // DRIVE TO TAPE
             case 1:
+
                 // if drive is done move on
                 if (!robot.drive.isBusy()) {
                     macroTime = getRuntime();
@@ -81,158 +88,52 @@ public class RedBackStageAuto extends AutoBase {
             // RUN INTAKE
             case 2:
                 // intake
-                if (getRuntime() < macroTime + 0.28) {
+                if (getRuntime() > macroTime + 0.28) {
                     robot.intake.setDcMotor(-0.22);
                 }
-                // if intake is done move on
-                else {
+                else{
+                    builder = this.robot.getTrajectorySequenceBuilder();
                     robot.intake.setDcMotor(0);
-                    robot.arm.setDoor(Arm.DoorPosition.CLOSE);
-                    robot.extendMacro(Slides.mini_tier1, getRuntime());
-                    builder = this.robot.getTrajectorySequenceBuilder();
-                    //Scores yellow pixel
-                    switch (teamPropLocation) {
-                        case 1:
-                            builder.lineToLinearHeading(DEPOSIT_PRELOAD_1);
-                            break;
-                        case 2:
-                            builder.lineToLinearHeading(DEPOSIT_PRELOAD_2);
-                            break;
-                        case 3:
-                            builder.lineToLinearHeading(DEPOSIT_PRELOAD_3);
-                            break;
-                    }
+                    builder.lineToLinearHeading(POST_DROP_POS);
+                    builder.lineToLinearHeading(STACK_LOCATION);
                     this.robot.drive.followTrajectorySequenceAsync(builder.build());
                     macroState++;
                 }
+                // if intake is done move on
                 break;
-            // EXTEND AND MOVE TO BACKBOARD
             case 3:
-                // extend macro
-                if (robot.macroState != 0) {
-                    robot.extendMacro(Slides.mini_tier1, getRuntime());
-                }
-                // if macro and drive are done, move on
-                if (robot.macroState == 0 && !robot.drive.isBusy()) {
-                    robot.resetMacro(0, getRuntime());
-                    macroState++;
+               // if drive is done move on
+                if (!robot.drive.isBusy()) {
                     macroTime = getRuntime();
-                }
-                break;
-            // STACK RUN 1 -------------------------
-            case 4:
-                robot.resetMacro(0, getRuntime());
-                if (getRuntime() > macroTime + 1.4 || robot.macroState >= 4) {
-                    builder = this.robot.getTrajectorySequenceBuilder();
-                    //builder.lineToConstantHeading(POST_SCORING_SPLINE_END);
-                    builder.splineToConstantHeading(POST_SCORING_SPLINE_END.vec(),Math.toRadians(180));
-                    builder.lineToConstantHeading(STACK_LOCATION.vec());
-                    this.robot.drive.followTrajectorySequenceAsync(builder.build());
                     macroState++;
-                }
-                break;
-            //waits for the robot to fin  the trajectory
-            case 5:
-                robot.resetMacro(0, getRuntime());
+               }
+
+            case 4:
                 robot.intake.setDcMotor(0.54);
                 robot.intake.setpos(STACK5);
-                if (!robot.drive.isBusy()) {
-                    macroState++;
-                }
-                break;
-            //First 2 pixels off the stack are intaken by this
-            case 6:
-                robot.intake.setDcMotor(0.54);
-                robot.intake.setpos(STACK4);
                 macroTime = getRuntime();
                 macroState++;
                 break;
-            //goes back to the easel
-            case 7:
-                if (getRuntime() > macroTime + 0.5) {
-                    robot.intake.setDcMotor(0);
-                    builder = this.robot.getTrajectorySequenceBuilder();
-                    //builder.lineToConstantHeading(POST_SCORING_SPLINE_END);
-                    builder.lineToConstantHeading(POST_SCORING_SPLINE_END.vec());
-                    switch (teamPropLocation) {
-                        case 1:
-                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_1.vec(),Math.toRadians(0));
-                            break;
-                        case 2:
-                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_2.vec(),Math.toRadians(0));
-                            break;
-                        case 3:
-                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_3.vec(),Math.toRadians(0));
-                            break;
-                    }
-                    this.robot.drive.followTrajectorySequenceAsync(builder.build());
-                    macroState++;
-                    macroTime = getRuntime();
-                }
-                break;
-            case 8:
-                // if drive is done move on
-                if (getRuntime() > macroTime + 1.4 || !robot.drive.isBusy()) {
-                    macroTime = getRuntime();
-                    robot.macroState = 0;
-                    robot.extendMacro(Slides.mini_tier1 + 80, getRuntime());
-                    macroState++;
-                }
-                break;
-            //extending the macro and about to score
-            case 9:
-                if (robot.macroState != 0) {
-                    robot.extendMacro(Slides.mini_tier1 + 80, getRuntime());
-                }
-                if (robot.macroState == 0 && !robot.drive.isBusy()) {
-                    robot.resetMacro(0, getRuntime());
-                    macroState++;
-                    macroTime = getRuntime();
-                }
-                break;
-            // STACK RUN 2
-            case 10:
-                robot.resetMacro(0, getRuntime());
-                if (getRuntime() > macroTime + 1.4 || robot.macroState >= 4) {
-                    builder = this.robot.getTrajectorySequenceBuilder();
-                    builder.splineToConstantHeading(POST_SCORING_SPLINE_END.vec(),Math.toRadians(180));
-                    builder.lineToConstantHeading(STACK_LOCATION_TWO.vec());
-                    this.robot.drive.followTrajectorySequenceAsync(builder.build());
-                    macroState++;
-                }
-                break;
-            //waits for the robot to fin  the trajectory
-            case 11:
-                robot.resetMacro(0, getRuntime());
-                robot.intake.setDcMotor(0.54);
-                robot.intake.setpos(STACK3);
-                if (!robot.drive.isBusy()) {
-                    macroState++;
-                }
-                break;
-            //3rd and 4th pixels off the stack are intaken by this
-            case 12:
-                robot.intake.setDcMotor(0.54);
-                robot.intake.setpos(STACK2);
-                macroTime = getRuntime();
-                macroState++;
-                break;
-            //goes back to the easel
-            case 13:
+
+            case 5:
                 if (getRuntime() > macroTime + 0.6) {
                     robot.intake.setDcMotor(0);
                     builder = this.robot.getTrajectorySequenceBuilder();
                     //builder.lineToConstantHeading(POST_SCORING_SPLINE_END);
-                    builder.lineToConstantHeading(POST_SCORING_SPLINE_END.vec());
+                    builder.lineToConstantHeading(POST_DROP_POS.vec());
+
                     switch (teamPropLocation) {
                         case 1:
-                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_1.vec(),Math.toRadians(0));
+                            builder.lineToLinearHeading(PRE_DEPOSIT_POS);
+                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_1.vec(), Math.toRadians(0));
                             break;
                         case 2:
-                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_2.vec(),Math.toRadians(0));
+                            builder.lineToLinearHeading(PRE_DEPOSIT_POS);
+                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_2.vec(), Math.toRadians(0));
                             break;
                         case 3:
-                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_3.vec(),Math.toRadians(0));
+                            builder.lineToLinearHeading(PRE_DEPOSIT_POS);
+                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_3.vec(), Math.toRadians(0));
                             break;
                     }
                     this.robot.drive.followTrajectorySequenceAsync(builder.build());
@@ -240,7 +141,7 @@ public class RedBackStageAuto extends AutoBase {
                     macroTime = getRuntime();
                 }
                 break;
-            case 14:
+            case 6:
                 // if drive is done move on
                 if (getRuntime() > macroTime + 1.4 || !robot.drive.isBusy()) {
                     macroTime = getRuntime();
@@ -250,7 +151,7 @@ public class RedBackStageAuto extends AutoBase {
                 }
                 break;
             //extending the macro and about to score
-            case 15:
+            case 7:
                 if (robot.macroState != 0) {
                     robot.extendMacro(Slides.mini_tier1 + 80, getRuntime());
                 }
@@ -260,15 +161,162 @@ public class RedBackStageAuto extends AutoBase {
                 }
                 break;
 
-            // PARK ROBOT
+            //Stack run 2
+            case 8:
+                robot.resetMacro(0, getRuntime());
+                if (getRuntime() > macroTime + 1.4 || robot.macroState >= 4) {
+                    builder = this.robot.getTrajectorySequenceBuilder();
+                    builder.lineToLinearHeading(POST_DROP_POS);
+                    builder.lineToLinearHeading(STACK_LOCATION_TWO);
+                    this.robot.drive.followTrajectorySequenceAsync(builder.build());
+                    macroState++;
+                    break;
+
+                }
+
+                //waits for the robot to fin  the trajectory
+            case 9:
+                robot.resetMacro(0, getRuntime());
+                robot.intake.setDcMotor(0.54);
+                robot.intake.setpos(STACK4);
+                if (!robot.drive.isBusy()) {
+                    macroState++;
+                }
+                break;
+            //3rd and 4th pixels off the stack are in-taken by this
+            case 10:
+                robot.intake.setDcMotor(0.54);
+                robot.intake.setpos(STACK3);
+                macroTime = getRuntime();
+                macroState++;
+                break;
+
+            case 11:
+                if (getRuntime() > macroTime + 0.6) {
+                    robot.intake.setDcMotor(0);
+                    builder = this.robot.getTrajectorySequenceBuilder();
+                    //builder.lineToConstantHeading(POST_SCORING_SPLINE_END);
+                    builder.lineToConstantHeading(POST_DROP_POS.vec());
+
+                    switch (teamPropLocation) {
+                        case 1:
+                            builder.lineToLinearHeading(PRE_DEPOSIT_POS);
+                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_1.vec(), Math.toRadians(0));
+                            break;
+                        case 2:
+                            builder.lineToLinearHeading(PRE_DEPOSIT_POS);
+                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_2.vec(), Math.toRadians(0));
+                            break;
+                        case 3:
+                            builder.lineToLinearHeading(PRE_DEPOSIT_POS);
+                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_3.vec(), Math.toRadians(0));
+                            break;
+                    }
+                    this.robot.drive.followTrajectorySequenceAsync(builder.build());
+                    macroState++;
+                    macroTime = getRuntime();
+                }
+                break;
+            case 12:
+                // if drive is done move on
+                if (getRuntime() > macroTime + 1.4 || !robot.drive.isBusy()) {
+                    macroTime = getRuntime();
+                    robot.macroState = 0;
+                    robot.extendMacro(Slides.mini_tier1 + 180, getRuntime());
+                    macroState++;
+                }
+                break;
+            //extending the macro and about to score
+            case 13:
+                if (robot.macroState != 0) {
+                    robot.extendMacro(Slides.mini_tier1 + 80, getRuntime());
+                }
+                if (robot.macroState == 0 && !robot.drive.isBusy()) {
+                    robot.resetMacro(0, getRuntime());
+                    macroState++;
+                }
+                break;
+
+            //stack run 3
+            case 14:
+                robot.resetMacro(0, getRuntime());
+                if (getRuntime() > macroTime + 1.4 || robot.macroState >= 4) {
+                    builder = this.robot.getTrajectorySequenceBuilder();
+                    builder.lineToLinearHeading(POST_DROP_POS);
+                    builder.lineToLinearHeading(STACK_LOCATION_THREE);
+                    this.robot.drive.followTrajectorySequenceAsync(builder.build());
+                    macroState++;
+                    break;
+
+                }
+
+                //waits for the robot to fin  the trajectory
+            case 15:
+                robot.resetMacro(0, getRuntime());
+                robot.intake.setDcMotor(0.54);
+                robot.intake.setpos(STACK4);
+                if (!robot.drive.isBusy()) {
+                    macroState++;
+                }
+                break;
+            //3rd and 4th pixels off the stack are intaken by this
             case 16:
+                robot.intake.setDcMotor(0.54);
+                robot.intake.setpos(STACK3);
+                macroTime = getRuntime();
+                macroState++;
+                break;
+
+            case 17:
+                if (getRuntime() > macroTime + 0.6) {
+                    robot.intake.setDcMotor(0);
+                    builder = this.robot.getTrajectorySequenceBuilder();
+                    //builder.lineToConstantHeading(POST_SCORING_SPLINE_END);
+                    builder.lineToConstantHeading(POST_DROP_POS.vec());
+
+                    switch (teamPropLocation) {
+                        case 1:
+                            builder.lineToLinearHeading(PRE_DEPOSIT_POS);
+                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_1.vec(), Math.toRadians(0));
+                            break;
+                        case 2:
+                            builder.lineToLinearHeading(PRE_DEPOSIT_POS);
+                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_2.vec(), Math.toRadians(0));
+                            break;
+                        case 3:
+                            builder.lineToLinearHeading(PRE_DEPOSIT_POS);
+                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_3.vec(), Math.toRadians(0));
+                            break;
+                    }
+                    this.robot.drive.followTrajectorySequenceAsync(builder.build());
+                    macroState++;
+                    macroTime = getRuntime();
+                }
+                break;
+            case 18:
+                // if drive is done move on
+                if (getRuntime() > macroTime + 1.4 || !robot.drive.isBusy()) {
+                    macroTime = getRuntime();
+                    robot.macroState = 0;
+                    robot.extendMacro(Slides.mini_tier1 + 180, getRuntime());
+                    macroState++;
+                }
+                break;
+            //extending the macro and about to score
+            case 19:
+                if (robot.macroState != 0) {
+                    robot.extendMacro(Slides.mini_tier1 + 80, getRuntime());
+                }
+                if (robot.macroState == 0 && !robot.drive.isBusy()) {
+                    robot.resetMacro(0, getRuntime());
+                    macroState++;
+                }
+                break;
+            case 20:
                 robot.resetMacro(0, getRuntime());
                 if (robot.macroState == 0) {
                     macroState = -1;
                 }
-
-                // PARK ROBOT
-//
         }
     }
 }
