@@ -19,6 +19,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.hardware.Camera;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
+import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 
 @TeleOp(name = "MainTeleOp", group = "Main")
 public class MainTeleOp extends OpMode {
@@ -42,6 +43,7 @@ public class MainTeleOp extends OpMode {
         this.clawArmPosition = PICKUP_ARM_MAX;
 
         this.robot = new Robot(this.hardwareMap, telemetry);
+        this.robot.getCamera().setAlliance(CenterStageCommon.Alliance.Blue);
         telemetry.addData("Status", "Initialized");
     }
 
@@ -168,7 +170,7 @@ public class MainTeleOp extends OpMode {
             this.robot.getLift().stopReset();
         }
 
-        Vector2d poseFromAprilTag = this.robot.getCamera().getPoseFromAprilTag(2, 5);
+        Pose2d poseFromAprilTag = this.robot.getCamera().getPoseFromAprilTag(2, 5);
         dashboard.getTelemetry().addData("Inferred Position", poseFromAprilTag);
         dashboard.getTelemetry().update();
 
@@ -215,13 +217,13 @@ public class MainTeleOp extends OpMode {
         this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
     }
 
-    private void macroToScore(Vector2d poseFromAprilTag, boolean left) {
+    private void macroToScore(Pose2d poseFromAprilTag, boolean left) {
         if (this.robot.getDrive().isBusy()) {
             return;
         }
 
         Pose2d target;  // defines a new pose2d named target, position not yet given
-        Pose2d poseEstimate = new Pose2d(poseFromAprilTag.getX(), poseFromAprilTag.getY(), this.robot.getDrive().getPoseEstimate().getHeading());
+        Pose2d poseEstimate = new Pose2d(poseFromAprilTag.getX(), poseFromAprilTag.getY(), -Math.toRadians(poseFromAprilTag.getHeading()));
         double y = poseEstimate.getY() > 0
                 ? left ? 40 : 30
                 : left ? -30 : -40;

@@ -41,7 +41,7 @@ public class Test extends OpMode {
         boolean slowmode = gamepad1.right_bumper || gamepad1.y;
         this.robot.getDrive().setInput(gamepad1, gamepad2, slowmode);
 
-        Vector2d poseFromAprilTag = this.robot.getCamera().getPoseFromAprilTag(2, 5);
+        Pose2d poseFromAprilTag = this.robot.getCamera().getPoseFromAprilTag(2, 5);
         dashboard.getTelemetry().addData("Inferred Position", poseFromAprilTag);
         dashboard.getTelemetry().update();
 
@@ -86,7 +86,7 @@ public class Test extends OpMode {
         this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
     }
 
-    private void macroToScore(Vector2d poseFromAprilTag, boolean left) {
+    private void macroToScore(Pose2d poseFromAprilTag, boolean left) {
         if (this.robot.getDrive().isBusy()) {
             return;
         }

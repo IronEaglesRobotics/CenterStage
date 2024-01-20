@@ -20,6 +20,7 @@ public class RobotConfig {
     public static final String ROBOT_LIFT_ROTATION_NAME = "liftRotation";
     public static final String ROBOT_LIFT_LIFT_NAME = "liftLift";
     public static final String WEBCAM_NAME = "webcam";
+    public static final String WEBCAM_MINI_NAME = "webcammini";
     public static final String PARALLEL_DRIVE_ODOMETRY = FRONT_LEFT_NAME;
     public static final String PERPENDICULAR_DRIVE_ODOMETRY = BACK_LEFT_NAME;
 
@@ -65,12 +66,8 @@ public class RobotConfig {
     public static double LIFT_POWER = 1f;
 
     // Vision
-    public static double CAMERA_OFFSET_X = 0f;
-    public static double DETECTION_AREA_MIN = 0.01f;
-    public static double DETECTION_AREA_MAX = 0.2f;
-    public static double DETECTION_LEFT_X = 0;
-    public static double DETECTION_CENTER_X = .5;
-    public static double DETECTION_RIGHT_X = 1;
+    public static double DETECTION_AREA_MIN = 0.05f;
+    public static double DETECTION_AREA_MAX = 0.8f;
     public static double SCORING_DISTANCE_FROM_APRIL_TAG = 7f;
     public static final double FORWARD_OFFSET_IN = 7.75;
     public static final double SIDE_OFFSET_IN = 0.5;

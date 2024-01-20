@@ -6,8 +6,6 @@ import static org.firstinspires.ftc.teamcode.hardware.Camera.PROP_REJECTION_VERT
 import static org.firstinspires.ftc.teamcode.hardware.Camera.PROP_REJECTION_VERTICAL_UPPER;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DETECTION_AREA_MAX;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DETECTION_AREA_MIN;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DETECTION_LEFT_X;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DETECTION_RIGHT_X;
 import static org.firstinspires.ftc.teamcode.util.Colors.FTC_BLUE_RANGE;
 import static org.firstinspires.ftc.teamcode.util.Colors.FTC_RED_RANGE_1;
 import static org.firstinspires.ftc.teamcode.util.Colors.FTC_RED_RANGE_2;
@@ -23,8 +21,6 @@ import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getLargestContour;
 import android.graphics.Canvas;
 
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
-import org.firstinspires.ftc.teamcode.hardware.Camera;
-import org.firstinspires.ftc.teamcode.hardware.Gantry;
 import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 import org.firstinspires.ftc.teamcode.util.ScalarRange;
 import org.firstinspires.ftc.vision.VisionProcessor;
@@ -39,7 +35,6 @@ import java.util.ArrayList;
 
 import lombok.Getter;
 import lombok.Setter;
-import opmodes.Test;
 
 public class PropDetectionPipeline implements VisionProcessor {
     @Getter
@@ -113,13 +108,14 @@ public class PropDetectionPipeline implements VisionProcessor {
 
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
-        canvas.drawLine(0, PROP_REJECTION_VERTICAL_LOWER, canvas.getWidth(), PROP_REJECTION_VERTICAL_LOWER, WHITE);
-        canvas.drawLine(0, PROP_REJECTION_VERTICAL_UPPER, canvas.getWidth(), PROP_REJECTION_VERTICAL_UPPER, WHITE);
+        canvas.drawLine(0, PROP_REJECTION_VERTICAL_LOWER * scaleBmpPxToCanvasPx, canvas.getWidth(), PROP_REJECTION_VERTICAL_LOWER * scaleBmpPxToCanvasPx, WHITE);
+        canvas.drawLine(0, PROP_REJECTION_VERTICAL_UPPER * scaleBmpPxToCanvasPx, canvas.getWidth(), PROP_REJECTION_VERTICAL_UPPER * scaleBmpPxToCanvasPx, WHITE);
+        canvas.drawLine(PROP_REJECTION_HORIZONTAL_LEFT * scaleBmpPxToCanvasPx, 0, PROP_REJECTION_HORIZONTAL_LEFT * scaleBmpPxToCanvasPx, canvas.getHeight(), WHITE);
+        canvas.drawLine(PROP_REJECTION_HORIZONTAL_RIGHT * scaleBmpPxToCanvasPx, 0, PROP_REJECTION_HORIZONTAL_RIGHT * scaleBmpPxToCanvasPx, canvas.getHeight(), WHITE);
 
         if (red != null && red.isValid()) {
             Point center = red.getCenterPx();
-            if (center.y < PROP_REJECTION_VERTICAL_LOWER
-                    && center.y > PROP_REJECTION_VERTICAL_UPPER) {
+            if (center.y < PROP_REJECTION_VERTICAL_LOWER && center.y > PROP_REJECTION_VERTICAL_UPPER) {
                 canvas.drawCircle((float)red.getCenterPx().x, (float)red.getCenterPx().y, 10, WHITE);
             } else {
                 canvas.drawCircle((float)red.getCenterPx().x, (float)red.getCenterPx().y, 10, RED);
@@ -128,8 +124,7 @@ public class PropDetectionPipeline implements VisionProcessor {
 
         if (blue != null && blue.isValid()) {
             Point center = blue.getCenterPx();
-            if (center.y < PROP_REJECTION_VERTICAL_LOWER
-                    && center.y > PROP_REJECTION_VERTICAL_UPPER) {
+            if (center.y < PROP_REJECTION_VERTICAL_LOWER && center.y > PROP_REJECTION_VERTICAL_UPPER) {
                 canvas.drawCircle((float)blue.getCenterPx().x, (float)blue.getCenterPx().y, 10, WHITE);
             } else {
                 canvas.drawCircle((float)blue.getCenterPx().x, (float)blue.getCenterPx().y, 10, RED);

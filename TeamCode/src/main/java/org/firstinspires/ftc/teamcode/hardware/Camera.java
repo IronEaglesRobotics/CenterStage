@@ -2,21 +2,18 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.FORWARD_OFFSET_IN;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.SIDE_OFFSET_IN;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.WEBCAM_MINI_NAME;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.WEBCAM_NAME;
 import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_DETECTION;
-
-import android.hardware.GeomagneticField;
-
-import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.apache.commons.math3.ml.neuralnet.twod.util.TopographicErrorHistogram;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.StandardTrackingWheelLocalizer;
 import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 import org.firstinspires.ftc.teamcode.vision.Detection;
 import org.firstinspires.ftc.teamcode.vision.PropDetectionPipeline;
@@ -24,19 +21,19 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
 @Config
 public class Camera {
-    public static float PROP_REJECTION_VERTICAL_UPPER = 150;
-    public static float PROP_REJECTION_VERTICAL_LOWER = 275;
-    public static float PROP_REJECTION_HORIZONTAL_LEFT = 50;
-    public static float PROP_REJECTION_HORIZONTAL_RIGHT = 480 - PROP_REJECTION_HORIZONTAL_LEFT;
+    public static float PROP_REJECTION_VERTICAL_UPPER = 10;
+    public static float PROP_REJECTION_VERTICAL_LOWER = 470;
+    public static float PROP_REJECTION_HORIZONTAL_LEFT = 10;
+    public static float PROP_REJECTION_HORIZONTAL_RIGHT = 630;
     private PropDetectionPipeline prop;
     private AprilTagProcessor aprilTag;
-    private VisionPortal visionPortal;
+    private VisionPortal aprilTagPortal;
+    private VisionPortal propPortal;
     private Telemetry telemetry;
     public static final Vector2d tag2Pose = new Vector2d(60, 36);
     public static final Vector2d tag5Pose = new Vector2d(60, -36);
@@ -54,13 +51,30 @@ public class Camera {
                 .setDrawTagID(true)
                 .setDrawTagOutline(true)
                 .build();
+        int[] viewportIds = VisionPortal.makeMultiPortalView(2, VisionPortal.MultiPortalLayout.HORIZONTAL);
+
+        VisionPortal.Builder aprilTagVisionPortalBuilder = new VisionPortal.Builder();
+        aprilTagVisionPortalBuilder.setCamera(hardwareMap.get(WebcamName.class, WEBCAM_NAME));
+        aprilTagVisionPortalBuilder.setLiveViewContainerId(viewportIds[0]);
+        aprilTagVisionPortalBuilder.setAutoStopLiveView(true);
+        aprilTagVisionPortalBuilder.addProcessor(aprilTag);
+        this.aprilTagPortal = aprilTagVisionPortalBuilder.build();
+
         this.prop = new PropDetectionPipeline();
-        this.visionPortal = VisionPortal.easyCreateWithDefaults(
-                hardwareMap.get(WebcamName.class, WEBCAM_NAME), aprilTag, prop);
+        VisionPortal.Builder propVisionPortalBuilder = new VisionPortal.Builder();
+        propVisionPortalBuilder.setCamera(hardwareMap.get(WebcamName.class, WEBCAM_MINI_NAME));
+        propVisionPortalBuilder.setLiveViewContainerId(viewportIds[1]);
+        propVisionPortalBuilder.setAutoStopLiveView(true);
+        propVisionPortalBuilder.addProcessor(prop);
+        this.propPortal = propVisionPortalBuilder.build();
+
+        this.propPortal.resumeLiveView();
+        this.aprilTagPortal.resumeLiveView();
         this.initialized = true;
     }
 
     public Detection getProp() {
+        telemetry.addData("Getting Prop - Alliance", this.getAlliance());
         if (!initialized || getAlliance() == null) {
             return INVALID_DETECTION;
         }
@@ -106,7 +120,7 @@ public class Camera {
         return this.prop != null ? this.prop.getAlliance() : null;
     }
 
-    public Vector2d getPoseFromAprilTag(int ... ids) {
+    public Pose2d getPoseFromAprilTag(int ... ids) {
         if (ids == null || ids.length == 0) {
             ids = new int[]{2, 5};
         }
@@ -136,6 +150,6 @@ public class Camera {
                 break;
         }
 
-        return new Vector2d(ourPoseX, ourPoseY);
+        return new Pose2d(ourPoseX, ourPoseY, ftcPose.bearing);
     }
 }
