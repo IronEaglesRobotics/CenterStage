@@ -32,9 +32,9 @@ public class RobotConfig {
 
     // Arm
     public static double PICKUP_ARM_MIN = 0.185;
-    public static double PICKUP_ARM_MAX = 0.755;
-    public static double CLAW_MIN = 0.92;
-    public static double CLAW_MAX = 0.6;
+    public static double PICKUP_ARM_MAX = 0.760;
+    public static double CLAW_MIN = 0.89;
+    public static double CLAW_MAX = 0.65;
     public static double CLAW_ARM_DELTA = 0.03;
     public static double CLAW_KP = 0.3;
 
@@ -71,7 +71,7 @@ public class RobotConfig {
     public static double DETECTION_LEFT_X = 0;
     public static double DETECTION_CENTER_X = .5;
     public static double DETECTION_RIGHT_X = 1;
-    public static double SCORING_DISTANCE_FROM_APRIL_TAG = 6f;
+    public static double SCORING_DISTANCE_FROM_APRIL_TAG = 7f;
     public static final double FORWARD_OFFSET_IN = 7.75;
     public static final double SIDE_OFFSET_IN = 0.5;
 }

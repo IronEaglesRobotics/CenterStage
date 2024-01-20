@@ -208,8 +208,9 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     }
 
     public void breakFollowing() {
+        boolean wasBusy = trajectorySequenceRunner.isBusy();
         trajectorySequenceRunner.breakFollowing();
-        if (trajectorySequenceRunner.isBusy()) {
+        if (wasBusy) {
             setWeightedDrivePower(new Pose2d());
         }
     }
@@ -333,6 +334,9 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     }
 
     public void setInput(Gamepad gamepad1, Gamepad gamepad2, boolean slowmode) {
+        if (isBusy()) {
+            return;
+        }
         double speedScale = slowmode ? SLOW_MODE_SPEED_PCT : SPEED;
         double turnScale = slowmode ? SLOW_MODE_TURN_PCT : TURN;
 

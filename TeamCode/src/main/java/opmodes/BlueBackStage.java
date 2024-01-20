@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 
 @Autonomous(name = "BlueBackStage", preselectTeleOp = "MainTeleOp")
 public class BlueBackStage extends AutoBase {
-    private final Pose2d rendezvous = new Pose2d(12, 11);
+    private final Pose2d rendezvous = new Pose2d(12, 10);
 
     public BlueBackStage() {
         super(

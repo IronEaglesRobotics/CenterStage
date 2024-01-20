@@ -37,6 +37,10 @@ public class Test extends OpMode {
     public void loop() {
         robot.update();
 
+        // Drive
+        boolean slowmode = gamepad1.right_bumper || gamepad1.y;
+        this.robot.getDrive().setInput(gamepad1, gamepad2, slowmode);
+
         Vector2d poseFromAprilTag = this.robot.getCamera().getPoseFromAprilTag(2, 5);
         dashboard.getTelemetry().addData("Inferred Position", poseFromAprilTag);
         dashboard.getTelemetry().update();
@@ -44,13 +48,13 @@ public class Test extends OpMode {
         boolean leftPressed = gamepad1.dpad_left;
         boolean rightPressed = gamepad1.dpad_right;
         if (poseFromAprilTag != null) {
-            if (leftPressed && !leftWasPressed) {
+            if (leftPressed) {
                 macroToScore(poseFromAprilTag, true);
-            } else if (rightPressed && !rightWasPressed) {
+            } else if (rightPressed) {
                 macroToScore(poseFromAprilTag, false);
             }
         } else {
-            if (leftPressed && !leftWasPressed || rightPressed && !rightWasPressed) {
+            if (leftPressed || rightPressed) {
                 moveToStartSquare();
             }
         }
@@ -78,11 +82,14 @@ public class Test extends OpMode {
         double y = targetTagId == 2 ? 36f : -36f;
 
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-        builder.lineToLinearHeading(new Pose2d(36, y, 0));
+        builder.lineToLinearHeading(new Pose2d(34, y, 0));
         this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
     }
 
     private void macroToScore(Vector2d poseFromAprilTag, boolean left) {
+        if (this.robot.getDrive().isBusy()) {
+            return;
+        }
         Pose2d target;
         Pose2d poseEstimate = new Pose2d(poseFromAprilTag.getX(), poseFromAprilTag.getY(), this.robot.getDrive().getPoseEstimate().getHeading());
         double y = poseEstimate.getY() > 0

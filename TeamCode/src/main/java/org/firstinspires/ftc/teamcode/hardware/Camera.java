@@ -32,6 +32,8 @@ import java.util.Arrays;
 public class Camera {
     public static float PROP_REJECTION_VERTICAL_UPPER = 150;
     public static float PROP_REJECTION_VERTICAL_LOWER = 275;
+    public static float PROP_REJECTION_HORIZONTAL_LEFT = 50;
+    public static float PROP_REJECTION_HORIZONTAL_RIGHT = 480 - PROP_REJECTION_HORIZONTAL_LEFT;
     private PropDetectionPipeline prop;
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
@@ -122,11 +124,11 @@ public class Camera {
         switch (aprilTagDetection.id) {
             case 2:
                 ourPoseX = tag2Pose.getX() - ftcPose.y - FORWARD_OFFSET_IN;
-                ourPoseY = tag2Pose.getY() - ftcPose.x - SIDE_OFFSET_IN;
+                ourPoseY = tag2Pose.getY() + ftcPose.x - SIDE_OFFSET_IN;
                 break;
             case 5:
                 ourPoseX = tag5Pose.getX() - ftcPose.y - FORWARD_OFFSET_IN;
-                ourPoseY = tag5Pose.getY() - ftcPose.x - SIDE_OFFSET_IN;
+                ourPoseY = tag5Pose.getY() + ftcPose.x - SIDE_OFFSET_IN;
                 break;
             default:
                 ourPoseX = 0;

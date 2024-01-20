@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.vision.Detection;
 @Config
 public abstract class AutoBase extends LinearOpMode {
     public static int DEPOSIT_HEIGHT = 100;
-    public static double SCORING_DURATION_S =  5f;
+    public static double SCORING_DURATION_S =  3f; // for spin of axle
     public static double APRIL_TAG_RIGHT_DELTA = -8.5;
     public static double APRIL_TAG_LEFT_DELTA = 7.0;
     protected static double Delay = 5000;
@@ -55,7 +55,7 @@ public abstract class AutoBase extends LinearOpMode {
             this.robot.update();
             this.sleep(20);
         }
-        if (isStopRequested()) {
+        if (isStopRequested()) {  // remove later if nessacary as recent addition might be interefering
             return;
         }
 
@@ -130,7 +130,9 @@ public abstract class AutoBase extends LinearOpMode {
                 break;
         }
         double distance = this.robot.getCamera().getDistanceToAprilTag(this.alliance == CenterStageCommon.Alliance.Blue ? 2:5, 25, 5);
-        Vector2d target = new Vector2d(this.robot.getDrive().getPoseEstimate().getX() + (distance - SCORING_DISTANCE_FROM_APRIL_TAG), this.robot.getDrive().getPoseEstimate().getY() + delta);
+        Vector2d target = new Vector2d(this.robot.getDrive().getPoseEstimate().getX() +
+                (distance - SCORING_DISTANCE_FROM_APRIL_TAG),
+                this.robot.getDrive().getPoseEstimate().getY() + delta);
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.lineToConstantHeading(target);
         this.robot.getDrive().followTrajectorySequence(builder.build());

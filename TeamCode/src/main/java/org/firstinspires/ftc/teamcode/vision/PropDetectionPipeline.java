@@ -1,9 +1,13 @@
 package org.firstinspires.ftc.teamcode.vision;
 
+import static org.firstinspires.ftc.teamcode.hardware.Camera.PROP_REJECTION_HORIZONTAL_LEFT;
+import static org.firstinspires.ftc.teamcode.hardware.Camera.PROP_REJECTION_HORIZONTAL_RIGHT;
 import static org.firstinspires.ftc.teamcode.hardware.Camera.PROP_REJECTION_VERTICAL_LOWER;
 import static org.firstinspires.ftc.teamcode.hardware.Camera.PROP_REJECTION_VERTICAL_UPPER;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DETECTION_AREA_MAX;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DETECTION_AREA_MIN;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DETECTION_LEFT_X;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DETECTION_RIGHT_X;
 import static org.firstinspires.ftc.teamcode.util.Colors.FTC_BLUE_RANGE;
 import static org.firstinspires.ftc.teamcode.util.Colors.FTC_RED_RANGE_1;
 import static org.firstinspires.ftc.teamcode.util.Colors.FTC_RED_RANGE_2;
@@ -19,6 +23,8 @@ import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getLargestContour;
 import android.graphics.Canvas;
 
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
+import org.firstinspires.ftc.teamcode.hardware.Camera;
+import org.firstinspires.ftc.teamcode.hardware.Gantry;
 import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 import org.firstinspires.ftc.teamcode.util.ScalarRange;
 import org.firstinspires.ftc.vision.VisionProcessor;
@@ -33,6 +39,7 @@ import java.util.ArrayList;
 
 import lombok.Getter;
 import lombok.Setter;
+import opmodes.Test;
 
 public class PropDetectionPipeline implements VisionProcessor {
     @Getter
@@ -92,7 +99,9 @@ public class PropDetectionPipeline implements VisionProcessor {
 
         Imgproc.rectangle(mask, new Point(0,0), new Point(mask.cols() - 1, (int)PROP_REJECTION_VERTICAL_UPPER), BLACK, -1);
         Imgproc.rectangle(mask, new Point(0,(int)PROP_REJECTION_VERTICAL_LOWER), new Point(mask.cols() - 1, mask.rows() -1), BLACK, -1);
-
+        Imgproc.rectangle(mask, new Point(0,0), new Point(PROP_REJECTION_HORIZONTAL_LEFT, mask.rows() - 1), BLACK, -1);
+        Imgproc.rectangle(mask, new Point(PROP_REJECTION_HORIZONTAL_RIGHT, 0), new Point(mask.cols() - 1, mask.rows() - 1), BLACK, -1);
+        
         Imgproc.erode(mask, mask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
         Imgproc.dilate(mask, mask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
 

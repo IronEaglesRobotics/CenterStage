@@ -33,9 +33,9 @@ public class MainTeleOp extends OpMode {
     private boolean liftArmShouldBeUp = false;
     private boolean screwArmIsMoving = false;
     private FtcDashboard dashboard;
-    private boolean leftWasPressed;
-    private boolean rightWasPressed;
     private boolean isGantryFlipped = false;
+    private int targetTagId;
+
     @Override
     public void init() {
         this.dashboard = FtcDashboard.getInstance();
@@ -122,6 +122,7 @@ public class MainTeleOp extends OpMode {
             this.robot.getGantry().setSlideTarget(SLIDE_UP);
         } else if (slideDown) {
             this.robot.getGantry().setSlideTarget(0);
+            this.robot.getGantry().stop();
         } else if (previousSlideUp || previousSlideDown) {
             this.robot.getGantry().setSlideTarget(this.robot.getGantry().getSlidePosition());
         } else if (!isGantryFlipped)
@@ -168,21 +169,24 @@ public class MainTeleOp extends OpMode {
         }
 
         Vector2d poseFromAprilTag = this.robot.getCamera().getPoseFromAprilTag(2, 5);
+        dashboard.getTelemetry().addData("Inferred Position", poseFromAprilTag);
+        dashboard.getTelemetry().update();
 
         if (poseFromAprilTag != null) {
-            if (leftPressed && !leftWasPressed) {
+            if (leftPressed) {
                 macroToScore(poseFromAprilTag, true);
-            } else if (rightPressed && !rightWasPressed) {
+            } else if (rightPressed) {
                 macroToScore(poseFromAprilTag, false);
+            }
+        } else {
+            if (leftPressed || rightPressed) {
+                moveToStartSquare();
             }
         }
 
-        if (!leftPressed && !rightPressed) { // breaks drive as makes it so it continuously brakes, added !this.robot.getDrive().isBusy just for placement
+        if (!leftPressed && !rightPressed) {
             this.robot.getDrive().breakFollowing();
         }
-
-        this.leftWasPressed = leftPressed;
-        this.rightWasPressed = rightPressed;
 
         this.previousSlideUp = slideUp;
         this.previousScrewArmToggle = screwArmToggle;
@@ -192,7 +196,30 @@ public class MainTeleOp extends OpMode {
         this.robot.update();
     }
 
+    private void moveToStartSquare() {
+        if (this.robot.getDrive().isBusy()) {
+            return;
+        }
+
+        Pose2d currentPoseEstimate = this.robot.getDrive().getPoseEstimate();
+        if (currentPoseEstimate.getX() < 0) {
+            return;
+        }
+
+        this.targetTagId = currentPoseEstimate.getY() >= 0 ? 2 : 5;
+
+        double y = targetTagId == 2 ? 36f : -36f;
+
+        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+        builder.lineToLinearHeading(new Pose2d(34, y, 0));
+        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
+    }
+
     private void macroToScore(Vector2d poseFromAprilTag, boolean left) {
+        if (this.robot.getDrive().isBusy()) {
+            return;
+        }
+
         Pose2d target;  // defines a new pose2d named target, position not yet given
         Pose2d poseEstimate = new Pose2d(poseFromAprilTag.getX(), poseFromAprilTag.getY(), this.robot.getDrive().getPoseEstimate().getHeading());
         double y = poseEstimate.getY() > 0
