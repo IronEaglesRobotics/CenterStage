@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.autonomous;
 
+import static org.firstinspires.ftc.teamcode.hardware.Arm.DoorPosition.OPEN;
 import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.STACK1;
 import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.STACK2;
 import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.STACK3;
@@ -19,22 +20,22 @@ import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 @Autonomous(name = "Red FrontStage Auto(2+5)", group = "Competition", preselectTeleOp = "Main TeleOp")
 public class RedFrontStageAuto extends AutoBase {
     public static final Pose2d DROP_1 = new Pose2d(-50, -45.5, Math.toRadians(90));
-    public static final Pose2d DROP_2 = new Pose2d(-38.7, -33.5, Math.toRadians(90));
+    public static final Pose2d DROP_2 = new Pose2d(-39.7, -33.5, Math.toRadians(90));
     public static final Pose2d DROP_3 = new Pose2d(-33.5, -40.5, Math.toRadians(0));
 
     public static final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(50.3, -35.3, Math.toRadians(188));//187
 
-    public static final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(50.5, -30, Math.toRadians(188));//187
+    public static final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(50.5, -33, Math.toRadians(188));//187
 
     public static final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(50.6, -32, Math.toRadians(188));//817
 
-    public static final Pose2d STACK_LOCATION = new Pose2d(-57.9, -36.4, Math.toRadians(190));
+    public static final Pose2d STACK_LOCATION = new Pose2d(-55, -34.4, Math.toRadians(180));
 
     public static final Pose2d POST_SCORING_SPLINE_END = new Pose2d(24, -12.4, Math.toRadians(190));//-36
 
-    public static final Pose2d POST_DROP_POS = new Pose2d(-32, -51.5, Math.toRadians(180));
+    public static final Pose2d POST_DROP_POS = new Pose2d(-22, -63.5, Math.toRadians(180));
 
-    public static final Pose2d PRE_DEPOSIT_POS = new Pose2d(32, -51.5, Math.toRadians(180));
+    public static final Pose2d PRE_DEPOSIT_POS = new Pose2d(34, -65.5, Math.toRadians(180));
 
     @Override
     public void createTrajectories() {
@@ -76,13 +77,14 @@ public class RedFrontStageAuto extends AutoBase {
             // RUN INTAKE
             case 2:
                 // intake
-                if (getRuntime() < macroTime + 0.28) {
-                    robot.intake.setDcMotor(-0.22);
+                if (getRuntime() < macroTime + 0.32) {
+                    robot.intake.setDcMotor(-0.18);
                 }
                 else{
                     builder = this.robot.getTrajectorySequenceBuilder();
                     robot.intake.setDcMotor(0);
                     builder.lineToLinearHeading(STACK_LOCATION.plus(new Pose2d(0)));
+                    robot.arm.setDoor(OPEN);
                     robot.intake.setDcMotor(0.54);
                     robot.intake.setpos(STACK5);
                     macroTime = getRuntime();
@@ -101,11 +103,11 @@ public class RedFrontStageAuto extends AutoBase {
 
 
             case 4:
-                if (getRuntime() > macroTime + 1.6) {
+                if (getRuntime() > macroTime + 0.3) {
                     robot.intake.setDcMotor(0);
                     builder = this.robot.getTrajectorySequenceBuilder();
                     //builder.lineToConstantHeading(POST_SCORING_SPLINE_END);
-                    builder.splineToSplineHeading(POST_DROP_POS, Math.toRadians(0));
+                    builder.lineToLinearHeading(POST_DROP_POS);
 
                     switch (teamPropLocation) {
                         case 1:
@@ -161,6 +163,7 @@ public class RedFrontStageAuto extends AutoBase {
                 //waits for the robot to fin  the trajectory
             case 8:
                 robot.resetMacro(0, getRuntime());
+                robot.arm.setDoor(OPEN);
                 robot.intake.setDcMotor(0.54);
                 robot.intake.setpos(STACK4);
                 if (!robot.drive.isBusy()) {
@@ -170,6 +173,7 @@ public class RedFrontStageAuto extends AutoBase {
             //3rd and 4th pixels off the stack are in-taken by this
             case 9:
                 robot.intake.setDcMotor(0.54);
+                robot.arm.setDoor(OPEN);
                 robot.intake.setpos(STACK3);
                 macroTime = getRuntime();
                 macroState++;
@@ -237,6 +241,7 @@ public class RedFrontStageAuto extends AutoBase {
                 //waits for the robot to fin  the trajectory
             case 14:
                 robot.resetMacro(0, getRuntime());
+                robot.arm.setDoor(OPEN);
                 robot.intake.setDcMotor(0.54);
                 robot.intake.setpos(STACK2);
                 if (!robot.drive.isBusy()) {
@@ -246,6 +251,7 @@ public class RedFrontStageAuto extends AutoBase {
             //3rd and 4th pixels off the stack are intaken by this
             case 15:
                 robot.intake.setDcMotor(0.54);
+                robot.arm.setDoor(OPEN);
                 robot.intake.setpos(STACK1);
                 macroTime = getRuntime();
                 macroState++;

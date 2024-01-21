@@ -33,8 +33,8 @@ public class Intake {
     public static double stack1 = 0.02;
     public static double stack2 = 0.03;
     public static double stack3 = 0.06;
-    public static double stack4 = 0.09;
-    public static double stack5 = 0.1;
+    public static double stack4 = 0.085;
+    public static double stack5 = 0.09;
     public static double up = 0.30;
     public static double motorPower = 0;
 
