@@ -120,8 +120,6 @@ public class Camera {
             return null;
         }
 
-//        return estimatePoseFromAprilTag(aprilTagDetections.get(0));
-
         int numDetections = aprilTagDetections.size();
         Pose2d acc = new Pose2d(0, 0, 0);
         for (AprilTagDetection aprilTagDetection : aprilTagDetections) {
