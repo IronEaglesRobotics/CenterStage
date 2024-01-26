@@ -44,8 +44,6 @@ public class MainTeleOp extends OpMode {
         this.clawArmPosition = PICKUP_ARM_MAX;
 
         this.robot = new Robot(this.hardwareMap, telemetry);
-        this.robot.getCamera().setAlliance(CenterStageCommon.Alliance.Blue);
-        this.robot.getDrive().setPoseEstimate(new Pose2d(12, 63, Math.toRadians(90)));
         telemetry.addData("Status", "Initialized");
     }
 
