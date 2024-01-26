@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DRONE_LAUNCH_POS;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DRONE_ROTATION_UP;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DRONE_ROTATION_UP_NAME;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DRONE_STOW_POS;
 
@@ -16,6 +17,10 @@ public class Drone {
     }
 
     public void raise() {
+        this.droneLaunchServo.setPosition(DRONE_ROTATION_UP);
+    }
+
+    public void launch() {
         this.droneLaunchServo.setPosition(DRONE_LAUNCH_POS);
     }
 

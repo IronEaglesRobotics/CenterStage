@@ -2,6 +2,7 @@ package opmodes;
 
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CLAW_ARM_DELTA;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CAMERA_FORWARD_OFFSET_IN;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DRONE_LAUNCH_PAUSE_S;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.PICKUP_ARM_MAX;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.SCORING_DISTANCE_FROM_APRIL_TAG;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CAMERA_SIDE_OFFSET_IN;
@@ -36,6 +37,8 @@ public class MainTeleOp extends OpMode {
     private FtcDashboard dashboard;
     private boolean isGantryFlipped = false;
     private int targetTagId;
+    private double droneLaunchStart;
+    private boolean wasRobotDroneLaunch;
 
     @Override
     public void init() {
@@ -140,11 +143,15 @@ public class MainTeleOp extends OpMode {
 
         // Robot Drone
 
-        if (robotDroneLaunch) {
+        if (robotDroneLaunch && !wasRobotDroneLaunch) {
             this.robot.getDrone().raise();
-        } else {
+            this.droneLaunchStart = this.getRuntime();
+        } else if (robotDroneLaunch && this.getRuntime() > this.droneLaunchStart + DRONE_LAUNCH_PAUSE_S){
+            this.robot.getDrone().launch();
+        } else if (!robotDroneLaunch) {
             this.robot.getDrone().reset();
         }
+        this.wasRobotDroneLaunch = robotDroneLaunch;
         // Robot Lift
 
         if (robotLiftRotation || this.liftArmShouldBeUp) {
@@ -213,7 +220,7 @@ public class MainTeleOp extends OpMode {
         double y = targetTagId == 2 ? 36f : -36f;
 
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-        builder.lineToLinearHeading(new Pose2d(34, y, 0));
+        builder.lineToLinearHeading(new Pose2d(35, y, 0));
         this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
     }
 

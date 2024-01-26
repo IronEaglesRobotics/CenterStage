@@ -46,7 +46,7 @@ public class RobotConfig {
     public static int GANTRY_LIFT_DELTA = 50;
     public static double GANTRY_ARM_KP = 0.1;
     public static double X_KP = 0.1;
-    public static double X_MAX = 0.84;
+    public static double X_MAX = 0.86;
     public static double X_MIN = 0.16;
     public static double X_CENTER = 0.54;
     public static double GANTRY_ARM_DELTA_MAX = 0.013;
@@ -54,9 +54,10 @@ public class RobotConfig {
     public static double SLIDE_POWER = 0.25;
 
     // Robot Drone Launch
-    public static double DRONE_ROTATION_UP = 0.2;
+    public static double DRONE_ROTATION_UP = 0.38;
     public static double DRONE_LAUNCH_POS = 0.5;
     public static double DRONE_STOW_POS = 0.2;
+    public static double DRONE_LAUNCH_PAUSE_S = 0.5;
 
     // Robot Lift
     public static double LIFT_ROTATION_UP = 0.4;

@@ -120,13 +120,7 @@ public class Camera {
             return null;
         }
 
-        int numDetections = aprilTagDetections.size();
-        Pose2d acc = new Pose2d(0, 0, 0);
-        for (AprilTagDetection aprilTagDetection : aprilTagDetections) {
-            acc = acc.plus(estimatePoseFromAprilTag(aprilTagDetection));
-        }
-
-        return acc.div(numDetections);
+        return estimatePoseFromAprilTag(aprilTagDetections.stream().max((a,  b) -> (int)(a.decisionMargin - b.decisionMargin)).get());
     }
 
     private Pose2d estimatePoseFromAprilTag(@NonNull AprilTagDetection aprilTagDetection) {
@@ -159,6 +153,7 @@ public class Camera {
 
 //        AprilTagDetection foo = aprilTagDetection;
 //        telemetry.addData("id", foo.id);
+//        telemetry.addData("decisionMargin", foo.decisionMargin);
 //        telemetry.addData("ax", foo.metadata.fieldPosition.get(0));
 //        telemetry.addData("ay", foo.metadata.fieldPosition.get(1));
 //        telemetry.addData("yaw", foo.ftcPose.yaw);
