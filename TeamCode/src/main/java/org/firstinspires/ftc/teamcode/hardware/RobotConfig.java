@@ -32,12 +32,13 @@ public class RobotConfig {
     public static double AUTO_STRAFE_SLOWDOWN = 4;
 
     // Arm
-    public static double PICKUP_ARM_MIN = 0.185;
+    public static double PICKUP_ARM_MIN = 0.175;
     public static double PICKUP_ARM_MAX = 0.760;
     public static double CLAW_MIN = 0.89;
     public static double CLAW_MAX = 0.65;
     public static double CLAW_ARM_DELTA = 0.03;
     public static double CLAW_KP = 0.3;
+    public static double CLAW_ARM_KP = 0.15;
 
     // Gantry
     public static double GANTRY_ARM_MIN = 0.42;
@@ -68,7 +69,8 @@ public class RobotConfig {
     // Vision
     public static double DETECTION_AREA_MIN = 0.05f;
     public static double DETECTION_AREA_MAX = 0.8f;
-    public static double SCORING_DISTANCE_FROM_APRIL_TAG = 7f;
-    public static final double FORWARD_OFFSET_IN = 7.75;
-    public static final double SIDE_OFFSET_IN = 0.5;
+    public static double SCORING_DISTANCE_FROM_APRIL_TAG = 6.25f;
+    public static final double CAMERA_FORWARD_OFFSET_IN = 7.77;
+    public static final double CAMERA_SIDE_OFFSET_IN = 0.707;
+    public static final double CAMERA_ROTATION_DEG = 0;
 }

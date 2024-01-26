@@ -1,20 +1,17 @@
 package opmodes;
 
-import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.FORWARD_OFFSET_IN;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CAMERA_FORWARD_OFFSET_IN;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.SCORING_DISTANCE_FROM_APRIL_TAG;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.SIDE_OFFSET_IN;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CAMERA_SIDE_OFFSET_IN;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.Camera;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
-import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @TeleOp(name = "Test", group = "Main")
 public class Test extends OpMode {
@@ -41,7 +38,7 @@ public class Test extends OpMode {
         boolean slowmode = gamepad1.right_bumper || gamepad1.y;
         this.robot.getDrive().setInput(gamepad1, gamepad2, slowmode);
 
-        Pose2d poseFromAprilTag = this.robot.getCamera().getPoseFromAprilTag(2, 5);
+        Pose2d poseFromAprilTag = this.robot.getCamera().estimatePoseFromAprilTag();
         dashboard.getTelemetry().addData("Inferred Position", poseFromAprilTag);
         dashboard.getTelemetry().update();
 
@@ -96,7 +93,7 @@ public class Test extends OpMode {
                 ? left ? 40 : 30
                 : left ? -30 : -40;
         this.robot.getDrive().setPoseEstimate(poseEstimate);
-        target = new Pose2d(Camera.tag2Pose.getX() - SCORING_DISTANCE_FROM_APRIL_TAG - FORWARD_OFFSET_IN, y - SIDE_OFFSET_IN, 0);
+        target = new Pose2d(Camera.tag2Pose.getX() - SCORING_DISTANCE_FROM_APRIL_TAG - CAMERA_FORWARD_OFFSET_IN, y - CAMERA_SIDE_OFFSET_IN, 0);
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.lineToLinearHeading(target);
         this.robot.getDrive().followTrajectorySequenceAsync(builder.build());

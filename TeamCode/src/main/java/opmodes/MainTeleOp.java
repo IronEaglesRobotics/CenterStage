@@ -1,18 +1,18 @@
 package opmodes;
 
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CLAW_ARM_DELTA;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.FORWARD_OFFSET_IN;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CAMERA_FORWARD_OFFSET_IN;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.PICKUP_ARM_MAX;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.SCORING_DISTANCE_FROM_APRIL_TAG;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.SIDE_OFFSET_IN;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CAMERA_SIDE_OFFSET_IN;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.SLIDE_UP;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.X_CENTER;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.X_MAX;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.X_MIN;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -40,10 +40,12 @@ public class MainTeleOp extends OpMode {
     @Override
     public void init() {
         this.dashboard = FtcDashboard.getInstance();
+        this.telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
         this.clawArmPosition = PICKUP_ARM_MAX;
 
         this.robot = new Robot(this.hardwareMap, telemetry);
         this.robot.getCamera().setAlliance(CenterStageCommon.Alliance.Blue);
+        this.robot.getDrive().setPoseEstimate(new Pose2d(12, 63, Math.toRadians(90)));
         telemetry.addData("Status", "Initialized");
     }
 
@@ -170,7 +172,7 @@ public class MainTeleOp extends OpMode {
             this.robot.getLift().stopReset();
         }
 
-        Pose2d poseFromAprilTag = this.robot.getCamera().getPoseFromAprilTag(2, 5);
+        Pose2d poseFromAprilTag = this.robot.getCamera().estimatePoseFromAprilTag();
         dashboard.getTelemetry().addData("Inferred Position", poseFromAprilTag);
         dashboard.getTelemetry().update();
 
@@ -223,12 +225,11 @@ public class MainTeleOp extends OpMode {
         }
 
         Pose2d target;  // defines a new pose2d named target, position not yet given
-        Pose2d poseEstimate = new Pose2d(poseFromAprilTag.getX(), poseFromAprilTag.getY(), -Math.toRadians(poseFromAprilTag.getHeading()));
-        double y = poseEstimate.getY() > 0
+        double y = poseFromAprilTag.getY() > 0
                 ? left ? 40 : 30
                 : left ? -30 : -40;
-        this.robot.getDrive().setPoseEstimate(poseEstimate);
-        target = new Pose2d(Camera.tag2Pose.getX() - SCORING_DISTANCE_FROM_APRIL_TAG - FORWARD_OFFSET_IN, y - SIDE_OFFSET_IN, 0);
+        this.robot.getDrive().setPoseEstimate(poseFromAprilTag);
+        target = new Pose2d(Camera.tag2Pose.getX() - SCORING_DISTANCE_FROM_APRIL_TAG - CAMERA_FORWARD_OFFSET_IN, y - CAMERA_SIDE_OFFSET_IN, 0);
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.lineToLinearHeading(target);
         this.robot.getDrive().followTrajectorySequenceAsync(builder.build());

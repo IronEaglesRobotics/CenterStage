@@ -1,5 +1,6 @@
 package opmodes;
 
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CAMERA_FORWARD_OFFSET_IN;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.PICKUP_ARM_MAX;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.PICKUP_ARM_MIN;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.SCORING_DISTANCE_FROM_APRIL_TAG;
@@ -62,7 +63,6 @@ public abstract class AutoBase extends LinearOpMode {
         // If the prop is visible at this point, then it must be in the center (2) position
         determinePropLocation();
 
-        TrajectorySequenceBuilder builder;
         switch (this.propLocation) {
             case Left:
                 propLeft();
@@ -75,7 +75,7 @@ public abstract class AutoBase extends LinearOpMode {
                 propRight();
                 break;
         }
-        moveToBackstage();
+        moveToEasel();
         prepareToScore();
         scorePreloadedPixel();
         park();
@@ -108,7 +108,6 @@ public abstract class AutoBase extends LinearOpMode {
         this.robot.getGantry().stop();
         this.robot.getGantry().setSlideTarget(0);
         this.robot.getGantry().armInSync();
-
     }
 
     protected void prepareToScore() {
@@ -129,30 +128,51 @@ public abstract class AutoBase extends LinearOpMode {
                 delta = APRIL_TAG_RIGHT_DELTA;
                 break;
         }
-        double distance = this.robot.getCamera().getDistanceToAprilTag(this.alliance == CenterStageCommon.Alliance.Blue ? 2:5, 25, 5);
-        Vector2d target = new Vector2d(this.robot.getDrive().getPoseEstimate().getX() +
-                (distance - SCORING_DISTANCE_FROM_APRIL_TAG),
-                this.robot.getDrive().getPoseEstimate().getY() + delta);
+
+        Pose2d inferredPos = this.robot.getCamera().estimatePoseFromAprilTag();
+        this.robot.getDrive().setPoseEstimate(inferredPos);
+        Pose2d target = new Pose2d(
+                60 - SCORING_DISTANCE_FROM_APRIL_TAG - CAMERA_FORWARD_OFFSET_IN, // 60 is the X position of the april tag
+                inferredPos.getY() + delta,
+                0);
+
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-        builder.lineToConstantHeading(target);
+        builder.lineToLinearHeading(target);
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 
-    protected void moveToBackstage() {
+    protected void moveToEasel() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
 
+        if (!this.isBackstage()) {
+            if (this.alliance == CenterStageCommon.Alliance.Blue) {
+                builder.lineToSplineHeading(new Pose2d(-40, 60, Math.PI));
+                builder.lineToLinearHeading(new Pose2d(12, 60, Math.PI));
+            } else if (this.alliance == CenterStageCommon.Alliance.Red) {
+                builder.lineToSplineHeading(new Pose2d(-40, -60, Math.PI));
+                builder.lineToLinearHeading(new Pose2d(12, -60, Math.PI));
+            }
+        }
+
         if (this.alliance == CenterStageCommon.Alliance.Blue) {
-            builder.lineToLinearHeading(new Pose2d(35, 11, 0));
-            builder.lineToLinearHeading(new Pose2d(35, 38, 0));
-        } else {
-            builder.lineToLinearHeading(new Pose2d(35, -11, 0));
-            builder.lineToLinearHeading(new Pose2d(35, -36, 0));
+            builder.lineToLinearHeading(new Pose2d(35, 36, 0));
+        } else if (this.alliance == CenterStageCommon.Alliance.Red) {
+            builder.lineToLinearHeading(new Pose2d(35, -35, 0));
         }
 
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 
     protected void determinePropLocation() {
+        this.robot.getClaw().setArmPositionAsync(PICKUP_ARM_MIN);
+
+        while (!this.robot.getClaw().isArmAtPosition()) {
+            this.robot.update();
+            sleep(20);
+        }
+
+        sleep(250);
+
         setPropLocationIfVisible(Center, Unknown);
         if (this.propLocation != Center) {
             peekRight();
@@ -160,11 +180,15 @@ public abstract class AutoBase extends LinearOpMode {
     }
 
     protected void peekRight() {
-        TrajectorySequenceBuilder builder = this.robot.getDrive()
-                .trajectorySequenceBuilder(initialPosition);
-        builder.forward(5);
-        builder.turn(Math.toRadians(-33));
+        Pose2d currentPose = this.robot.getDrive().getPoseEstimate();
+        final double y = currentPose.getY() > 0 ? -5 : 5;
+        final double z = Math.toRadians(-25);
+        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+        builder.lineToLinearHeading(currentPose.plus(new Pose2d(0, y, z)));
         this.robot.getDrive().followTrajectorySequence(builder.build());
+
+        this.sleep(250);
+
         setPropLocationIfVisible(Right, Left);
     }
 
@@ -188,7 +212,11 @@ public abstract class AutoBase extends LinearOpMode {
         double currentX = this.robot.getDrive().getPoseEstimate().getX();
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.strafeTo(new Vector2d(currentX, park.getY()));
-        builder.lineToConstantHeading(park.vec());
+        builder.lineToLinearHeading(park);
         this.robot.getDrive().followTrajectorySequence(builder.build());
+    }
+
+    protected boolean isBackstage() {
+        return this.initialPosition.getX() > 0;
     }
 }

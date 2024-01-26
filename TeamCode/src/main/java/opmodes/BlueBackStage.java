@@ -11,48 +11,44 @@ import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 
 @Autonomous(name = "BlueBackStage", preselectTeleOp = "MainTeleOp")
 public class BlueBackStage extends AutoBase {
-    private final Pose2d rendezvous = new Pose2d(12, 10);
+    private static final int delay = 0;
 
     public BlueBackStage() {
         super(
                 CenterStageCommon.Alliance.Blue,
-                new Pose2d(12, 63, Math.toRadians(-90)),
+                new Pose2d(12, 63, Math.toRadians(90)),
                 new Pose2d(62, 62));
     }
 
     protected void propLeft() {
-        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-        builder.lineToLinearHeading(new Pose2d(36, 25, Math.toRadians(-33)));
-        builder.addDisplacementMarker(10, () -> {
-            this.robot.getClaw().setArmPosition(PICKUP_ARM_MIN);
-        });
-        this.robot.getDrive().followTrajectorySequence(builder.build());
+        this.sleep(delay);
 
-        openAndLiftClaw();
-    }
-
-    protected void propCenter() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-        builder.lineToConstantHeading(rendezvous.vec());
-        builder.addDisplacementMarker(10, () -> {
-            this.robot.getClaw().setArmPosition(PICKUP_ARM_MIN);
-        });
+        builder.lineToLinearHeading(new Pose2d(17.3, 41.6, Math.toRadians(108.25)));
         this.robot.getDrive().followTrajectorySequence(builder.build());
 
         openAndLiftClaw();
 
         builder = this.robot.getTrajectorySequenceBuilder();
-        builder.turn(Math.toRadians(90));
+        builder.lineToConstantHeading(new Vector2d(24, 50));
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 
-    protected void propRight() {
+    protected void propCenter() {
+        this.sleep(delay);
+
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-        builder.lineToLinearHeading(new Pose2d(32, 34, Math.toRadians(0)));
-        builder.lineToConstantHeading(new Vector2d(19, 34));
-        builder.addTemporalMarker(0.5, () -> {
-            this.robot.getClaw().setArmPosition(PICKUP_ARM_MIN);
-        });
+        builder.lineToLinearHeading(new Pose2d(12, 42, initialPosition.getHeading()));
+        this.robot.getDrive().followTrajectorySequence(builder.build());
+
+        openAndLiftClaw();
+    }
+
+    protected void propRight() {
+        this.sleep(delay);
+
+        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+        builder.lineToLinearHeading(new Pose2d(18.25, 32, Math.toRadians(0)));
         this.robot.getDrive().followTrajectorySequence(builder.build());
 
         openAndLiftClaw();

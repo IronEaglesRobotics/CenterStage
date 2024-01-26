@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CLAW_ARM_KP;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CLAW_ARM_LEFT_NAME;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CLAW_ARM_RIGHT_NAME;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CLAW_KP;
@@ -22,6 +23,8 @@ public class Claw implements Updatable {
     private Telemetry telemetry;
     PController clawController = new PController(CLAW_KP);
     private double clawControllerTarget;
+    PController armController = new PController(CLAW_ARM_KP);
+    private double armControllerTarget = -1;
 
     public Claw(HardwareMap hardwareMap) {
         this.claw = hardwareMap.get(Servo.class, CLAW_NAME);
@@ -58,15 +61,32 @@ public class Claw implements Updatable {
         this.armRight.setPosition(target);
     }
 
+    public void setArmPositionAsync(double armControllerTarget) {
+        this.armControllerTarget = armControllerTarget;
+    }
+
+    public boolean isArmAtPosition() {
+        return this.armController.atSetPoint();
+    }
     public void update() {
         this.clawController.setSetPoint(this.clawControllerTarget);
         this.clawController.setTolerance(0.001);
         this.clawController.setP(CLAW_KP);
 
-        double output = 0;
+        this.armController.setSetPoint(this.armControllerTarget);
+        this.armController.setP(CLAW_ARM_KP);
+
         if (!this.clawController.atSetPoint()) {
+            double output = 0;
             output = Math.max(-1 * CLAW_MAX, Math.min(CLAW_MAX, this.clawController.calculate(claw.getPosition())));
             this.claw.setPosition(this.claw.getPosition() + output);
+        }
+
+        if (this.armControllerTarget > 0 && !this.armController.atSetPoint()) {
+            double output = 0;
+            output = Math.max(-1 * PICKUP_ARM_MAX, Math.min(PICKUP_ARM_MAX, this.armController.calculate(armLeft.getPosition())));
+            this.armLeft.setPosition(this.armLeft.getPosition() + output);
+            this.armRight.setPosition(this.armRight.getPosition() + output);
         }
     }
 }

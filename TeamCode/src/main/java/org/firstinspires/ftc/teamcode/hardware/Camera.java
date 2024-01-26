@@ -1,19 +1,24 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.FORWARD_OFFSET_IN;
-import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.SIDE_OFFSET_IN;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CAMERA_FORWARD_OFFSET_IN;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CAMERA_ROTATION_DEG;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CAMERA_SIDE_OFFSET_IN;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.WEBCAM_MINI_NAME;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.WEBCAM_NAME;
 import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_DETECTION;
+
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.tan;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.apache.commons.math3.ml.neuralnet.twod.util.TopographicErrorHistogram;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 import org.firstinspires.ftc.teamcode.vision.Detection;
 import org.firstinspires.ftc.teamcode.vision.PropDetectionPipeline;
@@ -22,12 +27,14 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-import java.util.Arrays;
+import java.util.List;
+
+import lombok.NonNull;
 
 @Config
 public class Camera {
-    public static float PROP_REJECTION_VERTICAL_UPPER = 10;
-    public static float PROP_REJECTION_VERTICAL_LOWER = 470;
+    public static float PROP_REJECTION_VERTICAL_UPPER = 480f * 0.33f;
+    public static float PROP_REJECTION_VERTICAL_LOWER = 440;
     public static float PROP_REJECTION_HORIZONTAL_LEFT = 10;
     public static float PROP_REJECTION_HORIZONTAL_RIGHT = 630;
     private PropDetectionPipeline prop;
@@ -91,25 +98,11 @@ public class Camera {
         return INVALID_DETECTION;
     }
 
-    public AprilTagDetection getAprilTag(int ... ids) {
+    public AprilTagDetection getAprilTag() {
         return this.aprilTag.getDetections()
                 .stream()
-                .filter(x -> Arrays.stream(ids).filter(id -> x.id == id).count() > 0)
                 .findFirst()
                 .orElse(null);
-    }
-
-    public double getDistanceToAprilTag(int id, double rejectAbove, double rejectBelow) {
-        for (int i = 0; i < 10; i++) {
-            AprilTagDetection aprilTagDetection = getAprilTag(id);
-            if (aprilTagDetection != null) {
-                if (aprilTagDetection.ftcPose.y < rejectAbove
-                        && aprilTagDetection.ftcPose.y > rejectBelow) {
-                    return aprilTagDetection.ftcPose.y;
-                }
-            }
-        }
-        return Double.MAX_VALUE;
     }
 
     public void setAlliance(CenterStageCommon.Alliance alliance) {
@@ -120,36 +113,71 @@ public class Camera {
         return this.prop != null ? this.prop.getAlliance() : null;
     }
 
-    public Pose2d getPoseFromAprilTag(int ... ids) {
-        if (ids == null || ids.length == 0) {
-            ids = new int[]{2, 5};
-        }
+    public Pose2d estimatePoseFromAprilTag() {
+        List<AprilTagDetection> aprilTagDetections = aprilTag.getDetections();
 
-        AprilTagDetection aprilTagDetection = getAprilTag(ids);
-
-        if (aprilTagDetection == null) {
+        if (aprilTagDetections == null || aprilTagDetections.isEmpty()) {
             return null;
         }
 
-        AprilTagPoseFtc ftcPose = aprilTagDetection.ftcPose;
+//        return estimatePoseFromAprilTag(aprilTagDetections.get(0));
 
-        double ourPoseX;
-        double ourPoseY;
-        switch (aprilTagDetection.id) {
-            case 2:
-                ourPoseX = tag2Pose.getX() - ftcPose.y - FORWARD_OFFSET_IN;
-                ourPoseY = tag2Pose.getY() + ftcPose.x - SIDE_OFFSET_IN;
-                break;
-            case 5:
-                ourPoseX = tag5Pose.getX() - ftcPose.y - FORWARD_OFFSET_IN;
-                ourPoseY = tag5Pose.getY() + ftcPose.x - SIDE_OFFSET_IN;
-                break;
-            default:
-                ourPoseX = 0;
-                ourPoseY = 0;
-                break;
+        int numDetections = aprilTagDetections.size();
+        Pose2d acc = new Pose2d(0, 0, 0);
+        for (AprilTagDetection aprilTagDetection : aprilTagDetections) {
+            acc = acc.plus(estimatePoseFromAprilTag(aprilTagDetection));
         }
 
-        return new Pose2d(ourPoseX, ourPoseY, ftcPose.bearing);
+        return acc.div(numDetections);
+    }
+
+    private Pose2d estimatePoseFromAprilTag(@NonNull AprilTagDetection aprilTagDetection) {
+        VectorF reference = aprilTagDetection.metadata.fieldPosition;
+        AprilTagPoseFtc ftcPose = aprilTagDetection.ftcPose;
+
+        double ax = reference.get(0);
+        double ay = reference.get(1);
+        double t = -Math.toRadians(ftcPose.yaw);
+        double r = -ftcPose.range;
+        double b = Math.toRadians(ftcPose.bearing);
+
+        double x1 = r * cos(b);
+        double y1 = r * sin(b);
+
+        double x2 = x1 * cos(t) - y1 * sin(t);
+        double y2 = x1 * sin(t) + y1 * cos(t);
+
+        double cx = ax + x2;
+        double cy = ay + y2;
+
+        double t1 = t + Math.toRadians(CAMERA_ROTATION_DEG);
+        double h = tan(t1);
+
+        double rx = -CAMERA_FORWARD_OFFSET_IN * cos(t1) + CAMERA_SIDE_OFFSET_IN * sin(t1);
+        double ry = -CAMERA_FORWARD_OFFSET_IN * sin(t1) - CAMERA_SIDE_OFFSET_IN * cos(t1);
+
+        rx += cx;
+        ry += cy;
+
+//        AprilTagDetection foo = aprilTagDetection;
+//        telemetry.addData("id", foo.id);
+//        telemetry.addData("ax", foo.metadata.fieldPosition.get(0));
+//        telemetry.addData("ay", foo.metadata.fieldPosition.get(1));
+//        telemetry.addData("yaw", foo.ftcPose.yaw);
+//        telemetry.addData("range", foo.ftcPose.range);
+//        telemetry.addData("bearing", foo.ftcPose.bearing);
+//        telemetry.addData("x1", x1);
+//        telemetry.addData("y1", y1);
+//        telemetry.addData("x2", x2);
+//        telemetry.addData("y2", y2);
+//        telemetry.addData("cx", cx);
+//        telemetry.addData("cy", cy);
+//        telemetry.addData("t1", t1);
+//        telemetry.addData("h", h);
+//        telemetry.addData("rx", rx);
+//        telemetry.addData("ry", ry);
+//        telemetry.update();
+
+        return new Pose2d(rx, ry, h);
     }
 }
