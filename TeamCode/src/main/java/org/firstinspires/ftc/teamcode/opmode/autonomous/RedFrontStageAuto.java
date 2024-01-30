@@ -29,13 +29,15 @@ public class RedFrontStageAuto extends AutoBase {
 
     public static final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(50.6, -32, Math.toRadians(188));//817
 
-    public static final Pose2d STACK_LOCATION = new Pose2d(-55, -34.4, Math.toRadians(180));
+    public static final Pose2d STACK_LOCATION = new Pose2d(-52, -34.4, Math.toRadians(180));
 
     public static final Pose2d POST_SCORING_SPLINE_END = new Pose2d(24, -12.4, Math.toRadians(190));//-36
 
-    public static final Pose2d POST_DROP_POS = new Pose2d(-22, -63.5, Math.toRadians(180));
+    public static final Pose2d POST_DROP_POS = new Pose2d(-45, -57.5, Math.toRadians(180));
 
-    public static final Pose2d PRE_DEPOSIT_POS = new Pose2d(34, -65.5, Math.toRadians(180));
+    public static final Pose2d POST_DROP_POS_PART2 = new Pose2d(-33, -60.5, Math.toRadians(180));
+
+    public static final Pose2d PRE_DEPOSIT_POS = new Pose2d(33, -60.5, Math.toRadians(180));
 
     @Override
     public void createTrajectories() {
@@ -77,13 +79,13 @@ public class RedFrontStageAuto extends AutoBase {
             // RUN INTAKE
             case 2:
                 // intake
-                if (getRuntime() < macroTime + 0.32) {
-                    robot.intake.setDcMotor(-0.18);
+                if (getRuntime() < macroTime + 0.22) {
+                    robot.intake.setDcMotor(-0.15);
                 }
                 else{
                     builder = this.robot.getTrajectorySequenceBuilder();
                     robot.intake.setDcMotor(0);
-                    builder.lineToLinearHeading(STACK_LOCATION.plus(new Pose2d(0)));
+                    builder.lineToLinearHeading(STACK_LOCATION.plus(new Pose2d(0,-1.5)));
                     robot.arm.setDoor(OPEN);
                     robot.intake.setDcMotor(0.54);
                     robot.intake.setpos(STACK5);
@@ -103,11 +105,12 @@ public class RedFrontStageAuto extends AutoBase {
 
 
             case 4:
-                if (getRuntime() > macroTime + 0.3) {
+                if (getRuntime() > macroTime + 0.2) {
                     robot.intake.setDcMotor(0);
                     builder = this.robot.getTrajectorySequenceBuilder();
                     //builder.lineToConstantHeading(POST_SCORING_SPLINE_END);
                     builder.lineToLinearHeading(POST_DROP_POS);
+                    builder.splineToConstantHeading(POST_DROP_POS_PART2.vec(), Math.toRadians(0));
 
                     switch (teamPropLocation) {
                         case 1:
@@ -130,7 +133,7 @@ public class RedFrontStageAuto extends AutoBase {
                 break;
             case 5:
                 // if drive is done move on
-                if (getRuntime() > macroTime + 2.4 || !robot.drive.isBusy()) {
+                if (getRuntime() > macroTime + 4.4 || !robot.drive.isBusy()) {
                     macroTime = getRuntime();
                     robot.macroState = 0;
                     robot.extendMacro(Slides.mini_tier1 + 180, getRuntime());
@@ -185,6 +188,8 @@ public class RedFrontStageAuto extends AutoBase {
                     builder = this.robot.getTrajectorySequenceBuilder();
                     //builder.lineToConstantHeading(POST_SCORING_SPLINE_END);
                     builder.splineToSplineHeading(POST_DROP_POS, Math.toRadians(0));
+                    builder.splineToConstantHeading(POST_DROP_POS_PART2.vec(), Math.toRadians(0));
+
 
                     switch (teamPropLocation) {
                         case 1:
@@ -207,7 +212,7 @@ public class RedFrontStageAuto extends AutoBase {
                 break;
             case 11:
                 // if drive is done move on
-                if (getRuntime() > macroTime + 1.4 || !robot.drive.isBusy()) {
+                if (getRuntime() > macroTime + 4.4 || !robot.drive.isBusy()) {
                     macroTime = getRuntime();
                     robot.macroState = 0;
                     robot.extendMacro(Slides.mini_tier1 + 180, getRuntime());
@@ -285,7 +290,7 @@ public class RedFrontStageAuto extends AutoBase {
                 break;
             case 17:
                 // if drive is done move on
-                if (getRuntime() > macroTime + 1.4 || !robot.drive.isBusy()) {
+                if (getRuntime() > macroTime + 4.4 || !robot.drive.isBusy()) {
                     macroTime = getRuntime();
                     robot.macroState = 0;
                     robot.extendMacro(Slides.mini_tier1 + 180, getRuntime());
