@@ -28,6 +28,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.NonNull;
 
@@ -98,13 +99,6 @@ public class Camera {
         return INVALID_DETECTION;
     }
 
-    public AprilTagDetection getAprilTag() {
-        return this.aprilTag.getDetections()
-                .stream()
-                .findFirst()
-                .orElse(null);
-    }
-
     public void setAlliance(CenterStageCommon.Alliance alliance) {
         this.prop.setAlliance(alliance);
     }
@@ -115,12 +109,23 @@ public class Camera {
 
     public Pose2d estimatePoseFromAprilTag() {
         List<AprilTagDetection> aprilTagDetections = aprilTag.getDetections();
-
-        if (aprilTagDetections == null || aprilTagDetections.isEmpty()) {
+        if (aprilTagDetections == null) {
             return null;
         }
 
-        return estimatePoseFromAprilTag(aprilTagDetections.stream().max((a,  b) -> (int)(a.decisionMargin - b.decisionMargin)).get());
+        // Currently `estimatePoseFromAprilTag` does not work for tags 7-10. Filter them out.
+        // Also, filter out detections that don't have a field position.
+        List<AprilTagDetection> filteredDetections = aprilTagDetections.stream()
+                .filter(x -> x.id <= 6 && x.metadata != null && x.metadata.fieldPosition != null)
+                .collect(Collectors.toList());
+
+        if (filteredDetections.isEmpty()) {
+            return null;
+        }
+
+        return estimatePoseFromAprilTag(filteredDetections.stream()
+                .max((a,  b) -> (int)(a.decisionMargin - b.decisionMargin))
+                .get());
     }
 
     private Pose2d estimatePoseFromAprilTag(@NonNull AprilTagDetection aprilTagDetection) {
