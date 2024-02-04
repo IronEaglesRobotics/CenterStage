@@ -20,29 +20,32 @@ import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 public class BlueBackStageAuto extends AutoBase {
     public static final Pose2d DROP_3 = new Pose2d(18, 32, Math.toRadians(-180));
 
-    public static final Pose2d DROP_3M = new Pose2d(14.7, 30, Math.toRadians(-180));
+    public static final Pose2d DROP_3M = new Pose2d(13.8, 32, Math.toRadians(-180));
     public static final Pose2d DROP_2 = new Pose2d(14, 34, Math.toRadians(-90));
 
     public static final Pose2d ALINE = new Pose2d(51,35, Math.toRadians(-180));
 
-    public static final Pose2d DROP_1 = new Pose2d(25, 43, Math.toRadians(-90));
-    public static final Pose2d DEPOSIT_PRELOAD_3 = new Pose2d(54.8, 28.7, Math.toRadians(-180));
-    public static final Pose2d DEPOSIT_PRELOAD_2 = new Pose2d(52.6, 34.5, Math.toRadians(-180));
-    public static final Pose2d DEPOSIT_PRELOAD_1 = new Pose2d(52.2, 39.3, Math.toRadians(-180));
+    public static final Pose2d DROP_1 = new Pose2d(24.5, 43, Math.toRadians(-90));
+    public static final Pose2d DEPOSIT_PRELOAD_3 = new Pose2d(55.4, 28.7, Math.toRadians(-180));
+    public static final Pose2d DEPOSIT_PRELOAD_2 = new Pose2d(51.6, 34.5, Math.toRadians(-180));
+    public static final Pose2d DEPOSIT_PRELOAD_1 = new Pose2d(51.5, 39.3, Math.toRadians(-180));
 
-    public static  final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(53.4, 35.6, Math.toRadians(-187));
+    public static  final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(53.2, 35.6, Math.toRadians(-187));
 
-    public static  final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(53.5, 30.6, Math.toRadians(-187));
+    public static  final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(52.4, 32.6, Math.toRadians(-187));
 
-    public static  final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(53.7, 32, Math.toRadians(-187));
+    public static  final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(53, 33.5, Math.toRadians(-187));
 
 
     //public static final Vector2d POST_SCORING_SPLINE_END = new Vector2d(24, -8.5);//-36
     public static final Pose2d POST_SCORING_SPLINE_END = new Pose2d(26, 11.1 , Math.toRadians(-180));//-36
 
-    public static final Pose2d STACK_LOCATION = new Pose2d(-54.8, 11.1, Math.toRadians(-180));
+    public static final Pose2d STACK_LOCATION1 = new Pose2d(-56.2, 11.1, Math.toRadians(-180));
 
-    public static final Pose2d STACK_LOCATION2 = new Pose2d(-55.3, 11.1, Math.toRadians(-180));
+    public static final Pose2d STACK_LOCATION2 = new Pose2d(-54.5, 11.1, Math.toRadians(-180));
+
+    public static final Pose2d STACK_LOCATION3 = new Pose2d(-55.6, 11.1, Math.toRadians(-180));
+
 
     @Override
     public void createTrajectories() {
@@ -85,7 +88,7 @@ public class BlueBackStageAuto extends AutoBase {
             case 2:
                 // intake
                 if (getRuntime() < macroTime + 0.1) {
-                    robot.intake.setDcMotor(-0.18);
+                    robot.intake.setDcMotor(-0.24);
                 }
                 // if intake is done move on
                 else {
@@ -129,7 +132,17 @@ public class BlueBackStageAuto extends AutoBase {
                     builder = this.robot.getTrajectorySequenceBuilder();
                     //builder.lineToConstantHeading(POST_SCORING_SPLINE_END);
                     builder.splineToConstantHeading(POST_SCORING_SPLINE_END.vec(),Math.toRadians(180));
-                    builder.lineToConstantHeading(STACK_LOCATION.vec().plus(new Vector2d(0,0)));
+                    switch (teamPropLocation) {
+                        case 1:
+                            builder.lineToConstantHeading(STACK_LOCATION1.vec().plus(new Vector2d(0)));
+                            break;
+                        case 2:
+                            builder.lineToConstantHeading(STACK_LOCATION2.vec().plus(new Vector2d(-0)));
+                            break;
+                        case 3:
+                            builder.lineToConstantHeading(STACK_LOCATION3.vec().plus(new Vector2d(0.5)));
+                            break;
+                    }
                     this.robot.drive.followTrajectorySequenceAsync(builder.build());
                     macroState++;
                 }
@@ -137,7 +150,7 @@ public class BlueBackStageAuto extends AutoBase {
             //waits for the robot to fin  the trajectory
             case 5:
                 robot.resetMacro(0, getRuntime());
-                robot.intake.setDcMotor(0.38);
+                robot.intake.setDcMotor(0.68);
                 robot.intake.setpos(STACK5);
                 if (!robot.drive.isBusy()) {
                     macroState++;
@@ -145,7 +158,7 @@ public class BlueBackStageAuto extends AutoBase {
                 break;
             //First 2 pixels off the stack are intaken by this
             case 6:
-                robot.intake.setDcMotor(0.38);
+                robot.intake.setDcMotor(0.68);
                 robot.intake.setpos(STACK5);
                 macroTime = getRuntime();
                 macroState++;
@@ -154,7 +167,7 @@ public class BlueBackStageAuto extends AutoBase {
             case 7:
                 if (getRuntime() > macroTime + 0.03) {
                     //robot.intake.setDcMotor(-0.0);
-                    robot.intake.setDcMotor(-0.65);
+                    robot.intake.setDcMotor(-0.35);
                     builder = this.robot.getTrajectorySequenceBuilder();
                     //builder.lineToConstantHeading(POST_SCORING_SPLINE_END);
                     builder.lineToConstantHeading(POST_SCORING_SPLINE_END.vec());
@@ -201,7 +214,18 @@ public class BlueBackStageAuto extends AutoBase {
                     builder = this.robot.getTrajectorySequenceBuilder();
                     //builder.lineToConstantHeading(POST_SCORING_SPLINE_END);
                     builder.splineToConstantHeading(POST_SCORING_SPLINE_END.vec(),Math.toRadians(180));
-                    builder.lineToConstantHeading(STACK_LOCATION2.vec().plus(new Vector2d(0)));
+                    switch (teamPropLocation) {
+                        case 1:
+                            builder.lineToConstantHeading(STACK_LOCATION1.vec().plus(new Vector2d(-2)));
+                            break;
+                        case 2:
+                            builder.lineToConstantHeading(STACK_LOCATION2.vec().plus(new Vector2d(-2)));
+                            break;
+                        case 3:
+                            builder.lineToConstantHeading(STACK_LOCATION3.vec().plus(new Vector2d(0.5
+                            )));
+                            break;
+                    }
                     this.robot.drive.followTrajectorySequenceAsync(builder.build());
                     macroState++;
                 }
@@ -209,23 +233,23 @@ public class BlueBackStageAuto extends AutoBase {
             //waits for the robot to fin  the trajectory
             case 11:
                 robot.resetMacro(0, getRuntime());
-                robot.intake.setDcMotor(0.38);
-                robot.intake.setpos(STACK4);
+                robot.intake.setDcMotor(0.68);
+                robot.intake.setpos(STACK3);
                 if (!robot.drive.isBusy()) {
                     macroState++;
                 }
                 break;
             //Third and 4th pixels off the stack are intaken by this
             case 12:
-                robot.intake.setDcMotor(0.38);
-                robot.intake.setpos(STACK3);
+                robot.intake.setDcMotor(0.6 8);
+                robot.intake.setpos(STACK2);
                 macroTime = getRuntime();
                 macroState++;
                 break;
             //goes back to the easel
             case 13:
                 if (getRuntime() > macroTime + 0.03) {
-                    robot.intake.setDcMotor(0.65);
+                    robot.intake.setDcMotor(-0.35);
                     builder = this.robot.getTrajectorySequenceBuilder();
                     //builder.lineToConstantHeading(POST_SCORING_SPLINE_END);
                     builder.lineToConstantHeading(POST_SCORING_SPLINE_END.vec());

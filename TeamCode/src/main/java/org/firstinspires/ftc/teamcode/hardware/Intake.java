@@ -16,7 +16,7 @@ public class Intake {
     private Position pos = Position.UP;
 
     public enum Position {
-        STACK1, STACK2, STACK3, STACK4, STACK5, UP;
+        STACK1, STACK2, STACK3, STACK4, STACK5, STACK6, UP;
 
         public Position nextPosition() {
             int nextOne = (this.ordinal() + 1) % Position.values().length;
@@ -35,6 +35,8 @@ public class Intake {
     public static double stack3 = 0.065;
     public static double stack4 = 0.09;
     public static double stack5 = 0.1;
+
+    public static double stack6 = 0.13;
     public static double up = 0.30;
     public static double motorPower = 0;
 
@@ -62,7 +64,11 @@ public class Intake {
         } else if (stack == Position.STACK5) {
             lServo.setPosition(stack5);
             rServo.setPosition(stack5);
-        } else if (stack == Position.UP) {
+        } else if (stack == Position.STACK6) {
+            lServo.setPosition(stack6);
+            rServo.setPosition(stack6);
+        }
+        else if (stack == Position.UP) {
             lServo.setPosition(up);
             rServo.setPosition(up);
         }
