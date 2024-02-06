@@ -35,7 +35,7 @@ public class RedBackStageAuto extends AutoBase {
 
     public static  final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(53, -35.3, Math.toRadians(188));//187
 
-    public static  final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(53.6, -32.5, Math.toRadians(190));//187
+    public static  final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(52.6, -32.5, Math.toRadians(190));//187
 
     public static  final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(51.4, -34.5, Math.toRadians(192));//187
 
@@ -140,7 +140,7 @@ public class RedBackStageAuto extends AutoBase {
                             builder.lineToConstantHeading(STACK_LOCATION_1.vec().plus(new Vector2d(-1.85)));
                             break;
                         case 2:
-                            builder.lineToConstantHeading(STACK_LOCATION_2.vec().plus(new Vector2d(-2)));
+                            builder.lineToConstantHeading(STACK_LOCATION_2.vec().plus(new Vector2d(-3)));
                             break;
                         case 3:
                             builder.lineToConstantHeading(STACK_LOCATION_3.vec().plus(new Vector2d(-3)));
@@ -221,7 +221,7 @@ public class RedBackStageAuto extends AutoBase {
                             builder.lineToConstantHeading(STACK_LOCATION_1.vec().plus(new Vector2d(-2)));
                             break;
                         case 2:
-                            builder.lineToConstantHeading(STACK_LOCATION_2.vec().plus(new Vector2d(-3)));
+                            builder.lineToConstantHeading(STACK_LOCATION_2.vec().plus(new Vector2d(-3.5)));
                             break;
                         case 3:
                             builder.lineToConstantHeading(STACK_LOCATION_3.vec().plus(new Vector2d(-2.8)));

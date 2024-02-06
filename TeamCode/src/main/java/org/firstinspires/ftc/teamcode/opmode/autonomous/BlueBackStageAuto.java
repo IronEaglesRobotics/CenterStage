@@ -241,7 +241,7 @@ public class BlueBackStageAuto extends AutoBase {
                 break;
             //Third and 4th pixels off the stack are intaken by this
             case 12:
-                robot.intake.setDcMotor(0.6 8);
+                robot.intake.setDcMotor(0.68);
                 robot.intake.setpos(STACK2);
                 macroTime = getRuntime();
                 macroState++;
