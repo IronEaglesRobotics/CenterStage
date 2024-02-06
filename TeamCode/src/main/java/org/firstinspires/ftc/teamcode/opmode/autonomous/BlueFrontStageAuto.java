@@ -35,11 +35,11 @@ public class BlueFrontStageAuto extends AutoBase {
 
     public static final Pose2d POST_SCORING_SPLINE_END = new Pose2d(24, 12.4, Math.toRadians(10));//-36
 
-    public static final Pose2d POST_DROP_POS = new Pose2d(-45, 58.5, Math.toRadians(180));
+    public static final Pose2d POST_DROP_POS = new Pose2d(-45, 59.5, Math.toRadians(180));
 
     public static final Pose2d POST_DROP_POS_PART2 = new Pose2d(-33, 60.5, Math.toRadians(180));
 
-    public static final Pose2d PRE_DEPOSIT_POS = new Pose2d(33, 58.5, Math.toRadians(180));
+    public static final Pose2d PRE_DEPOSIT_POS = new Pose2d(33, 59.5, Math.toRadians(180));
 
     @Override
     public void createTrajectories() {
@@ -87,12 +87,13 @@ public class BlueFrontStageAuto extends AutoBase {
                 else{
                     builder = this.robot.getTrajectorySequenceBuilder();
                     robot.intake.setDcMotor(0);
-//                    robot.arm.setDoor(OPEN);
-//                    builder.lineToLinearHeading(STACK_LOCATION.plus(new Pose2d(-3.6,1.5)));
-//
-//                    robot.intake.setDcMotor(0.44);
-//                    robot.intake.setpos(STACK6);
-//                    macroTime = getRuntime();
+                    robot.arm.setDoor(OPEN);
+                    builder.lineToLinearHeading(STACK_LOCATION.plus(new Pose2d(-5.8,1.5))).waitSeconds(.01);
+
+
+                    robot.intake.setDcMotor(0.44);
+                    robot.intake.setpos(STACK6);
+                    macroTime = getRuntime();
                     builder.lineToLinearHeading(POST_DROP_POS);
                     this.robot.drive.followTrajectorySequenceAsync(builder.build());
                     macroState++;
@@ -110,8 +111,8 @@ public class BlueFrontStageAuto extends AutoBase {
 
             case 4:
                 if (getRuntime() > macroTime + 0.06) {
-//                    robot.arm.setDoor(CLOSE);
-//                    robot.intake.setDcMotor(-0.5);
+                    robot.arm.setDoor(CLOSE);
+                    robot.intake.setDcMotor(-0.5);
                     builder = this.robot.getTrajectorySequenceBuilder();
 //                    //builder.lineToConstantHeading(POST_SCORING_SPLINE_END);
 //                    builder.lineToConstantHeading(POST_DROP_POS.vec());
@@ -161,9 +162,9 @@ public class BlueFrontStageAuto extends AutoBase {
                 robot.resetMacro(0, getRuntime());
                 if (getRuntime() > macroTime + 3.4 || robot.macroState >= 4) {
                     builder = this.robot.getTrajectorySequenceBuilder();
-                    builder.splineToConstantHeading(PRE_DEPOSIT_POS.vec(), Math.toRadians(180));
-                    builder.lineToConstantHeading(POST_DROP_POS.vec());
-                    builder.splineToConstantHeading(STACK_LOCATION.plus(new Pose2d(-3.7, -1.5)).vec(), Math.toRadians(180));
+                    builder.splineToConstantHeading(PRE_DEPOSIT_POS.plus(new Pose2d(0,-2)).vec(), Math.toRadians(180));
+                    builder.lineToConstantHeading(POST_DROP_POS.plus(new Pose2d(0,-2)).vec());
+                    builder.splineToConstantHeading(STACK_LOCATION.plus(new Pose2d(-3.7, -3.5)).vec(), Math.toRadians(180));
                     this.robot.drive.followTrajectorySequenceAsync(builder.build());
                     macroState++;
                 }
@@ -203,7 +204,7 @@ public class BlueFrontStageAuto extends AutoBase {
                             builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_1.vec(), Math.toRadians(0));
                             break;
                         case 2:
-                            builder.lineToLinearHeading(PRE_DEPOSIT_POS);
+                            builder.lineToLinearHeading(PRE_DEPOSIT_POS.plus(new Pose2d(0,-2)));
                             builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_2.vec(), Math.toRadians(0));
                             break;
                         case 3:
