@@ -35,13 +35,24 @@ public abstract class AutoBase extends LinearOpMode {
     protected CenterStageCommon.PropLocation propLocation;
     protected final Pose2d initialPosition;
     protected final CenterStageCommon.Alliance alliance;
-    protected final Pose2d park;
+    protected final Pose2d parkLeft;
+    protected final Pose2d parkRight;
+
+    protected Pose2d park;
+    protected int delay = 0;
+    boolean leftWasPressed = false;
+    boolean rightWasPressed = false;
+    boolean upWasPressed = false;
+    boolean downWasPressed = false;
 
 
-    protected AutoBase(CenterStageCommon.Alliance alliance, Pose2d initialPosition, Pose2d park) {
+
+
+    protected AutoBase(CenterStageCommon.Alliance alliance, Pose2d initialPosition, Pose2d parkLeft, Pose2d parkRight) {
         this.alliance = alliance;
         this.initialPosition = initialPosition;
-        this.park = park;
+        this.parkLeft = parkLeft;
+        this.parkRight = parkRight;
     }
 
     @Override
@@ -50,11 +61,33 @@ public abstract class AutoBase extends LinearOpMode {
         this.robot = new Robot(hardwareMap, telemetry, initialPosition, alliance);
         this.dashboard = FtcDashboard.getInstance();
         this.dashboardTelemetry = dashboard.getTelemetry();
-
         // Wait for match to start
         while(!isStarted() && !isStopRequested()) {
             this.robot.update();
             this.sleep(20);
+
+            boolean leftPressed = gamepad1.dpad_left;
+            boolean rightPressed = gamepad1.dpad_right;
+            boolean upPressed = gamepad1.dpad_up;
+            boolean downPressed = gamepad1.dpad_down;
+            this.telemetry.addData("To select parking location, use the dpad right or left. To add delay, use the dpad up to increase delay, and dpad down to decrease delay", "");
+            if(leftPressed && !leftWasPressed) {
+                this.park = parkLeft;
+                this.telemetry.addData("Park set to", "Left");
+            } else if(rightPressed && !rightWasPressed) {
+                this.park = parkRight;
+                this.telemetry.addData("Park set to", "Right");
+            } else if(upPressed && !upWasPressed) {
+                this.delay += 1000;
+                this.telemetry.addData("Delay increased by", "1000");
+                this.sleep(200);
+            } else if(downPressed && !downWasPressed) {
+                this.delay -= 1000;
+                this.telemetry.addData("Delay decreased by", "1000");
+                this.sleep(200);
+            }
+            this.telemetry.addData("Delay", this.delay);
+            this.telemetry.addData("Park set to", this.park);
         }
         if (isStopRequested()) {  // remove later if nessacary as recent addition might be interefering
             return;
@@ -75,6 +108,7 @@ public abstract class AutoBase extends LinearOpMode {
                 propRight();
                 break;
         }
+        this.sleep(delay);
         moveToEasel();
         prepareToScore();
         scorePreloadedPixel();
@@ -130,6 +164,7 @@ public abstract class AutoBase extends LinearOpMode {
         }
 
         Pose2d inferredPos = this.robot.getCamera().estimatePoseFromAprilTag();
+//        inferredPos = inferredPos != null ? inferredPos : robot.getDrive().getPoseEstimate(); // new code (maybe get rid of)
         this.robot.getDrive().setPoseEstimate(inferredPos);
         Pose2d target = new Pose2d(
                 60 - SCORING_DISTANCE_FROM_APRIL_TAG - CAMERA_FORWARD_OFFSET_IN, // 60 is the X position of the april tag
@@ -164,7 +199,7 @@ public abstract class AutoBase extends LinearOpMode {
     }
 
     protected void determinePropLocation() {
-        this.robot.getClaw().setArmPositionAsync(PICKUP_ARM_MIN);
+        this.robot.getClaw().setArmPositionAsync(PICKUP_ARM_MIN); // changed from setArmPositionAsync
 
         while (!this.robot.getClaw().isArmAtPosition()) {
             this.robot.update();
@@ -173,7 +208,7 @@ public abstract class AutoBase extends LinearOpMode {
 
         sleep(250);
 
-        setPropLocationIfVisible(Center, Unknown);
+        setPropLocationIfVisible(Center, Unknown); //only works if arm is async
         if (this.propLocation != Center) {
             peekRight();
         }

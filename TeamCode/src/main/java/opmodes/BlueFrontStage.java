@@ -11,17 +11,17 @@ import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 
 @Autonomous(name = "BlueFrontStage", preselectTeleOp = "MainTeleOp")
 public class BlueFrontStage extends AutoBase {
-    private static final int delay = 0;
 
     public BlueFrontStage() {
         super(
                 CenterStageCommon.Alliance.Blue,
                 new Pose2d(-36, 63, Math.toRadians(90)),
+                new Pose2d(62, 62),
                 new Pose2d(62, 12, Math.toRadians(0)));
+
     }
 
     protected void propLeft() {
-        this.sleep(delay);
 
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.lineToLinearHeading(new Pose2d(-43.5, 31.5, Math.toRadians(180)));
@@ -31,7 +31,6 @@ public class BlueFrontStage extends AutoBase {
     }
 
     protected void propCenter() {
-        this.sleep(delay);
 
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.lineToLinearHeading(new Pose2d(-36, 42, initialPosition.getHeading()));
@@ -41,7 +40,6 @@ public class BlueFrontStage extends AutoBase {
     }
 
     protected void propRight() {
-        this.sleep(delay);
 
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.lineToLinearHeading(new Pose2d(-39.34, 40.45, Math.toRadians(64.3)));

@@ -32,16 +32,16 @@ public class RobotConfig {
     public static double AUTO_STRAFE_SLOWDOWN = 4;
 
     // Arm
-    public static double PICKUP_ARM_MIN = 0.175;
-    public static double PICKUP_ARM_MAX = 0.760;
-    public static double CLAW_MIN = 0.89;
-    public static double CLAW_MAX = 0.65;
+    public static double PICKUP_ARM_MIN = .19;
+    public static double PICKUP_ARM_MAX = 0.76; // Changed .760 --> .74 Claw arm go up
+    public static double CLAW_MIN = 0.91; // Changed .89 --> .88 Probably the Claw Clamp
+    public static double CLAW_MAX = 0.65; // Claw release
     public static double CLAW_ARM_DELTA = 0.03;
     public static double CLAW_KP = 0.3;
     public static double CLAW_ARM_KP = 0.15;
 
     // Gantry
-    public static double GANTRY_ARM_MIN = 0.42;
+    public static double GANTRY_ARM_MIN = 0.43; // Changed 0.42 --> 0.45 pickup position
     public static double GANTRY_ARM_MAX = 0.96;
     public static int GANTRY_LIFT_DELTA = 50;
     public static double GANTRY_ARM_KP = 0.1;
@@ -49,7 +49,7 @@ public class RobotConfig {
     public static double X_MAX = 0.86;
     public static double X_MIN = 0.16;
     public static double X_CENTER = 0.54;
-    public static double GANTRY_ARM_DELTA_MAX = 0.013;
+    public static double GANTRY_ARM_DELTA_MAX = 0.015;
     public static int SLIDE_UP = 820;
     public static double SLIDE_POWER = 0.25;
 

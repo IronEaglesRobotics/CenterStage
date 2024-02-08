@@ -3,6 +3,7 @@ package opmodes;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CLAW_ARM_DELTA;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CAMERA_FORWARD_OFFSET_IN;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.DRONE_LAUNCH_PAUSE_S;
+import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.GANTRY_ARM_MIN;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.PICKUP_ARM_MAX;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.SCORING_DISTANCE_FROM_APRIL_TAG;
 import static org.firstinspires.ftc.teamcode.hardware.RobotConfig.CAMERA_SIDE_OFFSET_IN;
@@ -39,6 +40,7 @@ public class MainTeleOp extends OpMode {
     private int targetTagId;
     private double droneLaunchStart;
     private boolean wasRobotDroneLaunch;
+    private double gantryArmPosition = 0;
 
     @Override
     public void init() {
