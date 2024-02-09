@@ -9,10 +9,14 @@ import static org.firstinspires.ftc.teamcode.util.CenterStageCommon.PropLocation
 import static org.firstinspires.ftc.teamcode.util.CenterStageCommon.PropLocation.Right;
 import static org.firstinspires.ftc.teamcode.util.CenterStageCommon.PropLocation.Unknown;
 
+import android.annotation.SuppressLint;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -23,82 +27,60 @@ import org.firstinspires.ftc.teamcode.vision.Detection;
 
 @Config
 public abstract class AutoBase extends LinearOpMode {
-    public static int DEPOSIT_HEIGHT = 100;
-    public static double SCORING_DURATION_S =  2f; // for spin of axle
-    public static double APRIL_TAG_RIGHT_DELTA = -8.5;
-    public static double APRIL_TAG_LEFT_DELTA = 7.0;
-    protected static double Delay = 5000;
+    protected AutoConfig config;
 
     protected Robot robot;
-    protected FtcDashboard dashboard;
-    protected Telemetry dashboardTelemetry;
-    protected CenterStageCommon.PropLocation propLocation;
-    protected final Pose2d initialPosition;
-    protected final CenterStageCommon.Alliance alliance;
-    protected final Pose2d parkLeft;
-    protected final Pose2d parkRight;
 
-    protected Pose2d park;
-    protected int delay = 0;
-    boolean leftWasPressed = false;
-    boolean rightWasPressed = false;
-    boolean upWasPressed = false;
-    boolean downWasPressed = false;
-
-
-
-
-    protected AutoBase(CenterStageCommon.Alliance alliance, Pose2d initialPosition, Pose2d parkLeft, Pose2d parkRight) {
-        this.alliance = alliance;
-        this.initialPosition = initialPosition;
-        this.parkLeft = parkLeft;
-        this.parkRight = parkRight;
+    protected AutoBase(AutoConfig config) {
+        this.config = config;
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void runOpMode() {
         // Initialize Robot and Dashboard
-        this.robot = new Robot(hardwareMap, telemetry, initialPosition, alliance);
-        this.dashboard = FtcDashboard.getInstance();
-        this.dashboardTelemetry = dashboard.getTelemetry();
-        this.park = parkLeft;
+        this.robot = new Robot(hardwareMap, telemetry, this.config.getInitialPosition(), this.config.getAlliance());
+        GamepadEx controller1 = new GamepadEx(this.gamepad1);
+        GamepadEx controller2 = new GamepadEx(this.gamepad2);
 
         // Wait for match to start
-        while(!isStarted() && !isStopRequested()) {
+        while (!isStarted() && !isStopRequested()) {
             this.robot.update();
+            controller1.readButtons();
+            controller2.readButtons();
 
-            boolean leftPressed = gamepad1.dpad_left;
-            boolean rightPressed = gamepad1.dpad_right;
-            boolean upPressed = gamepad1.dpad_up;
-            boolean downPressed = gamepad1.dpad_down;
-            this.telemetry.addData("To select parking location, use the dpad right or left. To add delay, use the dpad up to increase delay, and dpad down to decrease delay", "");
-            if(leftPressed && !leftWasPressed) {
-                this.park = parkLeft;
-            } else if(rightPressed && !rightWasPressed) {
-                this.park = parkRight;
-            } else if(upPressed && !upWasPressed) {
-                this.delay += 1000;
-            } else if(downPressed && !downWasPressed) {
-                this.delay -= 1000;
+            if (controller1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)
+                    || controller2.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+                this.config.setParkLocation(AutoConfig.ParkLocation.Left);
+            }
+            if (controller1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)
+                    || controller2.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
+                this.config.setParkLocation(AutoConfig.ParkLocation.Right);
             }
 
-            this.leftWasPressed = leftPressed;
-            this.rightWasPressed = rightPressed;
-            this.upWasPressed = upPressed;
-            this.downWasPressed = downPressed;
+            if (controller1.wasJustPressed(GamepadKeys.Button.DPAD_UP)
+                    || controller2.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+                this.config.increaseDelay();
+            }
+            if (controller1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)
+                    || controller2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+                this.config.decreaseDelay();
+            }
 
-            this.telemetry.addData("Delay", this.delay);
-            this.telemetry.addData("Park set to", this.park);
+            this.telemetry.addLine("Press DPAD_UP to increase delay");
+            this.telemetry.addLine("Press DPAD_DOWN to decrease delay");
+            this.telemetry.addLine("Press DPAD_LEFT to park on the left");
+            this.telemetry.addLine("Press DPAD_RIGHT to park on the right");
+            this.telemetry.addData("Delay", String.format("%d second(s)", this.config.getDelay() / 1000));
+            this.telemetry.addData("Park set to", this.config.getParkLocation());
             this.sleep(20);
         }
-        if (isStopRequested()) {  // remove later if nessacary as recent addition might be interefering
+        if (isStopRequested()) {
             return;
         }
 
-        // If the prop is visible at this point, then it must be in the center (2) position
-        determinePropLocation();
-
-        switch (this.propLocation) {
+        CenterStageCommon.PropLocation propLocation = determinePropLocation();
+        switch (propLocation) {
             case Left:
                 propLeft();
                 break;
@@ -110,9 +92,10 @@ public abstract class AutoBase extends LinearOpMode {
                 propRight();
                 break;
         }
-        this.sleep(delay);
+
+        this.sleep(this.config.getDelay());
         moveBackstage();
-        prepareToScore();
+        prepareToScore(propLocation);
         scorePreloadedPixel();
         park();
     }
@@ -123,6 +106,8 @@ public abstract class AutoBase extends LinearOpMode {
 
     protected abstract void propRight();
 
+    protected void moveBackstage() { }
+
     protected void openAndLiftClaw() {
         this.robot.getClaw().openSync();
         this.sleep(100);
@@ -130,15 +115,15 @@ public abstract class AutoBase extends LinearOpMode {
     }
 
     protected void scorePreloadedPixel() {
-        this.robot.getGantry().setSlideTarget(DEPOSIT_HEIGHT);
+        this.robot.getGantry().setSlideTarget(AutoConfig.DEPOSIT_HEIGHT);
         this.robot.getGantry().armOut();
-        while(this.robot.getGantry().isIn()) {
+        while (this.robot.getGantry().isIn()) {
             this.robot.update();
             sleep(20);
         }
         this.robot.getGantry().deposit();
         double startTime = this.getRuntime();
-        while (this.getRuntime() < (startTime + SCORING_DURATION_S)) {
+        while (this.getRuntime() < (startTime + AutoConfig.SCORING_DURATION_S)) {
             this.robot.update();
         }
         this.robot.getGantry().stop();
@@ -146,22 +131,18 @@ public abstract class AutoBase extends LinearOpMode {
         this.robot.getGantry().armInSync();
     }
 
-    protected void prepareToScore() {
+    protected void prepareToScore(CenterStageCommon.PropLocation propLocation) {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
 
         this.robot.getGantry().armOut();
-        this.robot.getGantry().setSlideTarget(DEPOSIT_HEIGHT);
+        this.robot.getGantry().setSlideTarget(AutoConfig.DEPOSIT_HEIGHT);
 
-        if (this.alliance == CenterStageCommon.Alliance.Blue) {
-            builder.lineToLinearHeading(new Pose2d(35, 36, 0));
-        } else if (this.alliance == CenterStageCommon.Alliance.Red) {
-            builder.lineToLinearHeading(new Pose2d(35, -35, 0));
-        }
+        builder.lineToLinearHeading(new Pose2d(35, Math.copySign(36, this.config.getInitialPosition().getY()), 0));
 
         this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
 
-        Pose2d inferredPos = null;
-        while(this.robot.getDrive().isBusy()) {
+        Pose2d inferredPos;
+        while (this.robot.getDrive().isBusy()) {
             this.robot.update();
 
             inferredPos = this.robot.getCamera().estimatePoseFromAprilTag();
@@ -176,53 +157,34 @@ public abstract class AutoBase extends LinearOpMode {
             inferredPos = this.robot.getDrive().getPoseEstimate();
         }
 
-        // At this point we know that Y = 38
-        // For 2 -> Ydelta = 0
-        // For 3 -> 3 5/8
-        // For 1 -> - 3 5/8
         double delta = 0;
-        switch (this.propLocation) {
+        switch (propLocation) {
             case Left:
-                delta = APRIL_TAG_LEFT_DELTA;
+                delta = AutoConfig.APRIL_TAG_LEFT_DELTA;
                 break;
             case Unknown:
             case Center:
                 delta = 0;
                 break;
             case Right:
-                delta = APRIL_TAG_RIGHT_DELTA;
+                delta = AutoConfig.APRIL_TAG_RIGHT_DELTA;
                 break;
         }
 
         builder = this.robot.getDrive().trajectorySequenceBuilder(inferredPos);
         Pose2d target = new Pose2d(
                 60 - SCORING_DISTANCE_FROM_APRIL_TAG - CAMERA_FORWARD_OFFSET_IN, // 60 is the X position of the april tag
-                36 + delta,
+                Math.copySign(36, this.config.getInitialPosition().getY()) + delta,
                 0);
         builder.lineToLinearHeading(target);
         this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
-        while(this.robot.getDrive().isBusy()) {
+        while (this.robot.getDrive().isBusy()) {
             this.robot.update();
         }
     }
 
-    protected void moveBackstage() {
-        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-
-        if (!this.isBackstage()) {
-            if (this.alliance == CenterStageCommon.Alliance.Blue) {
-                builder.lineToSplineHeading(new Pose2d(-40, 60, Math.PI));
-                builder.lineToLinearHeading(new Pose2d(12, 60, Math.PI));
-            } else if (this.alliance == CenterStageCommon.Alliance.Red) {
-                builder.lineToSplineHeading(new Pose2d(-40, -60, Math.PI));
-                builder.lineToLinearHeading(new Pose2d(12, -60, Math.PI));
-            }
-            this.robot.getDrive().followTrajectorySequence(builder.build());
-        }
-    }
-
-    protected void determinePropLocation() {
-        this.robot.getClaw().setArmPositionAsync(PICKUP_ARM_MIN); // changed from setArmPositionAsync
+    protected CenterStageCommon.PropLocation determinePropLocation() {
+        this.robot.getClaw().setArmPositionAsync(PICKUP_ARM_MIN);
 
         while (!this.robot.getClaw().isArmAtPosition() && !this.robot.getCamera().getProp().isValid()) {
             this.robot.update();
@@ -231,26 +193,24 @@ public abstract class AutoBase extends LinearOpMode {
 
         sleep(250);
 
-        setPropLocationIfVisible(Center, Unknown); //only works if arm is async
-        if (this.propLocation != Center) {
-            peekRight();
+        CenterStageCommon.PropLocation propLocation = getPropLocationIfVisible(Center, Unknown);
+        if (propLocation != Center) {
+            Pose2d currentPose = this.robot.getDrive().getPoseEstimate();
+            final double y = currentPose.getY() > 0 ? -5 : 5;
+            final double z = Math.toRadians(-25);
+            TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+            builder.lineToLinearHeading(currentPose.plus(new Pose2d(0, y, z)));
+            this.robot.getDrive().followTrajectorySequence(builder.build());
+
+            this.sleep(250);
+
+            propLocation = getPropLocationIfVisible(Right, Left);
         }
+
+        return propLocation;
     }
 
-    protected void peekRight() {
-        Pose2d currentPose = this.robot.getDrive().getPoseEstimate();
-        final double y = currentPose.getY() > 0 ? -5 : 5;
-        final double z = Math.toRadians(-25);
-        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-        builder.lineToLinearHeading(currentPose.plus(new Pose2d(0, y, z)));
-        this.robot.getDrive().followTrajectorySequence(builder.build());
-
-        this.sleep(250);
-
-        setPropLocationIfVisible(Right, Left);
-    }
-
-    protected void setPropLocationIfVisible(CenterStageCommon.PropLocation ifVisible, CenterStageCommon.PropLocation ifNotVisible) {
+    private CenterStageCommon.PropLocation getPropLocationIfVisible(CenterStageCommon.PropLocation ifVisible, CenterStageCommon.PropLocation ifNotVisible) {
         float seenCount = 0;
         float samples = 10;
         for (int i = 0; i < samples; i++) {
@@ -260,21 +220,18 @@ public abstract class AutoBase extends LinearOpMode {
             }
         }
         if (seenCount / samples > 0.5) {
-            this.propLocation = ifVisible;
+            return ifVisible;
         } else {
-            this.propLocation = ifNotVisible;
+            return ifNotVisible;
         }
     }
 
-    public void park() {
+    private void park() {
+        Pose2d park = this.config.getSelectionParkPosition();
         double currentX = this.robot.getDrive().getPoseEstimate().getX();
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.strafeTo(new Vector2d(currentX, park.getY()));
         builder.lineToLinearHeading(park);
         this.robot.getDrive().followTrajectorySequence(builder.build());
-    }
-
-    protected boolean isBackstage() {
-        return this.initialPosition.getX() > 0;
     }
 }
