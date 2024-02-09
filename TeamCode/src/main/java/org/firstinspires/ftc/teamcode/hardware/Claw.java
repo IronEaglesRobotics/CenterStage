@@ -74,6 +74,7 @@ public class Claw implements Updatable {
         this.clawController.setP(CLAW_KP);
 
         this.armController.setSetPoint(this.armControllerTarget);
+        this.armController.setTolerance(0.008);
         this.armController.setP(CLAW_ARM_KP);
 
         if (!this.clawController.atSetPoint()) {

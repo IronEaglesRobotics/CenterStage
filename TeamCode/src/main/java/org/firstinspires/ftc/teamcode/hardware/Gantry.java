@@ -41,6 +41,7 @@ public class Gantry {
         this.armServo = hardwareMap.get(Servo.class, GANTRY_ARM_NAME);
         this.screwServo = hardwareMap.get(CRServo.class, GANTRY_SCREW_NAME);
         this.armServo.setPosition(GANTRY_ARM_MIN);
+        this.armControllerTarget = GANTRY_ARM_MIN;
 
         this.liftLeft = hardwareMap.get(DcMotor.class, LEFT_SLIDE_MOTOR_NAME);
         this.liftLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -127,7 +128,7 @@ public class Gantry {
 
     public void update() {
         this.armController.setSetPoint(this.armControllerTarget);
-        this.armController.setTolerance(0.001);
+        this.armController.setTolerance(0.0001);
         this.armController.setP(GANTRY_ARM_KP);
 
         this.xController.setSetPoint(this.xControllerTarget);

@@ -41,7 +41,7 @@ public class RobotConfig {
     public static double CLAW_ARM_KP = 0.15;
 
     // Gantry
-    public static double GANTRY_ARM_MIN = 0.43; // Changed 0.42 --> 0.45 pickup position
+    public static double GANTRY_ARM_MIN = 0.435; // Changed 0.42 --> 0.45 pickup position
     public static double GANTRY_ARM_MAX = 0.96;
     public static int GANTRY_LIFT_DELTA = 50;
     public static double GANTRY_ARM_KP = 0.1;
