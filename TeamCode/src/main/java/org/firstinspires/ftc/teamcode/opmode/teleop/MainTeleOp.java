@@ -27,6 +27,8 @@ public class MainTeleOp extends OpMode {
     private Controller controller1;
     private Controller controller2;
 
+    public boolean hang_counter = false;
+
     @Override
     public void init() {
         controller1 = new Controller(gamepad1);
@@ -34,7 +36,7 @@ public class MainTeleOp extends OpMode {
 
         this.robot = new Robot(hardwareMap);
 //        robot.intake.setpos(Intake.Position.STACK1);
-        this.robot.endGameMechs.hold();
+
 //        while (robot.camera.getFrameCount() < 1) {
 //            telemetry.addLine("Initializing...");
 //            telemetry.update();
@@ -68,6 +70,31 @@ public class MainTeleOp extends OpMode {
             z *= normal;
         }
         robot.drive.setWeightedDrivePower(new Pose2d(x, y, z));
+        // Drone launcher
+        if (controller1.getA().isPressed() && !controller1.getStart().isPressed() && !controller2.getStart().isPressed()) {
+            this.robot.endGameMechs.launch();
+        } else {
+            this.robot.endGameMechs.reset();
+        }
+
+        //Hang Motor
+
+//        if (controller1.getB().isJustPressed() && !controller1.getStart().isPressed() && !controller2.getStart().isPressed() && !hang_counter){
+//            this.robot.endGameMechs.hang_init_pos();
+//            hang_counter = true;
+//        }
+//        else if (controller1.getB().isJustPressed() && !controller1.getStart().isPressed() && !controller2.getStart().isPressed() && hang_counter){
+//            this.robot.endGameMechs.hang_final_pos();
+//            hang_counter = false;
+//        }
+
+        if (controller1.getB().isPressed()) {
+            this.robot.endGameMechs.hang_final_pos();
+        } else  {
+            this.robot.endGameMechs.hang_init_pos();
+        }
+
+
 
         // Driver 2
         if (controller2.getRightTrigger().getValue()>=0.1){
@@ -87,16 +114,8 @@ public class MainTeleOp extends OpMode {
             robot.intake.decrementPos();
         }
 
-        // Drone launcher
-        if (controller1.getA().isPressed() && !controller1.getStart().isPressed() && !controller2.getStart().isPressed()) {
-            this.robot.endGameMechs.launch();
-        } else {
-            this.robot.endGameMechs.reset();
-        }
-        //Hang Servos
-        if (controller1.getX().isPressed() && !controller1.getStart().isPressed() && !controller2.getStart().isPressed()) {
-            this.robot.endGameMechs.release();
-        }
+
+
 
 
         // macros

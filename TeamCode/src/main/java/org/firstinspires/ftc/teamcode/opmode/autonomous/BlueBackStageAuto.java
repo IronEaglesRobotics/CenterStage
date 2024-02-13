@@ -25,7 +25,7 @@ public class BlueBackStageAuto extends AutoBase {
 
     public static final Pose2d ALINE = new Pose2d(51,35, Math.toRadians(-180));
 
-    public static final Pose2d DROP_1 = new Pose2d(24.5, 43, Math.toRadians(-90));
+    public static final Pose2d DROP_1 = new Pose2d(24.5, 45, Math.toRadians(-90));
     public static final Pose2d DEPOSIT_PRELOAD_3 = new Pose2d(55.4, 28.7, Math.toRadians(-180));
     public static final Pose2d DEPOSIT_PRELOAD_2 = new Pose2d(51.6, 34.5, Math.toRadians(-180));
     public static final Pose2d DEPOSIT_PRELOAD_1 = new Pose2d(51.5, 39.3, Math.toRadians(-180));
@@ -222,8 +222,7 @@ public class BlueBackStageAuto extends AutoBase {
                             builder.lineToConstantHeading(STACK_LOCATION2.vec().plus(new Vector2d(-2)));
                             break;
                         case 3:
-                            builder.lineToConstantHeading(STACK_LOCATION3.vec().plus(new Vector2d(0.5
-                            )));
+                            builder.lineToConstantHeading(STACK_LOCATION3.vec().plus(new Vector2d(0.5   )));
                             break;
                     }
                     this.robot.drive.followTrajectorySequenceAsync(builder.build());

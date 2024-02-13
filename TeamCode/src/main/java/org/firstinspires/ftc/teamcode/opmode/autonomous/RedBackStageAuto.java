@@ -29,7 +29,7 @@ public class RedBackStageAuto extends AutoBase {
     public static final Pose2d ALINE = new Pose2d(51,-32.5, Math.toRadians(180));
 
     public static final Pose2d DROP_3 = new Pose2d(25, -45.5, Math.toRadians(90));
-    public static final Pose2d DEPOSIT_PRELOAD_1 = new Pose2d(52, -26.3, Math.toRadians(180));
+    public static final Pose2d DEPOSIT_PRELOAD_1 = new Pose2d(52, -28.3, Math.toRadians(180));
     public static final Pose2d DEPOSIT_PRELOAD_2 = new Pose2d(52.3, -34.5, Math.toRadians(190));
     public static final Pose2d DEPOSIT_PRELOAD_3 = new Pose2d(51, -40.7, Math.toRadians(190));
 
@@ -41,13 +41,13 @@ public class RedBackStageAuto extends AutoBase {
 
 
     //public static final Vector2d POST_SCORING_SPLINE_END = new Vector2d(24, -8.5);//-36
-    public static final Pose2d POST_SCORING_SPLINE_END = new Pose2d(27, -10.2, Math.toRadians(190));//-36
+    public static final Pose2d POST_SCORING_SPLINE_END = new Pose2d(27, -11.2, Math.toRadians(185));//-36
 
-    public static final Pose2d STACK_LOCATION_1 = new Pose2d(-56, -10.2, Math.toRadians(190));
+    public static final Pose2d STACK_LOCATION_1 = new Pose2d(-56, -11.2, Math.toRadians(185));
 
-    public static final Pose2d STACK_LOCATION_2 = new Pose2d(-56.2, -10.2, Math.toRadians(190));
+    public static final Pose2d STACK_LOCATION_2 = new Pose2d(-56.2, -11.2, Math.toRadians(185));
 
-    public static final Pose2d STACK_LOCATION_3 = new Pose2d(-56.2, -10.2, Math.toRadians(185));
+    public static final Pose2d STACK_LOCATION_3 = new Pose2d(-56.2, -11.2, Math.toRadians(185));
 
     @Override
     public void createTrajectories() {
@@ -101,7 +101,7 @@ public class RedBackStageAuto extends AutoBase {
                     //Scores yellow pixel
                     switch (teamPropLocation) {
                         case 1:
-                            builder.lineToLinearHeading(DEPOSIT_PRELOAD_1);
+                            builder.lineToLinearHeading(DEPOSIT_PRELOAD_1 );
                             break;
                         case 2:
                             robot.extendMacro(Slides.mini_tier1 -20, getRuntime());
@@ -140,7 +140,7 @@ public class RedBackStageAuto extends AutoBase {
                             builder.lineToConstantHeading(STACK_LOCATION_1.vec().plus(new Vector2d(-1.85)));
                             break;
                         case 2:
-                            builder.lineToConstantHeading(STACK_LOCATION_2.vec().plus(new Vector2d(-3)));
+                            builder.lineToConstantHeading(STACK_LOCATION_2.vec().plus(new Vector2d(-5)));
                             break;
                         case 3:
                             builder.lineToConstantHeading(STACK_LOCATION_3.vec().plus(new Vector2d(-3)));
