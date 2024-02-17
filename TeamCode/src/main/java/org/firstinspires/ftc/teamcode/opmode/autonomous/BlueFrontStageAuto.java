@@ -62,6 +62,7 @@ public class BlueFrontStageAuto extends AutoBase {
                 builder = this.robot.getTrajectorySequenceBuilder();
                 switch (teamPropLocation) {
                     case 1:
+                        builder.lineToLinearHeading(DROP_1M);
                         builder.lineToLinearHeading(DROP_1);
                         break;
                     case 2:
