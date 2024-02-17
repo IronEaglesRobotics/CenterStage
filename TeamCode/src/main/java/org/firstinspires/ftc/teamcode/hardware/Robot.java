@@ -15,6 +15,8 @@ import static org.firstinspires.ftc.teamcode.util.Configurables.PLANELAUNCH;
 import static org.firstinspires.ftc.teamcode.util.Configurables.PLANELOCK;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SLIDEAUTOSTACKS;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SLIDELAYERONE;
+import static org.firstinspires.ftc.teamcode.util.Configurables.SLIDELAYERTWO;
+import static org.firstinspires.ftc.teamcode.util.Configurables.SLIDEPICKUPSTACKSTWO;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SLIDEUP;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SLIDE_POWER_DOWN;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SLIDE_POWER_UP;
@@ -24,6 +26,7 @@ import static org.firstinspires.ftc.teamcode.util.Constants.CLAW;
 import static org.firstinspires.ftc.teamcode.util.Constants.HANGLEFT;
 import static org.firstinspires.ftc.teamcode.util.Constants.HANGRIGHT;
 import static org.firstinspires.ftc.teamcode.util.Constants.LEFTARM;
+import static org.firstinspires.ftc.teamcode.util.Constants.LIGHTS;
 import static org.firstinspires.ftc.teamcode.util.Constants.PLANE;
 import static org.firstinspires.ftc.teamcode.util.Constants.RIGHTARM;
 import static org.firstinspires.ftc.teamcode.util.Constants.SLIDELEFT;
@@ -31,6 +34,7 @@ import static org.firstinspires.ftc.teamcode.util.Constants.SLIDERIGHT;
 import static org.firstinspires.ftc.teamcode.util.Constants.WRIST;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -45,8 +49,8 @@ import lombok.Getter;
 public class Robot {
     @Getter
     private MecanumDrive drive;
-//    @Getter
-//    private Intake intake;
+    @Getter
+    private Led led;
     @Getter
     private Arm arm;
     @Getter
@@ -71,6 +75,7 @@ public class Robot {
         this.camera = new Camera(hardwareMap);
         this.plane = new Plane().init(hardwareMap);
         this.slides= new Slides().init(hardwareMap);
+        this.led = new Led().init(hardwareMap);
         return this;
     }
 
@@ -112,7 +117,11 @@ public class Robot {
 
         public void slideFirstLayer(){this.slideTo(SLIDELAYERONE, SLIDE_POWER_UP);}
 
+        public void slideScoreStack(){this.slideTo(SLIDELAYERTWO, SLIDE_POWER_UP);}
+
         public void slideAutoStacks(){this.slideTo(SLIDEAUTOSTACKS, SLIDE_POWER_UP);}
+
+        public void slidePickupStackTwo(){this.slideTo(SLIDEPICKUPSTACKSTWO, SLIDE_POWER_UP);}
 
         public void slideStop() {this.slideTo(slidesRight.getCurrentPosition(), 1.0);}
 
@@ -258,6 +267,22 @@ public class Robot {
 
     }
 
+    public static class Led {
+        private RevBlinkinLedDriver led;
+
+        public Led init(HardwareMap hardwareMap) {
+            this.led = hardwareMap.get(RevBlinkinLedDriver.class, LIGHTS);
+            return this;
+        }
+
+        public void gold() {
+            this.led.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE_VIOLET);
+        }
+
+        public void white() {
+            this.led.setPattern(RevBlinkinLedDriver.BlinkinPattern.STROBE_WHITE);
+        }
+    }
     public static class Plane {
         private Servo plane;
 

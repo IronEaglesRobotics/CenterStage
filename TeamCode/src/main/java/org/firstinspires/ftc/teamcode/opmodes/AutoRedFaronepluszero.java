@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 @Config
-@Autonomous(name = "AutoRedFar")
-public class AutoRedFar extends LinearOpMode {
+@Autonomous(name = "AutoRedFar1+0")
+public class AutoRedFaronepluszero extends LinearOpMode {
     protected Pose2d initialPosition;
     private Robot robot;
     private String randomization;
@@ -57,16 +57,15 @@ public class AutoRedFar extends LinearOpMode {
                 break;
         }
         builder.addTemporalMarker(.4,robot.getArm()::armScore);
+//        builder.addTemporalMarker(2,robot.getArm()::armRest);
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
-
-
 
     protected void goBackToWhereYouCameFrom() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.lineToLinearHeading(LEAVE);
-        builder.lineToLinearHeading(READY_TRUSS);
-        builder.lineToLinearHeading(TO_BOARD);
+//        builder.lineToLinearHeading(READY_TRUSS);
+//        builder.lineToLinearHeading(TO_BOARD);
         builder.addTemporalMarker(.3,robot.getArm()::armRest);
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
@@ -159,13 +158,13 @@ public class AutoRedFar extends LinearOpMode {
             this.telemetry.update();
 
         }
-        sleep(delay);
+//        sleep(delay);
         scorePreloadOne();
         goBackToWhereYouCameFrom();
-        scoreBoard();
-        score();
-        sleep(500);
-        park();
+//        scoreBoard();
+//        score();
+//        sleep(500);
+//        park();
     }
 
 }

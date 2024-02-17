@@ -45,13 +45,15 @@ public class MainTeleOp extends OpMode {
         } else if (restArm) {
             this.robot.getArm().armRest();
         } else if (scoreArm) {
-            this.robot.getArm().armScore();
+            this.robot.getArm().armSecondaryScore();
         }
 //Claw
         if (claw) {
             this.robot.getClaw().open();
+            this.robot.getLed().white();
         } else {
             this.robot.getClaw().close();
+            this.robot.getLed().gold();
         }
 //Wrist
         if (pickupWrist) {

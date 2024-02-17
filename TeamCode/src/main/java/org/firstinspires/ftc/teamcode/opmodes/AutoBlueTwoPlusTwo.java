@@ -21,23 +21,25 @@ public class AutoBlueTwoPlusTwo extends LinearOpMode {
 
     //Pose2ds
     //Preloads
-    final static Pose2d RIGHT_PRELOAD_ONE = new Pose2d(-40, -37.5, Math.toRadians(270));
-    final static Pose2d RIGHT_PRELOAD_TWO = new Pose2d(-29.5, -31, Math.toRadians(180));
-    final static Pose2d CENTER_PRELOAD = new Pose2d(-33, -28, Math.toRadians(270));
-    final static Pose2d LEFT_PRELOAD = new Pose2d(-43, -35, Math.toRadians(270));
+    final static Pose2d RIGHT_PRELOAD_ONE = new Pose2d(-40, -33.5, Math.toRadians(210));
+    final static Pose2d RIGHT_PRELOAD_TWO = new Pose2d(-30.5, -31, Math.toRadians(210));
+    final static Pose2d CENTER_PRELOAD = new Pose2d(-33, -26.8, Math.toRadians(270));
+    final static Pose2d LEFT_PRELOAD = new Pose2d(-47, -35, Math.toRadians(270));
     //Board Scores
-    final static Pose2d RIGHT_BOARD = new Pose2d(-75.7, -25.7, Math.toRadians(185));
-    final static Pose2d CENTER_BOARD = new Pose2d(-75.7, -35, Math.toRadians(185));
-    final static Pose2d LEFT_BOARD = new Pose2d(-75.7, -42, Math.toRadians(185));
+    final static Pose2d RIGHT_BOARD = new Pose2d(-75.5, -26.5, Math.toRadians(182));
+    final static Pose2d CENTER_BOARD = new Pose2d(-77, -33.5, Math.toRadians(185));
+    final static Pose2d LEFT_BOARD = new Pose2d(-76, -41, Math.toRadians(185));
     //Stack Cycle
     final static Pose2d LEAVE_BOARD = new Pose2d(-65, -10, Math.toRadians(180));
-    final static Pose2d TO_STACK = new Pose2d(40.75, -7.25, Math.toRadians(180));
+    final static Pose2d TO_STACK = new Pose2d(35, -6.5, Math.toRadians(180));
+    final static Pose2d TO_STACK_SLOW = new Pose2d(40, -7.5, Math.toRadians(180));
+    final static Pose2d TO_STACK_SLOW2 = new Pose2d(40, -8.5, Math.toRadians(183));
     final static Pose2d BACK_THROUGH_GATE = new Pose2d(-50, -10, Math.toRadians(180));
     final static Pose2d APPROACHING_BOARD = new Pose2d(-70, -28, Math.toRadians(180));
-    final static Pose2d SCORE_STACK = new Pose2d(-73, -31, Math.toRadians(180));
+    final static Pose2d SCORE_STACK = new Pose2d(-73.5, -29, Math.toRadians(180));
     //Park
-    final static Pose2d BACK_OFF =  new Pose2d(-60,-58,Math.toRadians(180));
-    final static Pose2d PARK = new Pose2d(-80, -60, Math.toRadians(180));
+    final static Pose2d BACK_OFF =  new Pose2d(-68, -55,Math.toRadians(180));
+    final static Pose2d PARK = new Pose2d(-80, -64, Math.toRadians(180));
 
     protected void scorePreloadOne() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
@@ -53,20 +55,27 @@ public class AutoBlueTwoPlusTwo extends LinearOpMode {
                 builder.lineToLinearHeading(LEFT_PRELOAD);
                 break;
         }
+        builder.addTemporalMarker(.5, robot.getArm()::armScore);
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 
     protected void boardScore() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         switch (randomization) {
-            case "RIGHT":
-                builder.lineToLinearHeading(RIGHT_BOARD);
+            case "LEFT":
+                builder.lineToLinearHeading(LEFT_BOARD,
+                        MecanumDrive.getVelocityConstraint(20, 20, DriveConstants.TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(20));;
                 break;
             case "CENTER":
-                builder.lineToLinearHeading(CENTER_BOARD);
+                builder.lineToLinearHeading(CENTER_BOARD,
+                        MecanumDrive.getVelocityConstraint(20, 20, DriveConstants.TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(20));
                 break;
-            case "LEFT":
-                builder.lineToLinearHeading(LEFT_BOARD);
+            case "RIGHT":
+                builder.lineToLinearHeading(RIGHT_BOARD,
+                        MecanumDrive.getVelocityConstraint(20, 20, DriveConstants.TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(20));
                 break;
         }
         builder.addTemporalMarker(.2, robot.getArm()::armScore);
@@ -84,6 +93,24 @@ public class AutoBlueTwoPlusTwo extends LinearOpMode {
         builder.addTemporalMarker(1.5,robot.getClaw()::openStack);
         builder.addTemporalMarker(1.5, robot.getArm()::pickup);
         builder.lineToLinearHeading(TO_STACK);
+        builder.lineToLinearHeading(TO_STACK_SLOW,
+                MecanumDrive.getVelocityConstraint(20, 20, DriveConstants.TRACK_WIDTH),
+                MecanumDrive.getAccelerationConstraint(20));
+        this.robot.getDrive().followTrajectorySequence(builder.build());
+    }
+
+    protected void toStackNoDrift() {
+        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+        builder.lineToLinearHeading(LEAVE_BOARD);
+        builder.addTemporalMarker(.3, robot.getArm()::armRest);
+        builder.addTemporalMarker(.3, robot.getWrist()::wristPickup);
+        builder.addTemporalMarker(.1, robot.getSlides()::slideDown);
+        builder.addTemporalMarker(1.5,robot.getClaw()::openStack);
+        builder.addTemporalMarker(1.5, robot.getArm()::pickup);
+        builder.lineToLinearHeading(TO_STACK);
+        builder.lineToLinearHeading(TO_STACK_SLOW2,
+                MecanumDrive.getVelocityConstraint(20, 20, DriveConstants.TRACK_WIDTH),
+                MecanumDrive.getAccelerationConstraint(20));
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 
@@ -94,13 +121,13 @@ public class AutoBlueTwoPlusTwo extends LinearOpMode {
         builder.lineToLinearHeading(SCORE_STACK);
         builder.addTemporalMarker(2.5, robot.getArm()::armSecondaryScore);
         builder.addTemporalMarker(2.5, robot.getWrist()::wristScore);
-        builder.addTemporalMarker(2.5, robot.getSlides()::slideAutoStacks);
+        builder.addTemporalMarker(2.5, robot.getSlides()::slideScoreStack);
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 
     protected void scoreTest() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-        builder.lineToLinearHeading(new Pose2d(-77, -31, Math.toRadians(180)),
+        builder.lineToLinearHeading(new Pose2d(-77.5, -31, Math.toRadians(183)),
                 MecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                 MecanumDrive.getAccelerationConstraint(20));
         builder.addTemporalMarker(.2,this::clawSlowOpen);
@@ -108,14 +135,12 @@ public class AutoBlueTwoPlusTwo extends LinearOpMode {
     }
 
     protected void clawSlowOpen() {
-        double currentPos = .86;
-        double targetPos = .8;
+        double currentPos = .8;
+        double targetPos = .73;
         double delta = (targetPos - currentPos) / 100;
         for (int i = 0; i < 100; i++) {
-//            int Position = this.robot.getSlides().slidesLeft.getCurrentPosition();
             this.robot.getClaw().setPos(currentPos + (delta * i));
-//            this.robot.getSlides().slideTo(Position + 14,1);
-            sleep(35);
+            sleep(30);
         }
     }
 
@@ -140,32 +165,38 @@ public class AutoBlueTwoPlusTwo extends LinearOpMode {
         this.initialPosition = new Pose2d(-34, -59.5, Math.toRadians(270));
         this.robot.getDrive().setPoseEstimate(initialPosition);
 
-//        this.park2 = this.robot.getDrive().trajectoryBuilder(park1.end())
-//                .lineToLinearHeading(new Pose2d(80, -57, Math.toRadians(360)))
-//                .build();
-
         // Do super fancy chinese shit
         while (!this.isStarted()) {
             this.telemetry.addData("Starting Position", this.robot.getCamera().getStartingPositionBlue());
             randomization = String.valueOf(this.robot.getCamera().getStartingPositionBlue());
             this.telemetry.update();
         }
+
         scorePreloadOne();
         boardScore();
 
         sleep(100);
         this.robot.getClaw().open();
 
-        toStack();
+        switch (randomization) {
+            case "RIGHT":
+                toStackNoDrift();
+                break;
+            case "CENTER":
+                toStack();
+                break;
+            case "LEFT":
+                toStack();
+                break;
+        }
 
         sleep(500);
         this.robot.getClaw().close();
         sleep(250);
         this.robot.getArm().armRest();
         scoreStack();
-        this.robot.getClaw().setPos(.86);
+        this.robot.getClaw().setPos(.83);
         scoreTest();
         park();
     }
-
 }

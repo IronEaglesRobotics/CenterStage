@@ -61,4 +61,6 @@ public class Constants {
     public static final String SLIDELEFT = "slideleft";
     public static final String HANGRIGHT = "hangright";
     public static final String HANGLEFT = "hangleft";
+    public static final String LIGHTS = "lights";
+
 }

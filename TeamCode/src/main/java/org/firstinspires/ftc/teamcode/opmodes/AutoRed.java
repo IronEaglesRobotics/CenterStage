@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
+import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 @Config
@@ -16,21 +18,24 @@ public class AutoRed extends LinearOpMode {
     protected Pose2d initialPosition;
     private Robot robot;
     private String randomization;
+    private String parkLocation;
 
     //Pose2ds
     //Preloads
     final static Pose2d LEFT_PRELOAD_ONE = new Pose2d(40, -37.5, Math.toRadians(270));
-    final static Pose2d LEFT_PRELOAD_TWO = new Pose2d(29.5, -29, Math.toRadians(360));
+    final static Pose2d LEFT_PRELOAD_TWO = new Pose2d(29.5, -32, Math.toRadians(360));
     final static Pose2d CENTER_PRELOAD = new Pose2d(33, -28, Math.toRadians(270));
-    final static Pose2d RIGHT_PRELOAD = new Pose2d(43, -35, Math.toRadians(270));
+    final static Pose2d RIGHT_PRELOAD = new Pose2d(45, -35, Math.toRadians(270));
     //Board Scores
-    final static Pose2d LEFT_BOARD = new Pose2d(74.3, -26.5, Math.toRadians(355));
-    final static Pose2d CENTER_BOARD = new Pose2d(74.7, -36.3, Math.toRadians(355));
-    final static Pose2d RIGHT_BOARD = new Pose2d(74.3, -40, Math.toRadians(355));
+    final static Pose2d LEFT_BOARD = new Pose2d(75.8, -26.5, Math.toRadians(358));
+    final static Pose2d CENTER_BOARD = new Pose2d(75.8, -36.3, Math.toRadians(358));
+    final static Pose2d RIGHT_BOARD = new Pose2d(75.8, -40, Math.toRadians(358));
 
     //Park
-    final static Pose2d BACK_OFF =  new Pose2d(60,-58,Math.toRadians(360));
-    final static Pose2d PARK = new Pose2d(80, -60, Math.toRadians(360));
+    final static Pose2d PARK =  new Pose2d(60,-58,Math.toRadians(360));
+    final static Pose2d PARK2 = new Pose2d(80, -60, Math.toRadians(360));
+    final static Pose2d PARKLEFT =  new Pose2d(60,-15,Math.toRadians(360));
+    final static Pose2d PARKLEFT2 = new Pose2d(80, -10, Math.toRadians(360));
 
     protected void scorePreloadOne() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
@@ -53,13 +58,19 @@ public class AutoRed extends LinearOpMode {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         switch (randomization) {
             case "LEFT":
-                builder.lineToLinearHeading(LEFT_BOARD);
+                builder.lineToLinearHeading(LEFT_BOARD,
+                        MecanumDrive.getVelocityConstraint(20, 20, DriveConstants.TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(20));
                 break;
             case "CENTER":
-                builder.lineToLinearHeading(CENTER_BOARD);
+                builder.lineToLinearHeading(CENTER_BOARD,
+                        MecanumDrive.getVelocityConstraint(20, 20, DriveConstants.TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(20));
                 break;
             case "RIGHT":
-                builder.lineToLinearHeading(RIGHT_BOARD);
+                builder.lineToLinearHeading(RIGHT_BOARD,
+                        MecanumDrive.getVelocityConstraint(20, 20, DriveConstants.TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(20));
                 break;
         }
         builder.addTemporalMarker(.2, robot.getArm()::armScore);
@@ -70,14 +81,28 @@ public class AutoRed extends LinearOpMode {
 
     protected void park() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-        builder.lineToLinearHeading(BACK_OFF);
-        builder.lineToLinearHeading(PARK);
+        switch(parkLocation) {
+            case "LEFT":
+                builder.lineToLinearHeading(PARKLEFT);
+                builder.lineToLinearHeading(PARKLEFT2);
+                break;
+            case "RIGHT":
+                builder.lineToLinearHeading(PARK);
+                builder.lineToLinearHeading(PARK2);
+                break;
+        }
         builder.addTemporalMarker(.1, robot.getArm()::armRest);
         builder.addTemporalMarker(.1, robot.getWrist()::wristPickup);
         builder.addTemporalMarker(.1, robot.getSlides()::slideDown);
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 
+    protected void parkLocation(){
+        if (gamepad2.dpad_left) {
+            parkLocation="LEFT";
+        } else if (gamepad2.dpad_right) {
+            parkLocation = "RIGHT";
+        }}
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -88,14 +113,12 @@ public class AutoRed extends LinearOpMode {
         this.initialPosition = new Pose2d(34, -59.5, Math.toRadians(270));
         this.robot.getDrive().setPoseEstimate(initialPosition);
 
-//        this.park2 = this.robot.getDrive().trajectoryBuilder(park1.end())
-//                .lineToLinearHeading(new Pose2d(80, -57, Math.toRadians(360)))
-//                .build();
-
         // Do super fancy chinese shit
         while (!this.isStarted()) {
             this.telemetry.addData("Starting Position", this.robot.getCamera().getStartingPosition());
             randomization = String.valueOf(this.robot.getCamera().getStartingPosition());
+            parkLocation();
+            this.telemetry.addData("Park Position", parkLocation);
             this.telemetry.update();
         }
 

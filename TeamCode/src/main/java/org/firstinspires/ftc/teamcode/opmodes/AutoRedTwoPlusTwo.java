@@ -22,15 +22,17 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
     //Preloads
     final static Pose2d LEFT_PRELOAD_ONE = new Pose2d(40, -37.5, Math.toRadians(270));
     final static Pose2d LEFT_PRELOAD_TWO = new Pose2d(29.5, -32, Math.toRadians(360));
-    final static Pose2d CENTER_PRELOAD = new Pose2d(33, -28, Math.toRadians(270));
+    final static Pose2d CENTER_PRELOAD = new Pose2d(34, -28, Math.toRadians(270));
     final static Pose2d RIGHT_PRELOAD = new Pose2d(43, -35, Math.toRadians(270));
     //Board Scores
-    final static Pose2d LEFT_BOARD = new Pose2d(75.3, -26.5, Math.toRadians(360));
-    final static Pose2d CENTER_BOARD = new Pose2d(75.3, -36.3, Math.toRadians(360));
-    final static Pose2d RIGHT_BOARD = new Pose2d(75.3, -40, Math.toRadians(355));
+    final static Pose2d LEFT_BOARD = new Pose2d(76.7, -27, Math.toRadians(360));
+    final static Pose2d CENTER_BOARD = new Pose2d(76.5, -32, Math.toRadians(355));
+    final static Pose2d RIGHT_BOARD = new Pose2d(76.5, -40, Math.toRadians(355));
     //Stack Cycle
     final static Pose2d LEAVE_BOARD = new Pose2d(65, -10, Math.toRadians(360));
-    final static Pose2d TO_STACK = new Pose2d(-40, -8.4, Math.toRadians(360));
+    final static Pose2d TO_STACK = new Pose2d(-35, -8, Math.toRadians(360));
+    final static Pose2d TO_STACK_SLOW = new Pose2d(-38.5, -8.5, Math.toRadians(360));
+    final static Pose2d TO_STACK_SLOW2 = new Pose2d(-38.5, -8, Math.toRadians(360));
     final static Pose2d BACK_THROUGH_GATE = new Pose2d(50, -10, Math.toRadians(360));
     final static Pose2d APPROACHING_BOARD = new Pose2d(70, -31, Math.toRadians(360));
     final static Pose2d SCORE_STACK = new Pose2d(73.5, -31, Math.toRadians(360));
@@ -52,6 +54,7 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
                 builder.lineToLinearHeading(RIGHT_PRELOAD);
                 break;
         }
+        builder.addTemporalMarker(.5, robot.getArm()::armScore);
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 
@@ -59,13 +62,19 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         switch (randomization) {
             case "LEFT":
-                builder.lineToLinearHeading(LEFT_BOARD);
+                builder.lineToLinearHeading(LEFT_BOARD,
+                        MecanumDrive.getVelocityConstraint(20, 20, DriveConstants.TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(20));;
                 break;
             case "CENTER":
-                builder.lineToLinearHeading(CENTER_BOARD);
+                builder.lineToLinearHeading(CENTER_BOARD,
+                        MecanumDrive.getVelocityConstraint(20, 20, DriveConstants.TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(20));
                 break;
             case "RIGHT":
-                builder.lineToLinearHeading(RIGHT_BOARD);
+                builder.lineToLinearHeading(RIGHT_BOARD,
+                        MecanumDrive.getVelocityConstraint(20, 20, DriveConstants.TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(20));
                 break;
         }
         builder.addTemporalMarker(.2, robot.getArm()::armScore);
@@ -83,6 +92,24 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
         builder.addTemporalMarker(1.5,robot.getClaw()::openStack);
         builder.addTemporalMarker(1.5, robot.getArm()::pickup);
         builder.lineToLinearHeading(TO_STACK);
+        builder.lineToLinearHeading(TO_STACK_SLOW,
+                MecanumDrive.getVelocityConstraint(20, 20, DriveConstants.TRACK_WIDTH),
+                MecanumDrive.getAccelerationConstraint(20));
+        this.robot.getDrive().followTrajectorySequence(builder.build());
+    }
+
+    protected void toStackNoDrift() {
+        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
+        builder.lineToLinearHeading(LEAVE_BOARD);
+        builder.addTemporalMarker(.3, robot.getArm()::armRest);
+        builder.addTemporalMarker(.3, robot.getWrist()::wristPickup);
+        builder.addTemporalMarker(.1, robot.getSlides()::slideDown);
+        builder.addTemporalMarker(1.5,robot.getClaw()::openStack);
+        builder.addTemporalMarker(1.5, robot.getArm()::pickup);
+        builder.lineToLinearHeading(TO_STACK);
+        builder.lineToLinearHeading(TO_STACK_SLOW2,
+                MecanumDrive.getVelocityConstraint(20, 20, DriveConstants.TRACK_WIDTH),
+                MecanumDrive.getAccelerationConstraint(20));
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 
@@ -93,7 +120,7 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
         builder.lineToLinearHeading(SCORE_STACK);
         builder.addTemporalMarker(2.5, robot.getArm()::armSecondaryScore);
         builder.addTemporalMarker(2.5, robot.getWrist()::wristScore);
-        builder.addTemporalMarker(2.5, robot.getSlides()::slideAutoStacks);
+        builder.addTemporalMarker(2.5, robot.getSlides()::slideScoreStack);
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 
@@ -107,8 +134,8 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
     }
 
     protected void clawSlowOpen() {
-        double currentPos = .86;
-        double targetPos = .78;
+        double currentPos = .8;
+        double targetPos = .7;
         double delta = (targetPos - currentPos) / 100;
         for (int i = 0; i < 100; i++) {
             this.robot.getClaw().setPos(currentPos + (delta * i));
@@ -121,6 +148,7 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
         builder.lineToLinearHeading(BACK_OFF);
         builder.lineToLinearHeading(PARK);
         builder.addTemporalMarker(.1, robot.getArm()::armRest);
+        builder.addTemporalMarker(.1, robot.getClaw()::close);
         builder.addTemporalMarker(.1, robot.getWrist()::wristPickup);
         builder.addTemporalMarker(.1, robot.getSlides()::slideDown);
         this.robot.getDrive().followTrajectorySequence(builder.build());
@@ -136,10 +164,6 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
         this.initialPosition = new Pose2d(34, -59.5, Math.toRadians(270));
         this.robot.getDrive().setPoseEstimate(initialPosition);
 
-//        this.park2 = this.robot.getDrive().trajectoryBuilder(park1.end())
-//                .lineToLinearHeading(new Pose2d(80, -57, Math.toRadians(360)))
-//                .build();
-
         // Do super fancy chinese shit
         while (!this.isStarted()) {
             this.telemetry.addData("Starting Position", this.robot.getCamera().getStartingPosition());
@@ -150,17 +174,28 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
         scorePreloadOne();
         boardScore();
 
-        sleep(100);
+        sleep(150);
         this.robot.getClaw().open();
+        sleep(150);
 
-        toStack();
+        switch (randomization) {
+            case "LEFT":
+                toStackNoDrift();
+                break;
+            case "CENTER":
+                toStack();
+                break;
+            case "RIGHT":
+                toStack();
+                break;
+        }
 
         sleep(500);
         this.robot.getClaw().close();
         sleep(250);
         this.robot.getArm().armRest();
         scoreStack();
-        this.robot.getClaw().setPos(.86);
+        this.robot.getClaw().setPos(.83);
         scoreTest();
         park();
     }
