@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.autonomous;
 
+import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.STACK1;
 import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.STACK2;
 import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.STACK3;
 import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.STACK4;
@@ -27,24 +28,24 @@ public class BlueBackStageAuto extends AutoBase {
 
     public static final Pose2d DROP_1 = new Pose2d(24.5, 45, Math.toRadians(-90));
     public static final Pose2d DEPOSIT_PRELOAD_3 = new Pose2d(55.4, 28.7, Math.toRadians(-180));
-    public static final Pose2d DEPOSIT_PRELOAD_2 = new Pose2d(51.6, 34.5, Math.toRadians(-180));
+    public static final Pose2d DEPOSIT_PRELOAD_2 = new Pose2d(51.8, 33.5, Math.toRadians(-180));
     public static final Pose2d DEPOSIT_PRELOAD_1 = new Pose2d(51.5, 39.3, Math.toRadians(-180));
 
     public static  final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(53.2, 35.6, Math.toRadians(-187));
 
-    public static  final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(52.4, 32.6, Math.toRadians(-187));
+    public static  final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(52, 31.6, Math.toRadians(-187));
 
     public static  final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(53, 33.5, Math.toRadians(-187));
 
 
     //public static final Vector2d POST_SCORING_SPLINE_END = new Vector2d(24, -8.5);//-36
-    public static final Pose2d POST_SCORING_SPLINE_END = new Pose2d(26, 11.1 , Math.toRadians(-180));//-36
+    public static final Pose2d POST_SCORING_SPLINE_END = new Pose2d(26, 11.1 , Math.toRadians(-187));//-36
 
-    public static final Pose2d STACK_LOCATION1 = new Pose2d(-56.2, 11.1, Math.toRadians(-180));
+    public static final Pose2d STACK_LOCATION1 = new Pose2d(-56.2, 11.1, Math.toRadians(-187));
 
-    public static final Pose2d STACK_LOCATION2 = new Pose2d(-54.5, 11.1, Math.toRadians(-180));
+    public static final Pose2d STACK_LOCATION2 = new Pose2d(-54.5, 11.1, Math.toRadians(-187));
 
-    public static final Pose2d STACK_LOCATION3 = new Pose2d(-55.6, 11.1, Math.toRadians(-180));
+    public static final Pose2d STACK_LOCATION3 = new Pose2d(-55.6, 11.1, Math.toRadians(-187));
 
 
     @Override
@@ -137,7 +138,7 @@ public class BlueBackStageAuto extends AutoBase {
                             builder.lineToConstantHeading(STACK_LOCATION1.vec().plus(new Vector2d(0)));
                             break;
                         case 2:
-                            builder.lineToConstantHeading(STACK_LOCATION2.vec().plus(new Vector2d(-0)));
+                            builder.lineToConstantHeading(STACK_LOCATION2.vec().plus(new Vector2d(-2.5)));
                             break;
                         case 3:
                             builder.lineToConstantHeading(STACK_LOCATION3.vec().plus(new Vector2d(0.5)));
@@ -150,7 +151,7 @@ public class BlueBackStageAuto extends AutoBase {
             //waits for the robot to fin  the trajectory
             case 5:
                 robot.resetMacro(0, getRuntime());
-                robot.intake.setDcMotor(0.68);
+                robot.intake.setDcMotor(0.7);
                 robot.intake.setpos(STACK5);
                 if (!robot.drive.isBusy()) {
                     macroState++;
@@ -159,13 +160,13 @@ public class BlueBackStageAuto extends AutoBase {
             //First 2 pixels off the stack are intaken by this
             case 6:
                 robot.intake.setDcMotor(0.68);
-                robot.intake.setpos(STACK5);
+                robot.intake.setpos(STACK4);
                 macroTime = getRuntime();
                 macroState++;
                 break;
             //goes back to the easel
             case 7:
-                if (getRuntime() > macroTime + 0.03) {
+                if (getRuntime() > macroTime + 0.5) {
                     //robot.intake.setDcMotor(-0.0);
                     robot.intake.setDcMotor(-0.35);
                     builder = this.robot.getTrajectorySequenceBuilder();
@@ -192,14 +193,14 @@ public class BlueBackStageAuto extends AutoBase {
                 if (getRuntime() > macroTime + 1.4 || !robot.drive.isBusy()) {
                     macroTime = getRuntime();
                     robot.macroState = 0;
-                    robot.extendMacro(Slides.mini_tier1 + 80, getRuntime());
+                    robot.extendMacro(Slides.mini_tier1 + 60, getRuntime());
                     macroState++;
                 }
                 break;
             //extending the macro and about to score
             case 9:
                 if (robot.macroState != 0) {
-                    robot.extendMacro(Slides.mini_tier1 + 80, getRuntime());
+                    robot.extendMacro(Slides.mini_tier1 + 60, getRuntime());
                 }
                 if (robot.macroState == 0 && !robot.drive.isBusy()) {
                     robot.resetMacro(0, getRuntime());
@@ -219,7 +220,7 @@ public class BlueBackStageAuto extends AutoBase {
                             builder.lineToConstantHeading(STACK_LOCATION1.vec().plus(new Vector2d(-2)));
                             break;
                         case 2:
-                            builder.lineToConstantHeading(STACK_LOCATION2.vec().plus(new Vector2d(-2)));
+                            builder.lineToConstantHeading(STACK_LOCATION2.vec().plus(new Vector2d(-3)));
                             break;
                         case 3:
                             builder.lineToConstantHeading(STACK_LOCATION3.vec().plus(new Vector2d(0.5   )));
@@ -241,13 +242,13 @@ public class BlueBackStageAuto extends AutoBase {
             //Third and 4th pixels off the stack are intaken by this
             case 12:
                 robot.intake.setDcMotor(0.68);
-                robot.intake.setpos(STACK2);
+                robot.intake.setpos(STACK1);
                 macroTime = getRuntime();
                 macroState++;
                 break;
             //goes back to the easel
             case 13:
-                if (getRuntime() > macroTime + 0.03) {
+                if (getRuntime() > macroTime + 0.5) {
                     robot.intake.setDcMotor(-0.35);
                     builder = this.robot.getTrajectorySequenceBuilder();
                     //builder.lineToConstantHeading(POST_SCORING_SPLINE_END);
@@ -273,7 +274,7 @@ public class BlueBackStageAuto extends AutoBase {
                 if (getRuntime() > macroTime + 1.4 || !robot.drive.isBusy()) {
                     macroTime = getRuntime();
                     robot.macroState = 0;
-                    robot.extendMacro(Slides.mini_tier1 + 140, getRuntime());
+                    robot.extendMacro(Slides.mini_tier1 + 80, getRuntime());
                     macroState++;
                 }
                 break;
