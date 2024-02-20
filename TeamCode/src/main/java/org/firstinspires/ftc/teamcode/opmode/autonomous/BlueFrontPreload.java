@@ -21,15 +21,17 @@ import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 @Config
 @Autonomous(name = "Blue FrontPreload (2+1)", group = "Competition", preselectTeleOp = "Main TeleOp")
 public class BlueFrontPreload extends AutoBase {
-    public static final Pose2d DROP_1 = new Pose2d(-35, 32.5, Math.toRadians(0)); //THIS ANGLE NEEDS TO BE CHANGED
+    public static final Pose2d DROP_1 = new Pose2d(-36, 33.5, Math.toRadians(0));
+
+    public static final Pose2d DROP_1_PART_2 = new Pose2d(-32,33.5,Math.toRadians(0));
     public static final Pose2d DROP_2 = new Pose2d(-39.7, 33.5, Math.toRadians(-90));
     public static final Pose2d DROP_2_PART_2 = new Pose2d(-39.7,36.5, Math.toRadians(-90));
-    public static final Pose2d DROP_3 = new Pose2d(-49, 33.5, Math.toRadians(-90));
-    public static final Pose2d DROP_1M = new Pose2d(-48.5, 30, Math.toRadians(-90));
+    public static final Pose2d DROP_3 = new Pose2d(-46.7, 50.5, Math.toRadians(-90));
+    public static final Pose2d DROP_1M = new Pose2d(-36, 45, Math.toRadians(-90));
 
     public static final Pose2d DROP_2M = new Pose2d(-48.5, 30, Math.toRadians(-90));
 
-    public static final Pose2d DROP_3M = new Pose2d(-48.5, 30, Math.toRadians(-90));
+    public static final Pose2d DROP_3M = new Pose2d(-46.7, 39.5, Math.toRadians(-90));
 
     public static final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(53.3, 38.3, Math.toRadians(8));//187
 
@@ -74,7 +76,8 @@ public class BlueFrontPreload extends AutoBase {
                         builder.lineToLinearHeading(DROP_2);
                         break;
                     case 3:
-                        builder.lineToLinearHeading(DROP_3);
+                        builder.lineToLinearHeading(DROP_3M);
+//                        builder.lineToLinearHeading(DROP_3);
                         break;
                 }
                 this.robot.drive.followTrajectorySequenceAsync(builder.build());
@@ -93,20 +96,20 @@ public class BlueFrontPreload extends AutoBase {
             case 2:
                 // intake
                 if (getRuntime() < macroTime + 0.32) {
-                    robot.intake.setDcMotor(-0.18);
+                    robot.intake.setDcMotor(-0.23);
                 }
                 else{
                     builder = this.robot.getTrajectorySequenceBuilder();
                     robot.intake.setDcMotor(0);
                     switch (teamPropLocation) {
                         case 1:
-                            builder.lineToLinearHeading(DROP_2_PART_2);
+                            builder.lineToLinearHeading(DROP_1_PART_2);
                             break;
                         case 2:
                             builder.lineToLinearHeading(DROP_2_PART_2);
                             break;
                         case 3:
-                            builder.lineToLinearHeading(DROP_2_PART_2);
+                            builder.lineToLinearHeading(DROP_3);
                             break;
                     }
                     robot.arm.setDoor(OPEN);
@@ -188,7 +191,6 @@ case 5:
                 if (getRuntime() > macroTime + 3.4 || robot.macroState >= 4) {
                     builder = this.robot.getTrajectorySequenceBuilder();
                     builder.lineToLinearHeading(PARK_1);
-                    builder.lineToLinearHeading(PARK_2);
                     this.robot.drive.followTrajectorySequenceAsync(builder.build());
                     macroState++;
                 }

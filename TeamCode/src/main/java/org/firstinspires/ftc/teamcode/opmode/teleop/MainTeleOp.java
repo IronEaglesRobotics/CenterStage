@@ -77,11 +77,11 @@ public class MainTeleOp extends OpMode {
             this.robot.endGameMechs.reset();
         }
 
-        if (controller1.getRightBumper().isPressed()) {
-            this.robot.endGameMechs.Finger_in();
-        }else {
-            this.robot.endGameMechs.Finger_out();
-        }
+//        if (controller1.getRightBumper().isPressed()) {
+//            this.robot.endGameMechs.Finger_in();
+//        }else {
+//            this.robot.endGameMechs.Finger_out();
+//        }
         //Hang Motor
 
 //        if (controller1.getB().isJustPressed() && !controller1.getStart().isPressed() && !controller2.getStart().isPressed() && !hang_counter){

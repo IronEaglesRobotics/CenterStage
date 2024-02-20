@@ -14,7 +14,7 @@ public class endGame_Mechs {
     private DcMotor hang;
     public static double initPos = 0.42;
     public static double launchPos = 0.8;
-    public static double finger_out = 0.5;
+    public static double finger_out = 0.48;
     public static double finger_in = 0.2;
     public static int initHang = -1000;
     public static double hold = 0.8;
@@ -34,8 +34,8 @@ public class endGame_Mechs {
     public endGame_Mechs(HardwareMap hardwareMap) {
         this.servo = hardwareMap.get(Servo.class, "Drone");
         this.servo.setPosition(initPos);
-        this.servo = hardwareMap.get(Servo.class, "Finger");
-        this.servo.setPosition(finger_out);
+//        this.servo = hardwareMap.get(Servo.class, "Finger");
+//        this.servo.setPosition(finger_out);
         this.hang = hardwareMap.get(DcMotor.class, "Hang");
         this.hang.setTargetPosition(0);
         this.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -58,9 +58,9 @@ public class endGame_Mechs {
     }
 
 
-    public void Finger_in() {this.servo.setPosition(finger_in);}
-
-    public void Finger_out () {this.servo.setPosition(finger_out);}
+//    public void Finger_in() {this.servo.setPosition(finger_in);}
+//
+//    public void Finger_out () {this.servo.setPosition(finger_out);}
 
 
     public void hang_init_pos(){
