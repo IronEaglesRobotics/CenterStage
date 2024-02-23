@@ -141,7 +141,7 @@ public class BlueBackStageAuto extends AutoBase {
                             builder.lineToConstantHeading(STACK_LOCATION2.vec().plus(new Vector2d(-2.5)));
                             break;
                         case 3:
-                            builder.lineToConstantHeading(STACK_LOCATION3.vec().plus(new Vector2d(-1.25)));
+                            builder.lineToConstantHeading(STACK_LOCATION3.vec().plus(new Vector2d()));
                             break;
                     }
                     this.robot.drive.followTrajectorySequenceAsync(builder.build());
@@ -151,9 +151,10 @@ public class BlueBackStageAuto extends AutoBase {
             //waits for the robot to fin  the trajectory
             case 5:
                 robot.resetMacro(0, getRuntime());
-                robot.intake.setDcMotor(0.5);
+                //robot.intake.setDcMotor(0.5);
                 robot.intake.setpos(STACK5);
                 if (!robot.drive.isBusy()) {
+                    robot.intake.setDcMotor(0.5);
                     macroState++;
                 }
                 break;
@@ -214,6 +215,7 @@ public class BlueBackStageAuto extends AutoBase {
                 robot.resetMacro(0, getRuntime());
                 if (getRuntime() > macroTime + 1.4 || robot.macroState >= 4) {
                     builder = this.robot.getTrajectorySequenceBuilder();
+                    robot.intake.setDcMotor(0);
                     //builder.lineToConstantHeading(POST_SCORING_SPLINE_END);
                     builder.splineToConstantHeading(POST_SCORING_SPLINE_END.vec(),Math.toRadians(180));
                     switch (teamPropLocation) {
@@ -224,7 +226,7 @@ public class BlueBackStageAuto extends AutoBase {
                             builder.lineToConstantHeading(STACK_LOCATION2.vec().plus(new Vector2d(-3)));
                             break;
                         case 3:
-                            builder.lineToConstantHeading(STACK_LOCATION3.vec().plus(new Vector2d(-1.25)));
+                            builder.lineToConstantHeading(STACK_LOCATION3.vec().plus(new Vector2d()));
                             break;
                     }
                     this.robot.drive.followTrajectorySequenceAsync(builder.build());
@@ -234,9 +236,9 @@ public class BlueBackStageAuto extends AutoBase {
             //waits for the robot to fin  the trajectory
             case 11:
                 robot.resetMacro(0, getRuntime());
-                robot.intake.setDcMotor(0.68);
                 robot.intake.setpos(STACK3);
                 if (!robot.drive.isBusy()) {
+                    robot.intake.setDcMotor(0.68);
                     macroState++;
                 }
                 break;

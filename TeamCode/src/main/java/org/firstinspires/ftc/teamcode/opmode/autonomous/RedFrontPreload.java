@@ -19,46 +19,46 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 
 @Config
-@Autonomous(name = "Blue FrontPreload (2+1)", group = "Competition", preselectTeleOp = "Main TeleOp")
-public class BlueFrontPreload extends AutoBase {
-    public static final Pose2d DROP_1_PART_2 = new Pose2d(-36, 33.5, Math.toRadians(0));
+@Autonomous(name = "Red FrontPreload (2+1)", group = "Competition", preselectTeleOp = "Main TeleOp")
+public class RedFrontPreload extends AutoBase {
+    public static final Pose2d DROP_1_PART_2 = new Pose2d(-36, -33.5, Math.toRadians(180));
 
-    public static final Pose2d DROP_1 = new Pose2d(-32,33.5,Math.toRadians(0));
-    public static final Pose2d DROP_2 = new Pose2d(-39.7, 33.5, Math.toRadians(-90));
-    public static final Pose2d DROP_2_PART_2 = new Pose2d(-39.7,36.5, Math.toRadians(-90));
-    public static final Pose2d DROP_3 = new Pose2d(-46.7, 50.5, Math.toRadians(-90));
-    public static final Pose2d DROP_1M = new Pose2d(-36, 45, Math.toRadians(-90));
+    public static final Pose2d DROP_1 = new Pose2d(-32,-33.5,Math.toRadians(180));
+    public static final Pose2d DROP_2 = new Pose2d(-39.7, -33.5, Math.toRadians(90));
+    public static final Pose2d DROP_2_PART_2 = new Pose2d(-39.7,-36.5, Math.toRadians(90));
+    public static final Pose2d DROP_3 = new Pose2d(-46.7, -50.5, Math.toRadians(90));
+    public static final Pose2d DROP_1M = new Pose2d(-36, -45, Math.toRadians(90));
 
-    public static final Pose2d DROP_2M = new Pose2d(-48.5, 30, Math.toRadians(-90));
+    public static final Pose2d DROP_2M = new Pose2d(-48.5, -30, Math.toRadians(90));
 
-    public static final Pose2d DROP_3M = new Pose2d(-48.7, 35.9, Math.toRadians(-90));
+    public static final Pose2d DROP_3M = new Pose2d(-48.7, -35.9, Math.toRadians(90));
 
-    public static final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(53.3, 38.3, Math.toRadians(8));//187
+    public static final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(53.3, -38.3, Math.toRadians(188));//187
 
-    public static final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(52, 34, Math.toRadians(8));//187
+    public static final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(52, -34, Math.toRadians(188));//187
 
-    public static final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(53.6, 23.5, Math.toRadians(6));//817
+    public static final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(53.6, -23.5, Math.toRadians(186));//817
 
-    public static final Pose2d STACK_LOCATION = new Pose2d(-52, 29.6, Math.toRadians(180));
+    public static final Pose2d STACK_LOCATION = new Pose2d(-52, -29.6, Math.toRadians(0));
 
-    public static final Pose2d POST_SCORING_SPLINE_END = new Pose2d(24, 12.4, Math.toRadians(10));//-36
+    public static final Pose2d POST_SCORING_SPLINE_END = new Pose2d(24, -12.4, Math.toRadians(190));//-36
 
-    public static final Pose2d POST_DROP_POS = new Pose2d(-45, 59.5, Math.toRadians(180));
+    public static final Pose2d POST_DROP_POS = new Pose2d(-45, -59.5, Math.toRadians(0));
 
-    public static final Pose2d POST_DROP_POS_PART2 = new Pose2d(-33, 59.5, Math.toRadians(180));
+    public static final Pose2d POST_DROP_POS_PART2 = new Pose2d(-33, -59.5, Math.toRadians(0));
 
-    public static final Pose2d PRE_DEPOSIT_POS = new Pose2d(33, 59.5, Math.toRadians(180));
+    public static final Pose2d PRE_DEPOSIT_POS = new Pose2d(33, -59.5, Math.toRadians(0));
 
-    public static final Pose2d PARK_1 = new Pose2d(45,58,Math.toRadians(-180));
+    public static final Pose2d PARK_1 = new Pose2d(45,-58,Math.toRadians(180));
 
-    public static final Pose2d PARK_2 = new Pose2d(58,58,Math.toRadians(-180));
+    public static final Pose2d PARK_2 = new Pose2d(58,-58,Math.toRadians(180));
 
     @Override
     public void createTrajectories() {
         // set start position
-        Pose2d start = new Pose2d(-36, 61.5, Math.toRadians(-90));
+        Pose2d start = new Pose2d(-36, -61.5, Math.toRadians(90));
         robot.drive.setPoseEstimate(start);
-        robot.camera.setAlliance(CenterStageCommon.Alliance.Blue);
+        robot.camera.setAlliance(CenterStageCommon.Alliance.Red);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class BlueFrontPreload extends AutoBase {
                             break;
                     }
                     robot.arm.setDoor(OPEN);
-                    builder.lineToLinearHeading(STACK_LOCATION.plus(new Pose2d(-5.4,2.5))).waitSeconds(.01);
+                    builder.lineToLinearHeading(STACK_LOCATION.plus(new Pose2d(-5.4,-2.5))).waitSeconds(.01);
 
 
                     robot.intake.setDcMotor(0.74);
@@ -141,22 +141,22 @@ public class BlueFrontPreload extends AutoBase {
 
                     switch (teamPropLocation) {
                         case 1:
-                            builder.setTangent(Math.toRadians(90));
-                            builder.splineToConstantHeading(POST_DROP_POS_PART2.vec(),Math.toRadians(0));
+                            builder.setTangent(Math.toRadians(-90));
+                            builder.splineToConstantHeading(POST_DROP_POS_PART2.vec(),Math.toRadians(180));
                             builder.lineToConstantHeading(PRE_DEPOSIT_POS.vec());
-                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_1.vec(),Math.toRadians(0));
+                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_1.vec(),Math.toRadians(180));
                             break;
                         case 2:
-                            builder.setTangent(Math.toRadians(90));
-                            builder.splineToConstantHeading(POST_DROP_POS_PART2.vec(),Math.toRadians(0));
+                            builder.setTangent(Math.toRadians(-90));
+                            builder.splineToConstantHeading(POST_DROP_POS_PART2.vec(),Math.toRadians(180));
                             builder.lineToConstantHeading(PRE_DEPOSIT_POS.vec());
-                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_2.vec(),Math.toRadians(0));
+                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_2.vec(),Math.toRadians(180));
                             break;
                         case 3:
-                            builder.setTangent(Math.toRadians(90));
-                            builder.splineToConstantHeading(POST_DROP_POS_PART2.vec(),Math.toRadians(0));
+                            builder.setTangent(Math.toRadians(-90));
+                            builder.splineToConstantHeading(POST_DROP_POS_PART2.vec(),Math.toRadians(180));
                             builder.lineToConstantHeading(PRE_DEPOSIT_POS.vec());
-                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_3.vec(),Math.toRadians(0));
+                            builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_3.vec(),Math.toRadians(180));
                             break;
                     }
                     this.robot.drive.followTrajectorySequenceAsync(builder.build());
@@ -164,7 +164,7 @@ public class BlueFrontPreload extends AutoBase {
                     macroTime = getRuntime();
                 }
                 break;
-case 5:
+            case 5:
                 // if drive is done move on
                 if (getRuntime() > macroTime + 4.4 || !robot.drive.isBusy()) {
                     macroTime = getRuntime();
