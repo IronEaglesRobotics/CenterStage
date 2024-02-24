@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.STACK2;
 import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.STACK3;
 import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.STACK4;
 import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.STACK5;
+import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.STACK6;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -43,7 +44,7 @@ public class BlueBackStageAuto extends AutoBase {
 
     public static final Pose2d STACK_LOCATION1 = new Pose2d(-56.2, 12.1, Math.toRadians(-187));
 
-    public static final Pose2d STACK_LOCATION2 = new Pose2d(-54.5, 12.1, Math.toRadians(-187));
+    public static final Pose2d STACK_LOCATION2 = new Pose2d(-55, 12.1, Math.toRadians(-187));
 
     public static final Pose2d STACK_LOCATION3 = new Pose2d(-55.6, 12.1, Math.toRadians(-187));
 
@@ -88,7 +89,7 @@ public class BlueBackStageAuto extends AutoBase {
             // RUN INTAKE
             case 2:
                 // intake
-                if (getRuntime() < macroTime + 0.1) {
+                if (getRuntime() < macroTime + 0.25) {
                     robot.intake.setDcMotor(-0.24);
                 }
                 // if intake is done move on
@@ -151,23 +152,23 @@ public class BlueBackStageAuto extends AutoBase {
             //waits for the robot to fin  the trajectory
             case 5:
                 robot.resetMacro(0, getRuntime());
-                //robot.intake.setDcMotor(0.5);
-                robot.intake.setpos(STACK5);
-                if (!robot.drive.isBusy()) {
-                    robot.intake.setDcMotor(0.5);
+                robot.intake.setDcMotor(0.58);
+                robot.intake.setpos(STACK6);
+                if (!robot.drive.isBusy() && getRuntime() > macroTime + 0.2) {
+                    //robot.intake.setDcMotor(0.5);
                     macroState++;
                 }
                 break;
             //First 2 pixels off the stack are intaken by this
             case 6:
-                robot.intake.setDcMotor(0.5);
-                robot.intake.setpos(STACK4);
+                robot.intake.setDcMotor(0.48);
+                robot.intake.setpos(STACK5);
                 macroTime = getRuntime();
                 macroState++;
                 break;
             //goes back to the easel
             case 7:
-                if (getRuntime() > macroTime + 0.5) {
+                if (getRuntime() > macroTime + 0.6) {
                     //robot.intake.setDcMotor(-0.0);
                     robot.arm.setDoor(Arm.DoorPosition.CLOSE);
                     robot.intake.setDcMotor(-0.35);
@@ -236,22 +237,23 @@ public class BlueBackStageAuto extends AutoBase {
             //waits for the robot to fin  the trajectory
             case 11:
                 robot.resetMacro(0, getRuntime());
+                robot.intake.setDcMotor(0.58);
                 robot.intake.setpos(STACK3);
-                if (!robot.drive.isBusy()) {
-                    robot.intake.setDcMotor(0.68);
+                if (!robot.drive.isBusy() && getRuntime() > macroTime + 0.2) {
+                    //robot.intake.setDcMotor(0.68);
                     macroState++;
                 }
                 break;
             //Third and 4th pixels off the stack are intaken by this
             case 12:
-                robot.intake.setDcMotor(0.68);
-                robot.intake.setpos(STACK1);
+                robot.intake.setDcMotor(0.48);
+                robot.intake.setpos(STACK2);
                 macroTime = getRuntime();
                 macroState++;
                 break;
             //goes back to the easel
             case 13:
-                if (getRuntime() > macroTime + 0.5) {
+                if (getRuntime() > macroTime + 0.7) {
                     robot.arm.setDoor(Arm.DoorPosition.CLOSE);
                     robot.intake.setDcMotor(-0.35);
                     builder = this.robot.getTrajectorySequenceBuilder();

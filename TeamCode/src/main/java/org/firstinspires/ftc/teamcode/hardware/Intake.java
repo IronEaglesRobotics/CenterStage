@@ -31,7 +31,7 @@ public class Intake {
 
     //Position
     public static double stack1 = 0.015;
-    public static double stack2 = 0.026;
+    public static double stack2 = 0.029;
     public static double stack3 = 0.065;
     public static double stack4 = 0.09;
     public static double stack5 = 0.1;

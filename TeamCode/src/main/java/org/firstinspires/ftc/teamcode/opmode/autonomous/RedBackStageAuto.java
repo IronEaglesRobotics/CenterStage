@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.STACK2;
 import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.STACK3;
 import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.STACK4;
 import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.STACK5;
+import static org.firstinspires.ftc.teamcode.hardware.Intake.Position.STACK6;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -30,12 +31,12 @@ public class RedBackStageAuto extends AutoBase {
 
     public static final Pose2d DROP_3 = new Pose2d(25, -42.5, Math.toRadians(90));
     public static final Pose2d DEPOSIT_PRELOAD_1 = new Pose2d(52, -26.3, Math.toRadians(180));
-    public static final Pose2d DEPOSIT_PRELOAD_2 = new Pose2d(52.3, -32.5, Math.toRadians(180));
-    public static final Pose2d DEPOSIT_PRELOAD_3 = new Pose2d(52, -40, Math.toRadians(180));
+    public static final Pose2d DEPOSIT_PRELOAD_2 = new Pose2d(51.7, -32.5, Math.toRadians(180));
+    public static final Pose2d DEPOSIT_PRELOAD_3 = new Pose2d(52.3, -39, Math.toRadians(180));
 
-    public static  final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(53, -35.3, Math.toRadians(180));//187
+    public static  final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(52, -35.3, Math.toRadians(180));//187
 
-    public static  final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(51.6, -29.5, Math.toRadians(180));//187
+    public static  final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(51.6, -30.5, Math.toRadians(180));//187
 
     public static  final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(52.4, -34.5, Math.toRadians(180));//187
 
@@ -142,7 +143,7 @@ public class RedBackStageAuto extends AutoBase {
                             robot.intake.setpos(STACK5);
                             break;
                         case 2:
-                            builder.lineToConstantHeading(STACK_LOCATION_2.vec().plus(new Vector2d(-1)));
+                            builder.lineToConstantHeading(STACK_LOCATION_2.vec().plus(new Vector2d(-2)));
                             robot.intake.setpos(STACK5);
                             break;
                         case 3:
@@ -152,22 +153,24 @@ public class RedBackStageAuto extends AutoBase {
                     }
                     this.robot.drive.followTrajectorySequenceAsync(builder.build());
                     macroState++;
+                    macroTime = getRuntime();
                 }
                 break;
             //waits for the robot to fin  the trajectory
             case 5:
-                robot.resetMacro(0, getRuntime());
-                robot.intake.setDcMotor(0.48);
-                robot.intake.setpos(STACK5);
-                if (!robot.drive.isBusy()) {
 
+                    robot.resetMacro(0, getRuntime());
+                    robot.intake.setDcMotor(0.58);
+                    robot.intake.setpos(STACK6);
+
+                if (!robot.drive.isBusy() && getRuntime() > macroTime + 0.2) {
                     macroState++;
                 }
                 break;
             //First 2 pixels off the stack are intaken by this
             case 6:
-                robot.intake.setDcMotor(0.38);
-                robot.intake.setpos(STACK4);
+                robot.intake.setDcMotor(0.48);
+                robot.intake.setpos(STACK5);
                 macroTime = getRuntime();
                 macroState++;
                 break;
@@ -224,34 +227,37 @@ public class RedBackStageAuto extends AutoBase {
                     builder.splineToConstantHeading(POST_SCORING_SPLINE_END.vec(),Math.toRadians(180));
                     switch (teamPropLocation) {
                         case 1:
-                            builder.lineToConstantHeading(STACK_LOCATION_1.vec().plus(new Vector2d(-2)));
+                            builder.lineToConstantHeading(STACK_LOCATION_1.vec().plus(new Vector2d(-1.75)));
                             robot.intake.setpos(STACK3);
                             break;
                         case 2:
-                            builder.lineToConstantHeading(STACK_LOCATION_2.vec().plus(new Vector2d(-3)));
+                            builder.lineToConstantHeading(STACK_LOCATION_2.vec().plus(new Vector2d(-3.3)));
                             robot.intake.setpos(STACK3);
                             break;
                         case 3:
-                            builder.lineToConstantHeading(STACK_LOCATION_3.vec().plus(new Vector2d(-1.8)));
+                            builder.lineToConstantHeading(STACK_LOCATION_3.vec().plus(new Vector2d(-2.8)));
                             robot.intake.setpos(STACK3);
                             break;
                     }
                     this.robot.drive.followTrajectorySequenceAsync(builder.build());
                     macroState++;
+                    macroTime = getRuntime();
                 }
                 break;
             //waits for the robot to fin  the trajectory
             case 11:
-                robot.resetMacro(0, getRuntime());
-                robot.intake.setDcMotor(0.48);
-                robot.intake.setpos(STACK3);
-                if (!robot.drive.isBusy()) {
+
+                    robot.resetMacro(0, getRuntime());
+                    robot.intake.setDcMotor(0.58);
+                    robot.intake.setpos(STACK3);
+
+                if (!robot.drive.isBusy() && getRuntime() > macroTime + 0.2) {
                     macroState++;
                 }
                 break;
             //3rd and 4th pixels off the stack are intaken by this
             case 12:
-                robot.intake.setDcMotor(0.38);
+                robot.intake.setDcMotor(0.48);
                 robot.intake.setpos(STACK2);
                 macroTime = getRuntime();
                 macroState++;
@@ -285,14 +291,14 @@ public class RedBackStageAuto extends AutoBase {
                 if (getRuntime() > macroTime + 1.4 || !robot.drive.isBusy()) {
                     macroTime = getRuntime();
                     robot.macroState = 0;
-                    robot.extendMacro(Slides.mini_tier1 + 80, getRuntime());
+                    robot.extendMacro(Slides.mini_tier1 + 100, getRuntime());
                     macroState++;
                 }
                 break;
             //extending the macro and about to score
             case 15:
                 if (robot.macroState != 0) {
-                    robot.extendMacro(Slides.mini_tier1 + 80, getRuntime());
+                    robot.extendMacro(Slides.mini_tier1 + 100, getRuntime());
                 }
                 if (robot.macroState == 0 && !robot.drive.isBusy()) {
                     robot.resetMacro(0, getRuntime());
