@@ -22,7 +22,8 @@ public class Arm {
     private double armTempPos;
     private double doorPos;
     private double wristPos;
-    public static double ARM_KP = 0.12;
+    public static double ARM_KP = 0.2
+            ;
 
     public static double doorOpenPos = 0.36;
     public static double doorClosePos = 0.61;

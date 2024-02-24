@@ -31,13 +31,13 @@ public class RedBackStageAuto extends AutoBase {
     public static final Pose2d DROP_3 = new Pose2d(25, -42.5, Math.toRadians(90));
     public static final Pose2d DEPOSIT_PRELOAD_1 = new Pose2d(52, -26.3, Math.toRadians(180));
     public static final Pose2d DEPOSIT_PRELOAD_2 = new Pose2d(52.3, -32.5, Math.toRadians(180));
-    public static final Pose2d DEPOSIT_PRELOAD_3 = new Pose2d(51, -40.7, Math.toRadians(180));
+    public static final Pose2d DEPOSIT_PRELOAD_3 = new Pose2d(52, -40, Math.toRadians(180));
 
     public static  final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(53, -35.3, Math.toRadians(180));//187
 
     public static  final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(51.6, -29.5, Math.toRadians(180));//187
 
-    public static  final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(51.4, -34.5, Math.toRadians(180));//187
+    public static  final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(52.4, -34.5, Math.toRadians(180));//187
 
 
     //public static final Vector2d POST_SCORING_SPLINE_END = new Vector2d(24, -8.5);//-36
@@ -139,12 +139,15 @@ public class RedBackStageAuto extends AutoBase {
                     switch (teamPropLocation) {
                         case 1:
                             builder.lineToConstantHeading(STACK_LOCATION_1.vec().plus(new Vector2d(-1.85)));
+                            robot.intake.setpos(STACK5);
                             break;
                         case 2:
                             builder.lineToConstantHeading(STACK_LOCATION_2.vec().plus(new Vector2d(-1)));
+                            robot.intake.setpos(STACK5);
                             break;
                         case 3:
-                            builder.lineToConstantHeading(STACK_LOCATION_3.vec().plus(new Vector2d(-3)));
+                            builder.lineToConstantHeading(STACK_LOCATION_3.vec().plus(new Vector2d(-2)));
+                            robot.intake.setpos(STACK5);
                             break;
                     }
                     this.robot.drive.followTrajectorySequenceAsync(builder.build());
@@ -154,7 +157,7 @@ public class RedBackStageAuto extends AutoBase {
             //waits for the robot to fin  the trajectory
             case 5:
                 robot.resetMacro(0, getRuntime());
-                robot.intake.setDcMotor(0.58);
+                robot.intake.setDcMotor(0.48);
                 robot.intake.setpos(STACK5);
                 if (!robot.drive.isBusy()) {
 
@@ -163,19 +166,19 @@ public class RedBackStageAuto extends AutoBase {
                 break;
             //First 2 pixels off the stack are intaken by this
             case 6:
-                robot.intake.setDcMotor(0.58);
+                robot.intake.setDcMotor(0.38);
                 robot.intake.setpos(STACK4);
                 macroTime = getRuntime();
                 macroState++;
                 break;
             //goes back to the easel
             case 7:
-                if (getRuntime() > macroTime + 1.2) {
+                if (getRuntime() > macroTime + 0.6) {
                     robot.arm.setDoor(Arm.DoorPosition.CLOSE);
-                    robot.intake.setDcMotor(-0.35);
                     builder = this.robot.getTrajectorySequenceBuilder();
                     //builder.lineToConstantHeading(POST_SCORING_SPLINE_END);
                     builder.lineToConstantHeading(POST_SCORING_SPLINE_END.vec());
+                    robot.intake.setDcMotor(-0.35);
                     switch (teamPropLocation) {
                         case 1:
                             builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_1.vec(),Math.toRadians(0));
@@ -222,12 +225,15 @@ public class RedBackStageAuto extends AutoBase {
                     switch (teamPropLocation) {
                         case 1:
                             builder.lineToConstantHeading(STACK_LOCATION_1.vec().plus(new Vector2d(-2)));
+                            robot.intake.setpos(STACK3);
                             break;
                         case 2:
                             builder.lineToConstantHeading(STACK_LOCATION_2.vec().plus(new Vector2d(-3)));
+                            robot.intake.setpos(STACK3);
                             break;
                         case 3:
-                            builder.lineToConstantHeading(STACK_LOCATION_3.vec().plus(new Vector2d(-2.8)));
+                            builder.lineToConstantHeading(STACK_LOCATION_3.vec().plus(new Vector2d(-1.8)));
+                            robot.intake.setpos(STACK3);
                             break;
                     }
                     this.robot.drive.followTrajectorySequenceAsync(builder.build());
@@ -237,27 +243,27 @@ public class RedBackStageAuto extends AutoBase {
             //waits for the robot to fin  the trajectory
             case 11:
                 robot.resetMacro(0, getRuntime());
+                robot.intake.setDcMotor(0.48);
                 robot.intake.setpos(STACK3);
-                robot.intake.setDcMotor(0.58);
                 if (!robot.drive.isBusy()) {
                     macroState++;
                 }
                 break;
             //3rd and 4th pixels off the stack are intaken by this
             case 12:
-                robot.intake.setDcMotor(0.58);
+                robot.intake.setDcMotor(0.38);
                 robot.intake.setpos(STACK2);
                 macroTime = getRuntime();
                 macroState++;
                 break;
             //goes back to the easel
             case 13:
-                if (getRuntime() > macroTime + 1) {
+                if (getRuntime() > macroTime + 0.7) {
                     robot.arm.setDoor(Arm.DoorPosition.CLOSE);
-                    robot.intake.setDcMotor(-0.35);
                     builder = this.robot.getTrajectorySequenceBuilder();
                     //builder.lineToConstantHeading(POST_SCORING_SPLINE_END);
                     builder.lineToConstantHeading(POST_SCORING_SPLINE_END.vec());
+                    robot.intake.setDcMotor(-0.35);
                     switch (teamPropLocation) {
                         case 1:
                             builder.splineToConstantHeading(DEPOSIT_WHITE_STACKS_1.vec(),Math.toRadians(0));
