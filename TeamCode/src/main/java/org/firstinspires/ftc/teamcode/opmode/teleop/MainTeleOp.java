@@ -3,10 +3,14 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 import static org.firstinspires.ftc.teamcode.hardware.Arm.DoorPosition.CLOSE;
 import static org.firstinspires.ftc.teamcode.hardware.Arm.DoorPosition.OPEN;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.controller.Controller;
 import org.firstinspires.ftc.teamcode.hardware.Arm;
@@ -29,8 +33,29 @@ public class MainTeleOp extends OpMode {
 
     public boolean hang_counter = false;
 
+
+    private DcMotor[] motors = new DcMotor[8];
+    private Servo[] servos = new Servo[7];
+
     @Override
     public void init() {
+        this.motors[0] = this.hardwareMap.get(DcMotor.class, "Rightslide");
+        this.motors[1] = this.hardwareMap.get(DcMotor.class, "Intakemotor");
+        this.motors[2] = this.hardwareMap.get(DcMotor.class, "FrontRight");
+        this.motors[3] = this.hardwareMap.get(DcMotor.class, "BackRight");
+        this.motors[4] = this.hardwareMap.get(DcMotor.class, "BackLeft");
+        this.motors[5] = this.hardwareMap.get(DcMotor.class, "FrontLeft");
+        this.motors[6] = this.hardwareMap.get(DcMotor.class, "Leftslide");
+        this.motors[7] = this.hardwareMap.get(DcMotor.class, "Hang");
+
+        this.servos[0] = this.hardwareMap.get(Servo.class, "LeftIntake");
+        this.servos[1] = this.hardwareMap.get(Servo.class, "Wrist");
+        this.servos[2] = this.hardwareMap.get(Servo.class, "Door");
+        this.servos[3] = this.hardwareMap.get(Servo.class, "RightArm");
+        this.servos[4] = this.hardwareMap.get(Servo.class, "LeftArm");
+        this.servos[5] = this.hardwareMap.get(Servo.class, "Right Intake Servo");
+        this.servos[6] = this.hardwareMap.get(Servo.class, "Drone");
+
         controller1 = new Controller(gamepad1);
         controller2 = new Controller(gamepad2);
 
@@ -43,13 +68,35 @@ public class MainTeleOp extends OpMode {
 //        }
 
         telemetry.addLine("Initialized");
+        this.telemetry = FtcDashboard.getInstance().getTelemetry();
         telemetry.update();
 
 
     }
 
+    double getBatteryVoltage() {
+        double result = Double.POSITIVE_INFINITY;
+        for (VoltageSensor sensor : hardwareMap.voltageSensor) {
+            double voltage = sensor.getVoltage();
+            if (voltage > 0) {
+                result = Math.min(result, voltage);
+            }
+        }
+        return result;
+    }
+
     @Override
     public void loop() {
+        for (DcMotor motor : this.motors) {
+            this.telemetry.addData(this.hardwareMap.getNamesOf(motor).stream().findFirst().get(), motor.getPower());
+        }
+        for (Servo servo : this.servos) {
+            this.telemetry.addData(this.hardwareMap.getNamesOf(servo).stream().findFirst().get(), servo.getPosition());
+        }
+
+        this.telemetry.addData("battery", getBatteryVoltage());
+        this.telemetry.update();
+
         // Driver 1
         double x = -gamepad1.left_stick_y;
         double y = -gamepad1.left_stick_x;
@@ -175,5 +222,7 @@ public class MainTeleOp extends OpMode {
         controller2.update();
         telemetry.addLine(robot.getTelemetry());
         telemetry.update();
+
+
     }
 }

@@ -17,7 +17,7 @@ public class Slides {
 //    public static double d = 0;
 //    public static double f = 0.01;
     //p was 0.0014
-    public static PIDFCoefficients coefficients = new PIDFCoefficients(0.0015,0.02,0,0.01);
+    public static PIDFCoefficients coefficients = new PIDFCoefficients(0.0015,0.05,0,0.01);
     public static double pTolerance = 20;
     private PIDController controller = new PIDController(coefficients.p, coefficients.i, coefficients.d);
 

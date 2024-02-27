@@ -139,7 +139,7 @@ public class RedBackStageAuto extends AutoBase {
                     builder.splineToConstantHeading(POST_SCORING_SPLINE_END.vec(),Math.toRadians(180));
                     switch (teamPropLocation) {
                         case 1:
-                            builder.lineToConstantHeading(STACK_LOCATION_1.vec().plus(new Vector2d(-1.85)));
+                            builder.lineToConstantHeading(STACK_LOCATION_1.vec().plus(new Vector2d(-2)));
                             robot.intake.setpos(STACK5);
                             break;
                         case 2:
