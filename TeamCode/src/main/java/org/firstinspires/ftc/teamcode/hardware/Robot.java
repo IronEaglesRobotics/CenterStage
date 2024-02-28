@@ -37,6 +37,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -303,7 +304,34 @@ public class Robot {
 
     }
 
+    public void pickupMacro(Gamepad gamepad, Runtime runtime) {
+        switch (pickupMacroState) {
+            case IDLE:
+                if (gamepad.dpad_down)
+                break;
+            case OPEN:
+                break;
+            case DROP:
+                break;
+            case CLOSE:
+                break;
+            case NEUTRAL:
+                break;
 
+        }
+    }
+
+    pickupMacroStates pickupMacroState = pickupMacroStates.IDLE;
+    enum pickupMacroStates{
+                IDLE,
+                OPEN,
+                DROP,
+                CLOSE,
+                NEUTRAL
+
+        }
+
+    double runtime;
 
 
 
