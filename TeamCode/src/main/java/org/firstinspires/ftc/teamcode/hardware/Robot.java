@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARMACCSCORE;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARMPICKUPSTACK;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARMREST;
@@ -34,10 +35,11 @@ import static org.firstinspires.ftc.teamcode.util.Constants.SLIDERIGHT;
 import static org.firstinspires.ftc.teamcode.util.Constants.WRIST;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -66,6 +68,8 @@ public class Robot {
     private Plane plane;
     @Getter
     private Slides slides;
+
+    GamepadEx controller2 = new GamepadEx(gamepad2);
 
     public Robot init(HardwareMap hardwareMap) {
         this.drive = new MecanumDrive(hardwareMap);
@@ -237,29 +241,33 @@ public class Robot {
         public void wristScore() {
             this.wrist.setPosition(WRISTSCORE);
         }
+
     }
 
-    public static class Claw {
-        private static final double CLAW_KP = 0.15;
+    public static boolean clawIsOpen;
 
+    public static class Claw {
         private Servo claw;
 
         public Claw init(HardwareMap hardwareMap) {
             this.claw = hardwareMap.get(Servo.class, CLAW);
-            this.claw.setPosition(CLOSE);
+            close();
             return this;
         }
 
         public void close() {
             this.claw.setPosition(CLOSE);
+            clawIsOpen = false;
         }
 
         public void open() {
             this.claw.setPosition(OPEN);
+            clawIsOpen = true;
         }
 
         public void openStack() {
             this.claw.setPosition(BIGOPEN);
+            clawIsOpen = true;
         }
 
         public void setPos(double pos) {
@@ -274,6 +282,14 @@ public class Robot {
         public Led init(HardwareMap hardwareMap) {
             this.led = hardwareMap.get(RevBlinkinLedDriver.class, LIGHTS);
             return this;
+        }
+
+        public void LED() {
+            if (clawIsOpen) {
+                white();
+            } else {
+                gold();
+            }
         }
 
         public void gold() {
@@ -304,25 +320,45 @@ public class Robot {
 
     }
 
-    public void pickupMacro(Gamepad gamepad, Runtime runtime) {
+    public void pickupMacro(GamepadEx gamepadEx, double runtime) {
         switch (pickupMacroState) {
             case IDLE:
-                if (gamepad.dpad_down)
+                if (controller2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)){
+                    pickupMacroState = pickupMacroStates.OPEN;
+                }
                 break;
             case OPEN:
+                    delay = runtime + .2;
+                    this.getClaw().open();
+                    pickupMacroState = pickupMacroStates.DROP;
                 break;
             case DROP:
+                    if (runtime > delay) {
+                        this.getArm().pickup();
+                        delay= runtime + .2;
+                        pickupMacroState = pickupMacroStates.CLOSE;
+                    }
                 break;
             case CLOSE:
+                if (runtime > delay) {
+                    this.getClaw().close();
+                    delay= runtime + .1;
+                    pickupMacroState = pickupMacroStates.NEUTRAL;
+                }
                 break;
             case NEUTRAL:
+                if (runtime > delay) {
+                    this.getArm().armRest();
+                    pickupMacroState = pickupMacroStates.IDLE;
+                }
                 break;
 
         }
     }
 
-    pickupMacroStates pickupMacroState = pickupMacroStates.IDLE;
-    enum pickupMacroStates{
+    public pickupMacroStates pickupMacroState = pickupMacroStates.IDLE;
+
+    public enum pickupMacroStates{
                 IDLE,
                 OPEN,
                 DROP,
@@ -331,9 +367,7 @@ public class Robot {
 
         }
 
-    double runtime;
-
-
+    double delay;
 
     public TrajectorySequenceBuilder getTrajectorySequenceBuilder() {
         this.drive.update();

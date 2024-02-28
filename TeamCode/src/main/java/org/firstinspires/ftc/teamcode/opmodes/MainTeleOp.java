@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
@@ -15,16 +17,11 @@ public class MainTeleOp extends OpMode {
         this.robot = new Robot().init(hardwareMap);
     }
 
-    @Override
+    GamepadEx controller2 = new GamepadEx(gamepad2);
+
     public void loop() {
         boolean slideUp = gamepad2.dpad_up;
-        boolean restArm = gamepad2.x;
-        boolean pickupArm = gamepad2.dpad_down;
-        boolean scoreArm = gamepad2.a;
         boolean plane = gamepad2.right_bumper;
-        boolean claw = gamepad2.b;
-        boolean pickupWrist = gamepad2.x;
-        boolean scoreWrist = gamepad2.a;
         boolean slideDown = gamepad2.dpad_left;
         boolean hang = gamepad2.left_bumper;
         boolean hangRelease = gamepad2.y;
@@ -39,27 +36,23 @@ public class MainTeleOp extends OpMode {
         } else {
             this.robot.getSlides().slideStop();
         }
-//Arm
-        if (pickupArm) {
-            this.robot.getArm().pickup();
-        } else if (restArm) {
-            this.robot.getArm().armRest();
-        } else if (scoreArm) {
+
+//Macros
+        this.robot.getLed().LED();
+        this.robot.pickupMacro(controller2,getRuntime());
+
+//Arm and Wrist
+        if (controller2.wasJustPressed(GamepadKeys.Button.X)){
             this.robot.getArm().armSecondaryScore();
+            this.robot.getWrist().wristScore();
+        } else if (controller2.wasJustPressed(GamepadKeys.Button.A)){
+            this.robot.getArm().armRest();
+            this.robot.getWrist().wristPickup();
+            this.robot.getClaw().close();
         }
 //Claw
-        if (claw) {
+        if (controller2.wasJustPressed(GamepadKeys.Button.B)){
             this.robot.getClaw().open();
-            this.robot.getLed().white();
-        } else {
-            this.robot.getClaw().close();
-            this.robot.getLed().gold();
-        }
-//Wrist
-        if (pickupWrist) {
-            this.robot.getWrist().wristPickup();
-        } else if (scoreWrist) {
-            this.robot.getWrist().wristScore();
         }
 //Hang
         if (hang) {
@@ -68,17 +61,18 @@ public class MainTeleOp extends OpMode {
             this.robot.getHang().hangRelease();
         } else if (hangPlane) {
             this.robot.getHang().hangPlane();
-        } else {
-            this.robot.getHang().hangIdle();
         }
+
         int Position = this.robot.getHang().hangRight.getCurrentPosition();
         telemetry.addData("position",(Position));
         telemetry.update();
+
 //Plane
         if (plane) {
             this.robot.getPlane().planeLaunch();
         }else {
             this.robot.getPlane().planeLock();
         }
+
     }
 }
