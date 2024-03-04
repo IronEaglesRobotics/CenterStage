@@ -32,11 +32,12 @@ import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
@@ -323,15 +324,15 @@ public class    MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDr
         return new ProfileAccelerationConstraint(maxAccel);
     }
 
-    public void setInput(Gamepad gamepad1, Gamepad gamepad2) {
-        double speedScale = gamepad1.y ? SLOWMODE_SPEED : SPEED;
-        double turnScale = gamepad1.y ? SLOWMODE_TURN : TURN;
+    public void setInput(GamepadEx controller1, GamepadEx controller2) {
+        double speedScale = controller1.isDown(GamepadKeys.Button.Y) ? SLOWMODE_SPEED : SPEED;
+        double turnScale = controller1.isDown(GamepadKeys.Button.Y) ? SLOWMODE_TURN : TURN;
 
         this.setWeightedDrivePower(
                 new Pose2d(
-                        gamepad1.left_stick_y* -1 * speedScale,
-                        gamepad1.left_stick_x*-1 * speedScale,
-                        -gamepad1.right_stick_x * turnScale
+                        controller1.getLeftY()* -1 * speedScale,
+                        controller1.getLeftX()*-1 * speedScale,
+                        -controller1.getRightX() * turnScale
                 ));
     }
 }

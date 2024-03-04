@@ -71,17 +71,19 @@ public class Robot {
     private Slides slides;
 
     GamepadEx controller2 = new GamepadEx(gamepad2);
+    GamepadEx controller1 = new GamepadEx(gamepad1);
+
 
     public Robot init(HardwareMap hardwareMap) {
         this.drive = new MecanumDrive(hardwareMap);
-        this.hang = new Hang().init(hardwareMap);
-        this.arm = new Arm().init(hardwareMap);
-        this.wrist = new Wrist().init(hardwareMap);
-        this.claw = new Claw().init(hardwareMap);
-        this.camera = new Camera(hardwareMap);
-        this.plane = new Plane().init(hardwareMap);
-        this.slides= new Slides().init(hardwareMap);
-        this.led = new Led().init(hardwareMap);
+//        this.hang = new Hang().init(hardwareMap);
+//        this.arm = new Arm().init(hardwareMap);
+//        this.wrist = new Wrist().init(hardwareMap);
+//        this.claw = new Claw().init(hardwareMap);
+//        this.camera = new Camera(hardwareMap);
+//        this.plane = new Plane().init(hardwareMap);
+//        this.slides= new Slides().init(hardwareMap);
+//        this.led = new Led().init(hardwareMap);
         return this;
     }
 
