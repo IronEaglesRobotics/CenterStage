@@ -27,6 +27,8 @@ public class MainTeleOp extends OpMode {
 //        boolean hangRelease = gamepad2.right_bumper;
 //        boolean hangPlane = gamepad2.y;
 //        boolean plane = gamepad2.dpad_right;
+        controller1.readButtons();
+        controller2.readButtons();
 //Drive
         robot.getDrive().setInput(this.controller1, this.controller2);
 //slides
