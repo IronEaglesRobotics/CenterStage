@@ -16,8 +16,8 @@ public class MainTeleOp extends OpMode {
         this.robot = new Robot().init(hardwareMap);
     }
 
-    GamepadEx controller2 = new GamepadEx(gamepad2);
-    GamepadEx controller1 = new GamepadEx(gamepad1);
+    GamepadEx controller2 = new GamepadEx(this.gamepad2);
+    GamepadEx controller1 = new GamepadEx(this.gamepad1);
 
 
     public void loop() {
@@ -28,7 +28,7 @@ public class MainTeleOp extends OpMode {
 //        boolean hangPlane = gamepad2.y;
 //        boolean plane = gamepad2.dpad_right;
 //Drive
-        robot.getDrive().setInput(controller1, controller2);
+        robot.getDrive().setInput(this.controller1, this.controller2);
 //slides
 //        if (slideUp) {
 //            this.robot.getSlides().slideUp();

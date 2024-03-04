@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARMACCSCORE;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARMPICKUPSTACK;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARMREST;
@@ -70,8 +69,8 @@ public class Robot {
     @Getter
     private Slides slides;
 
-    GamepadEx controller2 = new GamepadEx(gamepad2);
-    GamepadEx controller1 = new GamepadEx(gamepad1);
+//    GamepadEx controller2 = new GamepadEx(gamepad2);
+//    GamepadEx controller1 = new GamepadEx(gamepad1);
 
 
     public Robot init(HardwareMap hardwareMap) {
@@ -326,7 +325,7 @@ public class Robot {
     public void pickupMacro(GamepadEx gamepadEx, double runtime) {
         switch (pickupMacroState) {
             case IDLE:
-                if (controller2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)){
+                if (gamepadEx.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)){
                     pickupMacroState = pickupMacroStates.OPEN;
                 }
                 break;
