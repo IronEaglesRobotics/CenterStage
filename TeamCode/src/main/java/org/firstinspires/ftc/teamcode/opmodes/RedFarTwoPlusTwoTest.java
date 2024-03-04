@@ -1,16 +1,26 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 @Config
-@Autonomous(name = "AutoRedFar2+2",preselectTeleOp = "Main TeleOp")
-public class AutoRedFarTwoPlusTwo extends AutoBase {
+@Autonomous(name = "TestRedFar2+2")
+public class RedFarTwoPlusTwoTest extends LinearOpMode {
+    protected Pose2d initialPosition;
+    private Robot robot;
+    private String randomization;
+    private String parkLocation;
+    private int delay = 10000;
+
     //Pose2ds
     //Preloads
     final static Pose2d RIGHT_PRELOAD_ONE = new Pose2d(-40, -33.5, Math.toRadians(230));
@@ -35,15 +45,6 @@ public class AutoRedFarTwoPlusTwo extends AutoBase {
     final static Pose2d PARK2 = new Pose2d(60, -63, Math.toRadians(0));
     final static Pose2d PARKLEFT = new Pose2d(45, -12, Math.toRadians(0));
     final static Pose2d PARKLEFT2 = new Pose2d(60, -12, Math.toRadians(0));
-
-    protected enum autoState{
-        STOP,
-        PURPLE,
-        YELLOW,
-        FLIPYELLOW,
-        SCOREYELLOW,
-        PARK,
-    }
 
     protected void scorePreloadOne() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
@@ -205,6 +206,7 @@ public class AutoRedFarTwoPlusTwo extends AutoBase {
     } else if (gamepad2.dpad_right) {
         parkLocation = "RIGHT";
     }}
+
     protected void delaySet(){
         if (gamepad2.dpad_up && delay<13000) {
             delay+=1000;
@@ -214,82 +216,39 @@ public class AutoRedFarTwoPlusTwo extends AutoBase {
             sleep(100);
         }
     }
+
+
+
     @Override
+    public void runOpMode() throws InterruptedException {
+        this.telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
+        this.robot = new Robot().init(hardwareMap);
+        this.robot.getCamera().initTargetingCamera();
+        this.initialPosition = new Pose2d(-34, -59.5, Math.toRadians(270));
+        this.robot.getDrive().setPoseEstimate(initialPosition);
 
-
-    public void followTrajectories(){
-        TrajectorySequenceBuilder builder;
-        switch (state){
-            case PURPLE:
-                builder = this.robot.getTrajectorySequenceBuilder();
-                switch (randomization) {
-                    case "LEFT":
-                        builder.lineToLinearHeading(LEFT_PRELOAD);
-                        break;
-                    case "CENTER":
-                        builder.lineToLinearHeading(CENTER_PRELOAD);
-                        break;
-                    case "RIGHT":
-                        builder.lineToLinearHeading(RIGHT_PRELOAD_ONE);
-                        builder.lineToLinearHeading(RIGHT_PRELOAD_TWO);
-                        break;
-                }
-                this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
-
-                if (!robot.getDrive().isBusy()){
-                    state = autoState.YELLOW;
-                }
-                break;
-            case YELLOW:
-                builder = this.robot.getTrajectorySequenceBuilder();
-                builder.lineToLinearHeading(LEAVE);
-                builder.lineToLinearHeading(READY_TRUSS);
-                builder.lineToLinearHeading(TO_BOARD);
-                switch (randomization) {
-                    case "LEFT":
-                        builder.splineToConstantHeading(SCORE_BOARD_LEFT.vec(),Math.toRadians(0));
-                        break;
-                    case "CENTER":
-                        builder.splineToConstantHeading(SCORE_BOARD_MID.vec(),Math.toRadians(0));
-                        break;
-                    case "RIGHT":
-                        builder.splineToConstantHeading(SCORE_BOARD_RIGHT.vec(),Math.toRadians(0));
-                        break;
-                }
-                this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
-                runtime = getRuntime();
-                state = autoState.FLIPYELLOW;
-                break;
-            case FLIPYELLOW:
-                if (getRuntime() > runtime + 5) {
-                    this.robot.getArm().armSecondaryScore();
-                    this.robot.getWrist().wristScore();
-                    state = autoState.SCOREYELLOW;
-                }
-                break;
-            case SCOREYELLOW:
-                if (!robot.getDrive().isBusy()){
-                    this.robot.getClaw().open();
-                    state = autoState.PARK;
-                }
-                break;
-            case PARK:
-
+        // Do super fancy chinese shit
+        while (!this.isStarted()) {
+            parkLocation = "RIGHT";
+            this.telemetry.addData("Starting Position", this.robot.getCamera().getStartingPosition());
+            randomization = String.valueOf(this.robot.getCamera().getStartingPosition());
+            this.telemetry.addData("Park Position", parkLocation);
+            this.telemetry.addData("Delay", delay);
+            this.telemetry.update();
 
         }
+        scorePreloadOne();
+        goBackToWhereYouCameFrom();
+//        scoreBoard();
+        score();
+        this.robot.getClaw().open();
+        backTruss();
+        this.robot.getClaw().close();
+        sleep(200);
+        goBackstage();
+        scoreBoardStack();
+        scoreTest();
+        park();
     }
 
-
-//        scorePreloadOne();
-//        goBackToWhereYouCameFrom();
-////        scoreBoard();
-//        score();
-//        this.robot.getClaw().open();
-//        backTruss();
-//        this.robot.getClaw().close();
-//        sleep(200);
-//        goBackstage();
-//        scoreBoardStack();
-//        scoreTest();
-//        park();
-    }
+}

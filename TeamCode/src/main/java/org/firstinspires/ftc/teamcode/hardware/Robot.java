@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARMACCSCORE;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARMPICKUPSTACK;
@@ -349,6 +350,7 @@ public class Robot {
             case NEUTRAL:
                 if (runtime > delay) {
                     this.getArm().armRest();
+                    gamepad1.rumble(300);
                     pickupMacroState = pickupMacroStates.IDLE;
                 }
                 break;

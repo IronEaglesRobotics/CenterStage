@@ -20,12 +20,12 @@ public class MainTeleOp extends OpMode {
     GamepadEx controller2 = new GamepadEx(gamepad2);
 
     public void loop() {
-        boolean slideUp = gamepad2.dpad_up;
-        boolean plane = gamepad2.right_bumper;
-        boolean slideDown = gamepad2.dpad_left;
+        boolean slideUp = controller2.isDown(GamepadKeys.Button.DPAD_UP);
+        boolean slideDown = controller2.isDown(GamepadKeys.Button.DPAD_LEFT);
         boolean hang = gamepad2.left_bumper;
-        boolean hangRelease = gamepad2.y;
-        boolean hangPlane = gamepad2.dpad_right;
+        boolean hangRelease = gamepad2.right_bumper;
+        boolean hangPlane = gamepad2.y;
+        boolean plane = gamepad2.dpad_right;
 //Drive
         robot.getDrive().setInput(gamepad1, gamepad2);
 //slides
@@ -33,26 +33,28 @@ public class MainTeleOp extends OpMode {
             this.robot.getSlides().slideUp();
         } else if (slideDown) {
             this.robot.getSlides().slideDown();
-        } else {
+        } else if (controller2.wasJustReleased(GamepadKeys.Button.DPAD_DOWN)
+                || controller2.wasJustReleased(GamepadKeys.Button.DPAD_LEFT)) {
             this.robot.getSlides().slideStop();
         }
-
 //Macros
-        this.robot.getLed().LED();
-        this.robot.pickupMacro(controller2,getRuntime());
+        this.robot.pickupMacro(controller2, getRuntime()); //DPADDOWN
 
 //Arm and Wrist
-        if (controller2.wasJustPressed(GamepadKeys.Button.X)){
+        if (controller2.wasJustPressed(GamepadKeys.Button.X)) {
             this.robot.getArm().armSecondaryScore();
             this.robot.getWrist().wristScore();
-        } else if (controller2.wasJustPressed(GamepadKeys.Button.A)){
+        } else if (controller2.wasJustPressed(GamepadKeys.Button.A)) {
             this.robot.getArm().armRest();
             this.robot.getWrist().wristPickup();
-            this.robot.getClaw().close();
         }
 //Claw
-        if (controller2.wasJustPressed(GamepadKeys.Button.B)){
+        if (controller2.wasJustPressed(GamepadKeys.Button.B)) {
+            gamepad1.rumble(300);
+        } else if (controller2.isDown(GamepadKeys.Button.B)){
             this.robot.getClaw().open();
+        } else if (controller2.wasJustReleased(GamepadKeys.Button.B)){
+            this.robot.getClaw().close();
         }
 //Hang
         if (hang) {
