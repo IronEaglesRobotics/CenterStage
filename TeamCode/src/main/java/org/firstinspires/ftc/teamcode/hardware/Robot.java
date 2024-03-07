@@ -34,6 +34,7 @@ import static org.firstinspires.ftc.teamcode.util.Constants.SLIDERIGHT;
 import static org.firstinspires.ftc.teamcode.util.Constants.WRIST;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.controller.PController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
@@ -84,7 +85,7 @@ public class Robot {
     }
 
     public static class Slides {
-        private DcMotor slidesRight = null;
+        public DcMotor slidesRight = null;
         public DcMotor slidesLeft = null;
 
         public Slides init(HardwareMap hardwareMap) {
@@ -92,8 +93,8 @@ public class Robot {
             this.slidesRight = hardwareMap.get(DcMotor.class, SLIDERIGHT);
             this.slidesLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.slidesRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            this.slidesRight.setTargetPosition(0);
             this.slidesLeft.setTargetPosition(0);
+            this.slidesRight.setTargetPosition(0);
 
             this.slidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.slidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -195,6 +196,7 @@ public class Robot {
     public static class Arm {
         private Servo leftArm;
         private Servo rightArm;
+        private PController armController;
 
 
         public Arm init(HardwareMap hardwareMap) {
@@ -336,7 +338,7 @@ public class Robot {
                 }
                 break;
             case OPEN:
-                    delay = runtime + .2;
+                    delay = runtime + .3;
                     this.getClaw().open();
                     pickupMacroState = pickupMacroStates.DROP;
                 break;
@@ -350,7 +352,7 @@ public class Robot {
             case CLOSE:
                 if (runtime > delay) {
                     this.getClaw().close();
-                    delay= runtime + .1;
+                    delay= runtime + .3;
                     pickupMacroState = pickupMacroStates.NEUTRAL;
                 }
                 break;

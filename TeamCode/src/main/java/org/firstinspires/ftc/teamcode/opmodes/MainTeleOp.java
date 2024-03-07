@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
+import org.firstinspires.ftc.teamcode.util.Configurables;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Main TeleOp", group = "Development")
 public class MainTeleOp extends OpMode {
@@ -43,6 +44,11 @@ public class MainTeleOp extends OpMode {
                 || controller2.wasJustReleased(GamepadKeys.Button.DPAD_LEFT)) {
             this.robot.getSlides().slideStop();
         }
+        if (gamepad2.left_trigger > .5){
+            Configurables.SLIDE_POWER_UP = .3;
+        } else {
+            Configurables.SLIDE_POWER_UP = .7;
+        }
 ////Macros
         this.robot.pickupMacro(controller2, getRuntime()); //DPADDOWN
 //
@@ -71,9 +77,11 @@ public class MainTeleOp extends OpMode {
             this.robot.getHang().hangPlane();
         }
 
-//        int Position = this.robot.getHang().hangRight.getCurrentPosition();
-//        telemetry.addData("position",(Position));
-//        telemetry.update();
+        int PositionLeft = this.robot.getSlides().slidesLeft.getCurrentPosition();
+        telemetry.addData("positionLeft",(PositionLeft));
+        int PositionRight = this.robot.getSlides().slidesRight.getCurrentPosition();
+        telemetry.addData("positionRight",(PositionRight));
+        telemetry.update();
 //
 //Plane
         if (plane) {
