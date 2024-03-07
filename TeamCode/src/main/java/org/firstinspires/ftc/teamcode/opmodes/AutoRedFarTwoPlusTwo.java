@@ -42,7 +42,9 @@ public class AutoRedFarTwoPlusTwo extends AutoBase {
         YELLOW,
         FLIPYELLOW,
         SCOREYELLOW,
-        PARK,
+        FIRSTCYCLE,
+        RETRACT,
+        SCORECYCLEONE,
     }
 
     protected void scorePreloadOne() {
@@ -270,12 +272,40 @@ public class AutoRedFarTwoPlusTwo extends AutoBase {
             case SCOREYELLOW:
                 if (!robot.getDrive().isBusy()){
                     this.robot.getClaw().open();
-                    state = autoState.PARK;
+                    runtime = getRuntime();
+                    state = autoState.FIRSTCYCLE;
                 }
                 break;
-            case PARK:
-
-
+            case FIRSTCYCLE:
+                builder = this.robot.getTrajectorySequenceBuilder();
+                builder.splineToConstantHeading(TO_BOARD.vec(),Math.toRadians(0));
+                builder.lineToLinearHeading(READY_TRUSS);
+                builder.splineToConstantHeading(GET_STACK.vec(),Math.toRadians(0));
+                builder.lineToLinearHeading(PICKUP_STACK,
+                        MecanumDrive.getVelocityConstraint(20, 20, DriveConstants.TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(20));
+                this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
+                runtime = getRuntime();
+                state = autoState.RETRACT;
+                break;
+            case RETRACT:
+                if (getRuntime() > runtime + .3) {
+                    this.robot.getClaw().close();
+                    this.robot.getArm().armRest();
+                    this.robot.getWrist().wristPickup();
+                    this.robot.getSlides().slideDown();
+                }
+                if (getRuntime() > runtime + 2) {
+                    this.robot.getClaw().openStack();
+                    this.robot.getArm().armPickupStack();
+                }
+                if (!robot.getDrive().isBusy()) {
+                    this.robot.getClaw().close();
+                    state = autoState.SCORECYCLEONE;
+                }
+                break;
+            case SCORECYCLEONE:
+                break;
         }
     }
 

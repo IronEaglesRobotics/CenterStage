@@ -14,16 +14,16 @@ public class Configurables {
     public static Color FTC_WHITE_UPPER = new Color(180, 30, 255);
 
     //Servo Positions
-    public static double ARMREST = 0.8;
+    public static double ARMREST = 0.91;
     public static double ARMSCORE = 0.4;
-    public static double ARMACCSCORE = .37;
+    public static double ARMACCSCORE = .57;
     public static double ARMPICKUPSTACK = 0.815;
     public static double PICKUP = 0.835;
-    public static double WRISTPICKUP = 0.28;
-    public static double WRISTSCORE = .96;
-    public static double OPEN = 0.82;
+    public static double WRISTPICKUP = 0.3;
+    public static double WRISTSCORE = .98;
+    public static double OPEN = 0.483;
     public static double BIGOPEN = 0.65;
-    public static double CLOSE = 0.91;
+    public static double CLOSE = .51;
     public static double PLANELOCK = 0.1;
     public static double PLANELAUNCH = 0.9;
 
@@ -39,9 +39,9 @@ public class Configurables {
     public static int SLIDELAYERONE = 60;
     public static int SLIDEAUTOSTACKS = 250;
     public static int SLIDEUP = 1150;
-    public static int HANGRELEASE = 2500;
+    public static int HANGRELEASE = 1550;
     public static int HANG = 0;
-    public static int HANGPLANE = 1800;
+    public static int HANGPLANE = 1150;
     public static int SLIDELAYERTWO = 350;
     public static int SLIDESTACK = 80;
     public static int SLIDEPICKUPSTACKSTWO = 30;

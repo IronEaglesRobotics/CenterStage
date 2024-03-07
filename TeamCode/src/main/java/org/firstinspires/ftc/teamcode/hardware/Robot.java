@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARMACCSCORE;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARMPICKUPSTACK;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARMREST;
@@ -69,19 +68,17 @@ public class Robot {
     @Getter
     private Slides slides;
 
-//    GamepadEx controller2 = new GamepadEx(gamepad2);
-//    GamepadEx controller1 = new GamepadEx(gamepad1);
 
 
     public Robot init(HardwareMap hardwareMap) {
         this.drive = new MecanumDrive(hardwareMap);
-//        this.hang = new Hang().init(hardwareMap);
-//        this.arm = new Arm().init(hardwareMap);
-//        this.wrist = new Wrist().init(hardwareMap);
-//        this.claw = new Claw().init(hardwareMap);
+        this.hang = new Hang().init(hardwareMap);
+        this.arm = new Arm().init(hardwareMap);
+        this.wrist = new Wrist().init(hardwareMap);
+        this.claw = new Claw().init(hardwareMap);
 //        this.camera = new Camera(hardwareMap);
-//        this.plane = new Plane().init(hardwareMap);
-//        this.slides= new Slides().init(hardwareMap);
+        this.plane = new Plane().init(hardwareMap);
+        this.slides= new Slides().init(hardwareMap);
 //        this.led = new Led().init(hardwareMap);
         return this;
     }
@@ -130,7 +127,16 @@ public class Robot {
 
         public void slidePickupStackTwo(){this.slideTo(SLIDEPICKUPSTACKSTWO, SLIDE_POWER_UP);}
 
-        public void slideStop() {this.slideTo(slidesRight.getCurrentPosition(), 1.0);}
+        public void slideStop() {
+            this.slidesLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.slidesLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            this.slidesLeft.setTargetPosition(this.slidesLeft.getCurrentPosition());
+            this.slidesLeft.setPower(1);
+
+            this.slidesRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.slidesRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            this.slidesRight.setTargetPosition(this.slidesRight.getCurrentPosition());
+            this.slidesRight.setPower(1);}
 
     }
 
@@ -351,7 +357,6 @@ public class Robot {
             case NEUTRAL:
                 if (runtime > delay) {
                     this.getArm().armRest();
-                    gamepad1.rumble(300);
                     pickupMacroState = pickupMacroStates.IDLE;
                 }
                 break;
