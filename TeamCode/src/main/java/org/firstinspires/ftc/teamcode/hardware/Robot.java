@@ -106,6 +106,85 @@ public class Robot {
                 break;
         }
     }
+    public void extendMacro_auto(int slidePos, double runTime, int slidepos2 ) {
+        switch(macroState) {
+            case(0):
+                macroStartTime = runTime;
+                slides.setTarget(slidePos);
+                arm.setDoor(CLOSE);
+                macroState ++;
+                break;
+            case(1):
+                if (runTime > macroStartTime + slideWait || slides.atTarget()) {
+                    macroState ++;
+                }
+                break;
+            case(2):
+                arm.setArmPos(Arm.Position.SCORE);
+                arm.setWristPos(Arm.Position.SCORE);
+                macroState++;
+                break;
+            case (3):
+                if(arm.armAtPosition()){
+                    macroState = 0;
+                    lastMacro = runningMacro;
+                    runningMacro = 0;
+                    macroState++;
+                }
+                break;
+
+            case (4):
+                slides.setTarget(slidepos2);
+                break;
+        }
+    }
+
+
+    public void resetMacro_auto(int slidePos2, double runTime, int slidePos) {
+        switch(macroState) {
+            case(0):
+                macroStartTime = runTime;
+                arm.setDoor(OPEN);
+                macroState++;
+                break;
+            case(1):
+                if (runTime > macroStartTime + scoreWait) {
+                    slides.setTarget(slidePos);
+                    macroState ++;
+                }
+                break;
+            case(2):
+                macroStartTime = runTime;
+                arm.setArmPos(Arm.Position.INTAKE);
+                arm.setWristPos(Arm.Position.INTAKE);
+                macroState++;
+                break;
+            case(3):
+                if (/*runTime > macroStartTime + armWait || */arm.armAtPosition()) {
+                    macroState ++;
+                }
+                break;
+            case(4):
+                slides.setTarget(slidePos2);
+                macroState++;
+                break;
+            case (5):
+                if (slides.atTarget()){
+                    macroState = 0;
+                    lastMacro = runningMacro;
+                    runningMacro = 0;
+                }
+                break;
+        }
+    }
+
+
+
+
+
+
+
+
 
     public void update(double runTime) {
         drive.update();

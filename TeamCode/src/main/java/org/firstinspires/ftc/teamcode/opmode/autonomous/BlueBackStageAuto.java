@@ -96,7 +96,7 @@ public class BlueBackStageAuto extends AutoBase {
                 else {
                     robot.intake.setDcMotor(0);
                     robot.arm.setDoor(Arm.DoorPosition.CLOSE);
-                    robot.extendMacro(Slides.mini_tier1, getRuntime());
+                    robot.extendMacro_auto(Slides.mini_tier1, getRuntime(), Slides.micro_tier1);
                     builder = this.robot.getTrajectorySequenceBuilder();
                     //Scores yellow pixel
                     switch (teamPropLocation) {

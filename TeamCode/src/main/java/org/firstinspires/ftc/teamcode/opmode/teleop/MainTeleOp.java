@@ -147,6 +147,13 @@ public class MainTeleOp extends OpMode {
             this.robot.endGameMechs.hang_init_pos();
         }
 
+        if (controller1.getX().isPressed()) {
+            this.robot.intake.wheel_spit();
+        } else if (controller1.getY().isPressed()) {
+            this.robot.intake.wheel_swallow();
+        } else {
+            this.robot.intake.wheel_stop();
+        }
 
 
         // Driver 2

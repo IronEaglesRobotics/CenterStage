@@ -22,18 +22,22 @@ public class Arm {
     private double armTempPos;
     private double doorPos;
     private double wristPos;
-    public static double ARM_KP = 0.2;
+    public static double ARM_KP = 0.18;
 
     public static double doorOpenPos = 0.36;
     public static double doorClosePos = 0.61;
 
     public static double armStart = 0.24;
     public static double armScore = 0.95;
+
+    public static double armScore_highMacro = 0.95;
     public static double wristStart = 0.29;
     public static double wristScore = 0.5;
 
+    public static double wristScore_highMacro = 0.3;
+
     public enum Position {
-        INTAKE, SCORE
+        INTAKE, SCORE, SCOREHI
     }
 
     public enum DoorPosition {
@@ -81,6 +85,9 @@ public class Arm {
             wristPos = wristStart;
         } else if (pos == Position.SCORE) {
             wristPos = wristScore;
+        } else if (pos == Position.SCOREHI) {
+            wristPos = wristScore_highMacro;
+
         }
     }
 

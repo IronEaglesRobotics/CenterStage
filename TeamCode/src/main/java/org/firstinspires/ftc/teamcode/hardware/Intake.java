@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.hardware.Arm.DoorPosition.CLOSE;
 import static org.firstinspires.ftc.teamcode.hardware.Arm.DoorPosition.OPEN;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -12,6 +13,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Intake {
     private Servo rServo;
     private Servo lServo;
+    private CRServo WheelServo;
+
     private DcMotor dcMotor;
     private Position pos = Position.UP;
 
@@ -45,6 +48,7 @@ public class Intake {
         lServo.setDirection(Servo.Direction.REVERSE);
         rServo = hardwareMap.get(Servo.class, "Right Intake Servo");
         dcMotor = hardwareMap.get(DcMotor.class, "Intakemotor");
+        WheelServo = hardwareMap.get(CRServo.class, "Wheel");
 
     }
 
@@ -90,6 +94,20 @@ public class Intake {
         else {
             this.setpos(Position.UP);
         }
+    }
+
+
+    public void wheel_spit(){
+
+        WheelServo.setPower(1);
+    }
+
+    public void wheel_swallow(){
+        WheelServo.setPower(-1);
+    }
+
+    public void wheel_stop(){
+        WheelServo.setPower(0);
     }
 
     public double getPower() {
