@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -9,7 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.opmodes.AutoRedFarTwoPlusTwo.autoState;
 
-@Config
 public abstract class AutoBase extends LinearOpMode {
     protected Pose2d initialPosition;
     Robot robot;
@@ -37,11 +35,11 @@ public abstract class AutoBase extends LinearOpMode {
             this.telemetry.addData("Park Position", parkLocation);
             this.telemetry.addData("Delay", delay);
             this.telemetry.update();
-
         }
+
         while (state != autoState.STOP) {
             followTrajectories();
-            robot.getDrive().update();
+            robot.update();
         }
     }
 }

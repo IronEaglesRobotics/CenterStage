@@ -11,10 +11,10 @@ import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveCons
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kA;
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kStatic;
 import static org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants.kV;
-import static org.firstinspires.ftc.teamcode.util.Configurables.SLOWMODE_SPEED;
-import static org.firstinspires.ftc.teamcode.util.Configurables.SLOWMODE_TURN;
-import static org.firstinspires.ftc.teamcode.util.Configurables.SPEED;
-import static org.firstinspires.ftc.teamcode.util.Configurables.TURN;
+import static org.firstinspires.ftc.teamcode.util.Configurables.driveSpeed.SLOWMODE_SPEED;
+import static org.firstinspires.ftc.teamcode.util.Configurables.driveSpeed.SLOWMODE_TURN;
+import static org.firstinspires.ftc.teamcode.util.Configurables.driveSpeed.SPEED;
+import static org.firstinspires.ftc.teamcode.util.Configurables.driveSpeed.TURN;
 
 import androidx.annotation.NonNull;
 
@@ -329,9 +329,9 @@ public class    MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDr
 
         this.setWeightedDrivePower(
                 new Pose2d(
-                        gamepad1.left_stick_y* -1 * speedScale,
-                        gamepad1.left_stick_x*-1 * speedScale,
-                        -gamepad1.right_stick_x * turnScale
+                        gamepad2.left_stick_y * -1 * speedScale,
+                        gamepad2.left_stick_x * -1 * speedScale,
+                        -gamepad2.right_stick_x * turnScale
                 ));
     }
 }

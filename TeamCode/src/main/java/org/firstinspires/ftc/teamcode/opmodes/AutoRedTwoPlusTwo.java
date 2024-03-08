@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -11,8 +10,9 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
-@Config
+
 @Autonomous(name = "autoRed2+2")
+
 public class AutoRedTwoPlusTwo extends LinearOpMode {
     protected Pose2d initialPosition;
     private Robot robot;
@@ -37,7 +37,7 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
     final static Pose2d APPROACHING_BOARD = new Pose2d(70, -31, Math.toRadians(360));
     final static Pose2d SCORE_STACK = new Pose2d(73.5, -31, Math.toRadians(360));
     //Park
-    final static Pose2d BACK_OFF =  new Pose2d(60,-58,Math.toRadians(360));
+    final static Pose2d BACK_OFF = new Pose2d(60, -58, Math.toRadians(360));
     final static Pose2d PARK = new Pose2d(80, -60, Math.toRadians(360));
 
     protected void scorePreloadOne() {
@@ -64,7 +64,8 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
             case "LEFT":
                 builder.lineToLinearHeading(LEFT_BOARD,
                         MecanumDrive.getVelocityConstraint(20, 20, DriveConstants.TRACK_WIDTH),
-                        MecanumDrive.getAccelerationConstraint(20));;
+                        MecanumDrive.getAccelerationConstraint(20));
+                ;
                 break;
             case "CENTER":
                 builder.lineToLinearHeading(CENTER_BOARD,
@@ -89,7 +90,7 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
         builder.addTemporalMarker(.3, robot.getArm()::armRest);
         builder.addTemporalMarker(.3, robot.getWrist()::wristPickup);
         builder.addTemporalMarker(.1, robot.getSlides()::slideDown);
-        builder.addTemporalMarker(1.5,robot.getClaw()::openStack);
+        builder.addTemporalMarker(1.5, robot.getClaw()::openStack);
         builder.addTemporalMarker(1.5, robot.getArm()::pickup);
         builder.lineToLinearHeading(TO_STACK);
         builder.lineToLinearHeading(TO_STACK_SLOW,
@@ -104,7 +105,7 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
         builder.addTemporalMarker(.3, robot.getArm()::armRest);
         builder.addTemporalMarker(.3, robot.getWrist()::wristPickup);
         builder.addTemporalMarker(.1, robot.getSlides()::slideDown);
-        builder.addTemporalMarker(1.5,robot.getClaw()::openStack);
+        builder.addTemporalMarker(1.5, robot.getClaw()::openStack);
         builder.addTemporalMarker(1.5, robot.getArm()::pickup);
         builder.lineToLinearHeading(TO_STACK);
         builder.lineToLinearHeading(TO_STACK_SLOW2,
@@ -113,7 +114,7 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 
-    protected void scoreStack()  {
+    protected void scoreStack() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.lineToLinearHeading(BACK_THROUGH_GATE);
         builder.lineToLinearHeading(APPROACHING_BOARD);
@@ -129,7 +130,7 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
         builder.lineToLinearHeading(new Pose2d(75, -31, Math.toRadians(360)),
                 MecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                 MecanumDrive.getAccelerationConstraint(20));
-        builder.addTemporalMarker(.2,this::clawSlowOpen);
+        builder.addTemporalMarker(.2, this::clawSlowOpen);
         this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 

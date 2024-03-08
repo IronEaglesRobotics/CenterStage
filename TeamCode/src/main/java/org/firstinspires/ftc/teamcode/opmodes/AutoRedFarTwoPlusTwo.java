@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -8,7 +7,6 @@ import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
-@Config
 @Autonomous(name = "AutoRedFar2+2",preselectTeleOp = "Main TeleOp")
 public class AutoRedFarTwoPlusTwo extends AutoBase {
     //Pose2ds

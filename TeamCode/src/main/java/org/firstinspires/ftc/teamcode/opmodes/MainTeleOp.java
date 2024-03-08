@@ -6,14 +6,13 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
-import org.firstinspires.ftc.teamcode.util.Configurables;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Main TeleOp", group = "Development")
 public class MainTeleOp extends OpMode {
-    private Robot robot;
-    private MecanumDrive drive;
     GamepadEx controller1;
     GamepadEx controller2;
+    private Robot robot;
+    private MecanumDrive drive;
 
     @Override
     public void init() {
@@ -22,15 +21,15 @@ public class MainTeleOp extends OpMode {
         this.controller1 = new GamepadEx(this.gamepad1);
     }
 
-
-
     public void loop() {
+//GamePad Controls
         boolean slideUp = controller2.isDown(GamepadKeys.Button.DPAD_UP);
         boolean slideDown = controller2.isDown(GamepadKeys.Button.DPAD_LEFT);
         boolean hang = gamepad2.left_bumper;
         boolean hangRelease = gamepad2.right_bumper;
         boolean hangPlane = gamepad2.y;
         boolean plane = gamepad2.dpad_right;
+//Read Controller
         controller1.readButtons();
         controller2.readButtons();
 //Drive
@@ -44,51 +43,55 @@ public class MainTeleOp extends OpMode {
                 || controller2.wasJustReleased(GamepadKeys.Button.DPAD_LEFT)) {
             this.robot.getSlides().slideStop();
         }
-        if (gamepad2.left_trigger > .5){
-            Configurables.SLIDE_POWER_UP = .3;
+        if (gamepad2.left_trigger > .1) {
+            Robot.Slides.SLIDE_POWER_UP = .3;
         } else {
-            Configurables.SLIDE_POWER_UP = .7;
+            Robot.Slides.SLIDE_POWER_UP = .7;
         }
 ////Macros
         this.robot.pickupMacro(controller2, getRuntime()); //DPADDOWN
+        this.robot.armMacro(controller2, getRuntime()); //X
 //
 //Arm and Wrist
-        if (controller2.wasJustPressed(GamepadKeys.Button.X)) {
-            this.robot.getArm().armSecondaryScore();
-            this.robot.getWrist().wristScore();
-        } else if (controller2.wasJustPressed(GamepadKeys.Button.A)) {
+//        if (controller2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
+//            this.robot.getArm().pickup(true);
+//        } else
+//        if (controller2.wasJustReleased(GamepadKeys.Button.DPAD_DOWN)) {
+//            this.robot.getArm().armRest(true);
+//        } else
+        if (controller2.wasJustPressed(GamepadKeys.Button.A)) {
             this.robot.getArm().armRest();
             this.robot.getWrist().wristPickup();
         }
-////Claw
+//Claw
         if (controller2.wasJustPressed(GamepadKeys.Button.B)) {
             gamepad1.rumble(300);
-        } else if (controller2.isDown(GamepadKeys.Button.B)){
+        } else if (controller2.isDown(GamepadKeys.Button.B) || controller2.isDown(GamepadKeys.Button.DPAD_DOWN)) {
             this.robot.getClaw().open();
-        } else if (controller2.wasJustReleased(GamepadKeys.Button.B)){
+        } else if (controller2.wasJustReleased(GamepadKeys.Button.B)) {
             this.robot.getClaw().close();
         }
-////Hang
+//Hang
         if (hang) {
             this.robot.getHang().hang();
-        } else if (hangRelease){
+        } else if (hangRelease) {
             this.robot.getHang().hangRelease();
         } else if (hangPlane) {
             this.robot.getHang().hangPlane();
         }
-
-        int PositionLeft = this.robot.getSlides().slidesLeft.getCurrentPosition();
-        telemetry.addData("positionLeft",(PositionLeft));
-        int PositionRight = this.robot.getSlides().slidesRight.getCurrentPosition();
-        telemetry.addData("positionRight",(PositionRight));
-        telemetry.update();
-//
 //Plane
         if (plane) {
             this.robot.getPlane().planeLaunch();
-        }else {
+        } else {
             this.robot.getPlane().planeLock();
         }
-//
+//Telemetry
+        int PositionLeft = this.robot.getSlides().slidesLeft.getCurrentPosition();
+        telemetry.addData("positionLeft", (PositionLeft));
+        int PositionRight = this.robot.getSlides().slidesRight.getCurrentPosition();
+        telemetry.addData("positionRight", (PositionRight));
+        telemetry.update();
+//Update Robot
+        this.robot.update();
     }
 }
