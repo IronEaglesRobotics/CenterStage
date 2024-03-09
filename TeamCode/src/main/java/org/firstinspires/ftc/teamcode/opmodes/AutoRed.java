@@ -67,6 +67,9 @@ public class AutoRed extends LinearOpMode {
         builder.addTemporalMarker(.2, robot.getSlides()::slideFirstLayer);
         builder.addTemporalMarker(.2, robot.getWrist()::wristScore);
         this.robot.getDrive().followTrajectorySequence(builder.build());
+        while (this.robot.getDrive().isBusy()) {
+            robot.update();
+        }
     }
 
     protected void park() {
@@ -85,6 +88,9 @@ public class AutoRed extends LinearOpMode {
         builder.addTemporalMarker(.1, robot.getWrist()::wristPickup);
         builder.addTemporalMarker(.1, robot.getSlides()::slideDown);
         this.robot.getDrive().followTrajectorySequence(builder.build());
+        while (this.robot.getDrive().isBusy()) {
+            robot.update();
+        }
     }
 
     protected void parkLocation(){
@@ -112,7 +118,6 @@ public class AutoRed extends LinearOpMode {
             this.telemetry.addData("Park Position", parkLocation);
             this.telemetry.update();
         }
-        while (!isStopRequested()) {
             robot.update();
             scorePreloadOne();
             boardScore();
@@ -120,8 +125,6 @@ public class AutoRed extends LinearOpMode {
             this.robot.getClaw().open();
             sleep(250);
             park();
-            stop();
-        }
     }
 
 }
