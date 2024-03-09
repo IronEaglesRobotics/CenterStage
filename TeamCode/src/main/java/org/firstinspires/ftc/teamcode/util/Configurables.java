@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.util;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 @Config
 public class Configurables {
@@ -20,5 +21,23 @@ public class Configurables {
         public static double SLOWMODE_SPEED = 0.3;
         public static double TURN = .75;
         public static double SLOWMODE_TURN = 0.3;
+    }
+
+    //Auto Temp
+    @Config
+    public static class AuToDeV {
+        //Things
+        public static double X1 = 0, Y1 = 0, R1 = 0;
+        public static double X2 = 0, Y2 = 0, R2 = 0;
+        public static double X3 = 0, Y3 = 0, R3 = 0;
+        public static double X4 = 0, Y4 = 0, R4 = 0;
+        public static double X5 = 0, Y5 = 0, R5 = 0;
+
+        //Pose2d
+        public static Pose2d TEMP1 = new Pose2d(X1, Y1, Math.toRadians(R1));
+        public static Pose2d TEMP2 = new Pose2d(X2, Y2, Math.toRadians(R2));
+        public static Pose2d TEMP3 = new Pose2d(X3, Y3, Math.toRadians(R3));
+        public static Pose2d TEMP4 = new Pose2d(X4, Y4, Math.toRadians(R4));
+        public static Pose2d TEMP5 = new Pose2d(X5, Y5, Math.toRadians(R5));
     }
 }

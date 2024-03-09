@@ -31,7 +31,7 @@ import lombok.Getter;
 @Config
 public class Robot {
     public static boolean clawIsOpen;
-    public static double WRISTDELAY = .3;
+    public static double WRISTDELAY = .08;
     double delay;
     public pickupMacroStates pickupMacroState = pickupMacroStates.IDLE;
     public armMacroStates armMacroState = armMacroStates.IDLE;
@@ -148,10 +148,10 @@ public class Robot {
     public static class Slides {
         //Values
         public static double SLIDE_POWER_UP = .7;
-        public static double SLIDE_POWER_DOWN = .5;
+        public static double SLIDE_POWER_DOWN = .2;
         public static int SLIDELAYERONE = 60;
         public static int SLIDEAUTOSTACKS = 250;
-        public static int SLIDEUP = 1150;
+        public static int SLIDEUP = 630;
         public static int SLIDELAYERTWO = 350;
         public static int SLIDESTACK = 80;
         public static int SLIDEPICKUPSTACKSTWO = 30;
@@ -426,11 +426,11 @@ public class Robot {
     @Config
     public static class Claw {
         //Values
-        public static double OPEN = 0.45;
+        public static double OPEN = 0.65;
         public static double BIGOPEN = 0f;
-        public static double CLOSE = 0.85;
-        public static double CLAW_MIN = 0.46;
-        public static double CLAW_MAX = 0.5;
+        public static double CLOSE = 0.73;
+        public static double CLAW_MIN = 0;
+        public static double CLAW_MAX = 1;
         //Servo
         private Servo claw;
 

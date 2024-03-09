@@ -329,9 +329,9 @@ public class    MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDr
 
         this.setWeightedDrivePower(
                 new Pose2d(
-                        gamepad2.left_stick_y * -1 * speedScale,
-                        gamepad2.left_stick_x * -1 * speedScale,
-                        -gamepad2.right_stick_x * turnScale
+                        gamepad1.left_stick_y * -1 * speedScale,
+                        gamepad1.left_stick_x * -1 * speedScale,
+                        -gamepad1.right_stick_x * turnScale
                 ));
     }
 }

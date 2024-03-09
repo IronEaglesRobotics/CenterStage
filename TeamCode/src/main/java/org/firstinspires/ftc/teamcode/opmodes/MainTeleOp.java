@@ -25,6 +25,8 @@ public class MainTeleOp extends OpMode {
 //GamePad Controls
         boolean slideUp = controller2.isDown(GamepadKeys.Button.DPAD_UP);
         boolean slideDown = controller2.isDown(GamepadKeys.Button.DPAD_LEFT);
+        boolean slideStop = controller2.wasJustReleased(GamepadKeys.Button.DPAD_UP) || controller2.wasJustReleased(GamepadKeys.Button.DPAD_LEFT);
+        boolean slideSlow = gamepad2.left_trigger > .1;
         boolean hang = gamepad2.left_bumper;
         boolean hangRelease = gamepad2.right_bumper;
         boolean hangPlane = gamepad2.y;
@@ -39,19 +41,21 @@ public class MainTeleOp extends OpMode {
             this.robot.getSlides().slideUp();
         } else if (slideDown) {
             this.robot.getSlides().slideDown();
-        } else if (controller2.wasJustReleased(GamepadKeys.Button.DPAD_UP)
-                || controller2.wasJustReleased(GamepadKeys.Button.DPAD_LEFT)) {
+        } else if (slideStop) {
             this.robot.getSlides().slideStop();
         }
-        if (gamepad2.left_trigger > .1) {
-            Robot.Slides.SLIDE_POWER_UP = .3;
+        //Slide Power
+        if (slideSlow) {
+            Robot.Slides.SLIDE_POWER_UP = .25;
+            Robot.Slides.SLIDE_POWER_DOWN = .2;
         } else {
             Robot.Slides.SLIDE_POWER_UP = .7;
+            Robot.Slides.SLIDE_POWER_DOWN = .5;
         }
-////Macros
+//Macros
         this.robot.pickupMacro(controller2, getRuntime()); //DPADDOWN
         this.robot.armMacro(controller2, getRuntime()); //X
-//
+
 //Arm and Wrist
 //        if (controller2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN)) {
 //            this.robot.getArm().pickup(true);
