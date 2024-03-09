@@ -59,9 +59,9 @@ import java.util.List;
  * Simple mecanum drive hardware implementation for REV hardware.
  */
 @Config
-public class    MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(20, 0, 1.5);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(10, 0, 2);
+public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive {
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(3, 0, 2.5);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(12, 0, .5);
 
     public static double LATERAL_MULTIPLIER = 1;
 
@@ -113,8 +113,8 @@ public class    MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDr
 
 
         this.leftFront.setDirection(DcMotor.Direction.REVERSE);
-        this.rightFront.setDirection(DcMotor.Direction.FORWARD);
         this.leftRear.setDirection(DcMotor.Direction.REVERSE);
+        this.rightFront.setDirection(DcMotor.Direction.FORWARD);
         this.rightRear.setDirection(DcMotor.Direction.FORWARD);
         this.leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -332,8 +332,8 @@ public class    MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDr
 
         this.setWeightedDrivePower(
                 new Pose2d(
-                        gamepad1.left_stick_y * speedScale,
-                        gamepad1.left_stick_x * speedScale,
+                        -gamepad1.left_stick_y * speedScale,
+                        -gamepad1.left_stick_x * speedScale,
                         -gamepad1.right_stick_x * turnScale
                 ));
     }

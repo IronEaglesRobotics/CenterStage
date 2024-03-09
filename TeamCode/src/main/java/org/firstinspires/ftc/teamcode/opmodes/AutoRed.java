@@ -7,16 +7,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
-import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants;
-import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 @Autonomous(name = "autoRed")
 public class AutoRed extends LinearOpMode {
     protected Pose2d initialPosition;
     private Robot robot;
-    private String randomization;
-    private String parkLocation;
+    private String randomization = "CENTER";
+    private String parkLocation = "LEFT";
 
     //Pose2ds
     //Preloads
@@ -56,19 +54,13 @@ public class AutoRed extends LinearOpMode {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         switch (randomization) {
             case "LEFT":
-                builder.lineToLinearHeading(LEFT_BOARD,
-                        MecanumDrive.getVelocityConstraint(20, 20, DriveConstants.TRACK_WIDTH),
-                        MecanumDrive.getAccelerationConstraint(20));
+                builder.lineToLinearHeading(LEFT_BOARD);
                 break;
             case "CENTER":
-                builder.lineToLinearHeading(CENTER_BOARD,
-                        MecanumDrive.getVelocityConstraint(20, 20, DriveConstants.TRACK_WIDTH),
-                        MecanumDrive.getAccelerationConstraint(20));
+                builder.lineToLinearHeading(CENTER_BOARD);
                 break;
             case "RIGHT":
-                builder.lineToLinearHeading(RIGHT_BOARD,
-                        MecanumDrive.getVelocityConstraint(20, 20, DriveConstants.TRACK_WIDTH),
-                        MecanumDrive.getAccelerationConstraint(20));
+                builder.lineToLinearHeading(RIGHT_BOARD);
                 break;
         }
         builder.addTemporalMarker(.2, robot.getArm()::armScore);
@@ -114,18 +106,22 @@ public class AutoRed extends LinearOpMode {
         // Do super fancy chinese shit
         while (!this.isStarted()) {
             this.telemetry.addData("Starting Position", this.robot.getCamera().getStartingPosition());
-            randomization = String.valueOf(this.robot.getCamera().getStartingPosition());
-            parkLocation();
+//            randomization = String.valueOf(this.robot.getCamera().getStartingPosition());
+//            parkLocation();
+            randomization = "CENTER";
             this.telemetry.addData("Park Position", parkLocation);
             this.telemetry.update();
         }
-
-        scorePreloadOne();
-        boardScore();
-        sleep(250);
-        this.robot.getClaw().open();
-        sleep(250);
-        park();
+        while (!isStopRequested()) {
+            robot.update();
+            scorePreloadOne();
+            boardScore();
+            sleep(250);
+            this.robot.getClaw().open();
+            sleep(250);
+            park();
+            stop();
+        }
     }
 
 }

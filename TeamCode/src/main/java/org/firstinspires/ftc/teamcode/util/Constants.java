@@ -37,18 +37,8 @@ public class Constants {
     public static final Detection INVALID_DETECTION = new Detection(new Size(0, 0), 0);
 
     // Hardware Name Constants
-    public static final String WHEEL_FRONT_LEFT = "frontLeft";
-    public static final String WHEEL_FRONT_RIGHT = "frontRight";
-    public static final String WHEEL_BACK_LEFT = "backLeft";
-    public static final String WHEEL_BACK_RIGHT = "backRight";
-    public static final String ARM = "wobbler";
+
     public static final String CLAW = "claw";
-    public static final String INTAKE = "intake";
-    public static final String INTAKE_SECONDARY = "secondary";
-    public static final String INTAKE_SHIELD = "shield";
-    public static final String SHOOTER = "wheel";
-    public static final String PUSHER = "pusher";
-    public static final String STACK_WEBCAM = "Stack Webcam";
     public static final String TARGETING_WEBCAM = "Targeting Webcam";
     public static final String IMU_SENSOR = "imu";
     public static final String LEFTHANG = "leftHang";

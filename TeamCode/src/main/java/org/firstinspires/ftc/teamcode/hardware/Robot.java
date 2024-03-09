@@ -60,7 +60,7 @@ public class Robot {
         this.arm = new Arm().init(hardwareMap);
         this.wrist = new Wrist().init(hardwareMap);
         this.claw = new Claw().init(hardwareMap);
-//        this.camera = new Camera(hardwareMap);
+        this.camera = new Camera(hardwareMap);
         this.plane = new Plane().init(hardwareMap);
         this.slides = new Slides().init(hardwareMap);
 //        this.led = new Led().init(hardwareMap);

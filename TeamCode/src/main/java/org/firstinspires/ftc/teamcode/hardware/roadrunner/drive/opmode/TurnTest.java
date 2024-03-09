@@ -36,13 +36,12 @@ public class TurnTest extends LinearOpMode {
 
             if (controller.wasJustPressed(GamepadKeys.Button.B)) {
                 TrajectoryBuilder builder = drive.trajectoryBuilder(drive.getPoseEstimate());
-                if (zig) {
-                    zig = false;
-                    builder.forward(DISTANCE);
-                } else {
-                    zig = true;
-                    builder.forward(-DISTANCE);
-                }
+                builder.forward(DISTANCE);
+                drive.followTrajectory(builder.build());
+            }
+            if (controller.wasJustPressed(GamepadKeys.Button.Y)) {
+                TrajectoryBuilder builder = drive.trajectoryBuilder(drive.getPoseEstimate());
+                builder.back(DISTANCE);
                 drive.followTrajectory(builder.build());
             }
         }
