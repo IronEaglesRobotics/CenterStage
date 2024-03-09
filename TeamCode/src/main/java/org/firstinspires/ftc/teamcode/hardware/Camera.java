@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_DETECTION;
-import static org.firstinspires.ftc.teamcode.util.Constants.WEBCAM_NAME;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.tearabite.ielib.localization.AprilTagPoseEstimator;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 import org.firstinspires.ftc.teamcode.vision.Detection;
@@ -17,30 +17,51 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 @Config
 public class Camera {
-    public static float PROP_REJECTION_VERTICAL_UPPER = 175;
-    public static float PROP_REJECTION_VERTICAL_LOWER = 300;
+    private static final String REAR_WEBCAM_NAME = "rearWebcam";
+    public static final String FRONT_WEBCAM_NAME = "frontWebcam";
+    private static final Pose2d REAR_CAMERA_OFFSETS = new Pose2d(8.9, 1.5, Math.PI);
+    public static float PROP_REJECTION_VERTICAL_UPPER = 480f * 0.33f;
+    public static float PROP_REJECTION_VERTICAL_LOWER = 440;
     private PropDetectionPipeline prop;
     private AprilTagProcessor aprilTag;
-    private VisionPortal visionPortal;
-    private Telemetry telemetry;
-
+    private VisionPortal aprilTagPortal;
+    private VisionPortal propPortal;
     private boolean initialized;
+    private AprilTagPoseEstimator aprilTagPoseEstimator;
 
     public Camera(HardwareMap hardwareMap) {
-        this.telemetry = telemetry;
         this.init(hardwareMap);
     }
 
     private void init(HardwareMap hardwareMap) {
+        this.aprilTagPoseEstimator = AprilTagPoseEstimator.builder()
+                .robotOffset(REAR_CAMERA_OFFSETS)
+                .build();
         this.aprilTag = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
                 .setDrawCubeProjection(true)
                 .setDrawTagID(true)
                 .setDrawTagOutline(true)
                 .build();
+        int[] viewportIds = VisionPortal.makeMultiPortalView(2, VisionPortal.MultiPortalLayout.HORIZONTAL);
+
+        VisionPortal.Builder aprilTagVisionPortalBuilder = new VisionPortal.Builder();
+        aprilTagVisionPortalBuilder.setCamera(hardwareMap.get(WebcamName.class, REAR_WEBCAM_NAME));
+        aprilTagVisionPortalBuilder.setLiveViewContainerId(viewportIds[0]);
+        aprilTagVisionPortalBuilder.setAutoStopLiveView(true);
+        aprilTagVisionPortalBuilder.addProcessor(aprilTag);
+        this.aprilTagPortal = aprilTagVisionPortalBuilder.build();
+
         this.prop = new PropDetectionPipeline();
-        this.visionPortal = VisionPortal.easyCreateWithDefaults(
-                hardwareMap.get(WebcamName.class, WEBCAM_NAME), aprilTag, prop);
+        VisionPortal.Builder propVisionPortalBuilder = new VisionPortal.Builder();
+        propVisionPortalBuilder.setCamera(hardwareMap.get(WebcamName.class, FRONT_WEBCAM_NAME));
+        propVisionPortalBuilder.setLiveViewContainerId(viewportIds[1]);
+        propVisionPortalBuilder.setAutoStopLiveView(true);
+        propVisionPortalBuilder.addProcessor(prop);
+        this.propPortal = propVisionPortalBuilder.build();
+
+        this.propPortal.resumeLiveView();
+        this.aprilTagPortal.resumeLiveView();
         this.initialized = true;
     }
 
@@ -61,27 +82,6 @@ public class Camera {
         return INVALID_DETECTION;
     }
 
-    public AprilTagDetection getAprilTag(int id) {
-        return this.aprilTag.getDetections()
-                .stream()
-                .filter(x -> x.id == id)
-                .findFirst()
-                .orElse(null);
-    }
-
-    public double getDistanceToAprilTag(int id, double rejectAbove, double rejectBelow) {
-        for (int i = 0; i < 10; i++) {
-            AprilTagDetection aprilTagDetection = getAprilTag(id);
-            if (aprilTagDetection != null) {
-                if (aprilTagDetection.ftcPose.y < rejectAbove
-                        && aprilTagDetection.ftcPose.y > rejectBelow) {
-                    return aprilTagDetection.ftcPose.y;
-                }
-            }
-        }
-        return Double.MAX_VALUE;
-    }
-
     public void setAlliance(CenterStageCommon.Alliance alliance) {
         this.prop.setAlliance(alliance);
     }
@@ -90,7 +90,17 @@ public class Camera {
         return this.prop != null ? this.prop.getAlliance() : null;
     }
 
-    public boolean isCameraReady() {
-        return this.visionPortal.getCameraState() == VisionPortal.CameraState.CAMERA_DEVICE_READY;
+    public AprilTagDetection getBestAprilTagDetection() {
+        return this.aprilTag.getDetections()
+                .stream().max((d1, d2) -> Float.compare(d2.decisionMargin, d1.decisionMargin))
+                .orElse(null);
+    }
+
+    public Pose2d estimatePoseFromAprilTag() {
+        AprilTagDetection detection = this.getBestAprilTagDetection();
+        if (detection == null) {
+            return null;
+        }
+        return this.aprilTagPoseEstimator.estimatePose(detection);
     }
 }

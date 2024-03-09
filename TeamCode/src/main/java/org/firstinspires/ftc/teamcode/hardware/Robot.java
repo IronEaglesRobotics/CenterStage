@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.hardware.Arm.DoorPosition.CLOSE;
 import static org.firstinspires.ftc.teamcode.hardware.Arm.DoorPosition.OPEN;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
@@ -178,16 +179,12 @@ public class Robot {
         }
     }
 
-
-
-
-
-
-
-
-
     public void update(double runTime) {
-        drive.update();
+        Pose2d estimatedPose = null;
+        if (camera != null) {
+            estimatedPose = this.camera.estimatePoseFromAprilTag();
+        }
+        drive.update(estimatedPose);
         slides.update(runTime);
         arm.update();
     }

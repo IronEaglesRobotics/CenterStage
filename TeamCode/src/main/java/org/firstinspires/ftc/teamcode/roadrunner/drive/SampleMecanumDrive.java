@@ -205,7 +205,15 @@ public class SampleMecanumDrive extends MecanumDrive {
     }
 
     public void update() {
-        updatePoseEstimate();
+        this.update(null);
+    }
+
+    public void update(Pose2d guess) {
+        if (guess == null) {
+            updatePoseEstimate();
+        } else {
+            setPoseEstimate(guess);
+        }
         DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
         if (signal != null) setDriveSignal(signal);
     }
