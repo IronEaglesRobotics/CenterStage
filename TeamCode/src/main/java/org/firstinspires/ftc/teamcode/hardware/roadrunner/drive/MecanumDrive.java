@@ -105,10 +105,13 @@ public class    MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDr
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
         imu.initialize(parameters);
 
+
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
         rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
         rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+
+
         this.leftFront.setDirection(DcMotor.Direction.REVERSE);
         this.rightFront.setDirection(DcMotor.Direction.FORWARD);
         this.leftRear.setDirection(DcMotor.Direction.REVERSE);
@@ -329,8 +332,8 @@ public class    MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDr
 
         this.setWeightedDrivePower(
                 new Pose2d(
-                        gamepad1.left_stick_y * -1 * speedScale,
-                        gamepad1.left_stick_x * -1 * speedScale,
+                        gamepad1.left_stick_y * speedScale,
+                        gamepad1.left_stick_x * speedScale,
                         -gamepad1.right_stick_x * turnScale
                 ));
     }

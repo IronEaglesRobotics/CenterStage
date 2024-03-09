@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.opmode;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
@@ -11,10 +13,10 @@ import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
  * This is a simple routine to test turning capabilities.
  */
 @Config
-@Disabled
 @Autonomous(group = "drive")
 public class TurnTest extends LinearOpMode {
     public static double ANGLE = 90; // deg
+    public static double DISTANCE = 24;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -24,6 +26,25 @@ public class TurnTest extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        drive.turn(Math.toRadians(ANGLE));
+        GamepadEx controller = new GamepadEx(this.gamepad1);
+        boolean zig = false;
+        while (opModeIsActive() && !isStopRequested()) {
+            controller.readButtons();
+            if (controller.wasJustPressed(GamepadKeys.Button.A)) {
+                drive.turn(Math.toRadians(ANGLE));
+            }
+
+            if (controller.wasJustPressed(GamepadKeys.Button.B)) {
+                TrajectoryBuilder builder = drive.trajectoryBuilder(drive.getPoseEstimate());
+                if (zig) {
+                    zig = false;
+                    builder.forward(DISTANCE);
+                } else {
+                    zig = true;
+                    builder.forward(-DISTANCE);
+                }
+                drive.followTrajectory(builder.build());
+            }
+        }
     }
 }
