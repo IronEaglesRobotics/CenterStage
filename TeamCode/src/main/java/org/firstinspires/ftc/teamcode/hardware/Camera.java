@@ -19,7 +19,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 public class Camera {
     private static final String REAR_WEBCAM_NAME = "rearWebcam";
     public static final String FRONT_WEBCAM_NAME = "frontWebcam";
-    private static final Pose2d REAR_CAMERA_OFFSETS = new Pose2d(8.9, 1.5, Math.PI);
+    private static final Pose2d REAR_CAMERA_OFFSETS = new Pose2d(9.75, 0, Math.PI);
     public static float PROP_REJECTION_VERTICAL_UPPER = 480f * 0.33f;
     public static float PROP_REJECTION_VERTICAL_LOWER = 440;
     private PropDetectionPipeline prop;
