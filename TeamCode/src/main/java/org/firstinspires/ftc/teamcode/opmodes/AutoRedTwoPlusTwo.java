@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 @Autonomous(name = "autoRed2+2")
-
 public class AutoRedTwoPlusTwo extends LinearOpMode {
     protected Pose2d initialPosition;
     private Robot robot;
@@ -161,7 +160,6 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
 
         this.telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
         this.robot = new Robot().init(hardwareMap);
-        this.robot.getCamera().initTargetingCamera();
         this.initialPosition = new Pose2d(34, -59.5, Math.toRadians(270));
         this.robot.getDrive().setPoseEstimate(initialPosition);
 

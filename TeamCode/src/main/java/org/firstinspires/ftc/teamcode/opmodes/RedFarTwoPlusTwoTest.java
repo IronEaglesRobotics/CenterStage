@@ -223,7 +223,6 @@ public class RedFarTwoPlusTwoTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         this.telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
         this.robot = new Robot().init(hardwareMap);
-        this.robot.getCamera().initTargetingCamera();
         this.initialPosition = new Pose2d(-34, -59.5, Math.toRadians(270));
         this.robot.getDrive().setPoseEstimate(initialPosition);
 

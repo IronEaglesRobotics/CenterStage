@@ -20,18 +20,18 @@ public class AutoRed extends LinearOpMode {
     //Preloads
     final static Pose2d LEFT_PRELOAD_ONE = new Pose2d(40, -37.5, Math.toRadians(270));
     final static Pose2d LEFT_PRELOAD_TWO = new Pose2d(29.5, -32, Math.toRadians(360));
-    final static Pose2d CENTER_PRELOAD = new Pose2d(33, -28, Math.toRadians(270));
+    final static Pose2d CENTER_PRELOAD = new Pose2d(33, -24, Math.toRadians(270));
     final static Pose2d RIGHT_PRELOAD = new Pose2d(45, -35, Math.toRadians(270));
     //Board Scores
     final static Pose2d LEFT_BOARD = new Pose2d(75.8, -26.5, Math.toRadians(358));
-    final static Pose2d CENTER_BOARD = new Pose2d(75.8, -36.3, Math.toRadians(358));
+    final static Pose2d CENTER_BOARD = new Pose2d(80, -30.3, Math.toRadians(358));
     final static Pose2d RIGHT_BOARD = new Pose2d(75.8, -40, Math.toRadians(358));
 
     //Park
-    final static Pose2d PARK =  new Pose2d(60,-58,Math.toRadians(360));
+    final static Pose2d PARK = new Pose2d(60, -58, Math.toRadians(360));
     final static Pose2d PARK2 = new Pose2d(80, -60, Math.toRadians(360));
-    final static Pose2d PARKLEFT =  new Pose2d(60,-15,Math.toRadians(360));
-    final static Pose2d PARKLEFT2 = new Pose2d(80, -10, Math.toRadians(360));
+    final static Pose2d PARKLEFT = new Pose2d(60, -6, Math.toRadians(360));
+    final static Pose2d PARKLEFT2 = new Pose2d(80, -6, Math.toRadians(360));
 
     protected void scorePreloadOne() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
@@ -66,7 +66,7 @@ public class AutoRed extends LinearOpMode {
         builder.addTemporalMarker(.2, robot.getArm()::armScore);
         builder.addTemporalMarker(.2, robot.getSlides()::slideFirstLayer);
         builder.addTemporalMarker(.2, robot.getWrist()::wristScore);
-        this.robot.getDrive().followTrajectorySequence(builder.build());
+        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
         while (this.robot.getDrive().isBusy()) {
             robot.update();
         }
@@ -87,7 +87,7 @@ public class AutoRed extends LinearOpMode {
         builder.addTemporalMarker(.1, robot.getArm()::armRest);
         builder.addTemporalMarker(.1, robot.getWrist()::wristPickup);
         builder.addTemporalMarker(.1, robot.getSlides()::slideDown);
-        this.robot.getDrive().followTrajectorySequence(builder.build());
+        this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
         while (this.robot.getDrive().isBusy()) {
             robot.update();
         }
@@ -105,7 +105,7 @@ public class AutoRed extends LinearOpMode {
 
         this.telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
         this.robot = new Robot().init(hardwareMap);
-        this.robot.getCamera().initTargetingCamera();
+//        this.robot.getCamera().initTargetingCamera();
         this.initialPosition = new Pose2d(34, -59.5, Math.toRadians(270));
         this.robot.getDrive().setPoseEstimate(initialPosition);
 

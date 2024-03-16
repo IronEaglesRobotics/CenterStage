@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import android.graphics.Paint;
+
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
@@ -86,5 +88,10 @@ public class OpenCVUtil {
     public static List<MatOfPoint> getLargestContours(List<MatOfPoint> contours, int numContours) {
         Collections.sort(contours, (a, b) -> (int) Imgproc.contourArea(b) - (int) Imgproc.contourArea(a));
         return contours.subList(0, Math.min(numContours, contours.size()));
+    }
+
+    public static class LinePaint extends Paint {
+        public LinePaint(int red) {
+        }
     }
 }

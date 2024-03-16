@@ -23,6 +23,18 @@ public class Configurables {
         public static double SLOWMODE_TURN = 0.3;
     }
 
+    //Camera Stuff
+    @Config
+    public static class camerStuff {
+        public static double CAMERA_OFFSET_X = 0f;
+        public static double DETECTION_AREA_MIN = 0.02f;
+        public static double DETECTION_AREA_MAX = 0.3f;
+        public static double DETECTION_LEFT_X = 0;
+        public static double DETECTION_CENTER_X = .5;
+        public static double DETECTION_RIGHT_X = 1;
+        public static double SCORING_DISTANCE_FROM_APRIL_TAG = 6f;
+    }
+
     //Auto Temp
     @Config
     public static class AuToDeV {

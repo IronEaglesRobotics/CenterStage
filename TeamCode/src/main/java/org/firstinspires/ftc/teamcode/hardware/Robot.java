@@ -12,6 +12,7 @@ import static org.firstinspires.ftc.teamcode.util.Constants.SLIDERIGHT;
 import static org.firstinspires.ftc.teamcode.util.Constants.WRIST;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.controller.PController;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -130,9 +131,14 @@ public class Robot {
     }
 
     public void update() {
+        Pose2d estimatedPose = null;
+        if (camera != null) {
+            estimatedPose = this.camera.estimatePoseFromAprilTag();
+        }
         this.arm.update();
         this.wrist.update();
-        this.drive.update();
+        this.drive.update(estimatedPose);
+
     }
 
     public enum pickupMacroStates {
