@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.util.Constants.TARGETING_WEBCAM;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.tearabite.ielib.common.Alliance;
 import com.tearabite.ielib.localization.AprilTagPoseEstimator;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -23,9 +24,9 @@ public class Camera {
     private VisionPortal aprilTagPortal;
     private VisionPortal propPortal;
     private boolean initialized;
-    private static final Pose2d TAG_CAMERA_OFFSETS = new Pose2d(8.27, 0, 0);
+    private static final Pose2d TAG_CAMERA_OFFSETS = new Pose2d(-8.27, -0.95, 0);
     private AprilTagPoseEstimator aprilTagPoseEstimator;
-    public static float PROP_REJECTION_VERTICAL_UPPER = 480f * 0.33f;
+    public static float PROP_REJECTION_VERTICAL_UPPER = 40;
     public static float PROP_REJECTION_VERTICAL_LOWER = 440;
 
 
@@ -78,9 +79,13 @@ public class Camera {
         return targetingCameraInitialized ? prop.getRed() : INVALID_DETECTION;
     }
 
+    public void setAlliance(Alliance alliance) {
+        this.prop.setAlliance(alliance);
+    }
+
     public StarterPosition getStartingPosition() {
         if (!targetingCameraInitialized) {
-           return StarterPosition.UNKNOWN;
+            return StarterPosition.UNKNOWN;
         }
 
         Detection detection = this.getRed();

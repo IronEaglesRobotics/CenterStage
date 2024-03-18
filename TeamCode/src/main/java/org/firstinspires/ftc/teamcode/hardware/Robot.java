@@ -33,11 +33,16 @@ import lombok.Getter;
 public class Robot {
     public static boolean clawIsOpen;
     public static double WRISTDELAY = .08;
-    double delay;
+    public static int MIN_ERROR = 1;
+    public static int MAX_ERROR = 6;
+    public double distance = Double.MAX_VALUE;
+    public Pose2d estimatedPose;
+    public Pose2d drivePose;
     public pickupMacroStates pickupMacroState = pickupMacroStates.IDLE;
     public armMacroStates armMacroState = armMacroStates.IDLE;
     @Getter
     public Arm arm;
+    double delay;
     @Getter
     private MecanumDrive drive;
     @Getter
@@ -130,15 +135,23 @@ public class Robot {
         return this.drive.trajectorySequenceBuilder(this.drive.getPoseEstimate());
     }
 
-    public void update() {
-        Pose2d estimatedPose = null;
-        if (camera != null) {
-            estimatedPose = this.camera.estimatePoseFromAprilTag();
+    public void refreshPoseEstimateFromAprilTag() {
+        this.drive.update();
+        drivePose = this.drive.getPoseEstimate();
+        estimatedPose = this.camera.estimatePoseFromAprilTag();
+
+        if (estimatedPose != null) {
+            distance = Math.sqrt(Math.pow(drivePose.getX() - estimatedPose.getX(), 2) + Math.pow(drivePose.getY() - estimatedPose.getY(), 2));
         }
+        if (distance < MAX_ERROR && distance > MIN_ERROR) {
+            this.drive.update(estimatedPose);
+        }
+    }
+
+    public void update() {
+        this.drive.update();
         this.arm.update();
         this.wrist.update();
-        this.drive.update(estimatedPose);
-
     }
 
     public enum pickupMacroStates {
@@ -392,10 +405,10 @@ public class Robot {
         public static double KP = 0.2;
         public static double TOL = 0.005;
         public static double MAX_DELTA = 0.04;
-        private PIDFController wristPController;
         //Values
         public static double WRISTPICKUP = 0.3;
         public static double WRISTSCORE = .98;
+        private PIDFController wristPController;
         //Servo
         private Servo wrist;
 

@@ -89,13 +89,16 @@ public class MainTeleOp extends OpMode {
         } else {
             this.robot.getPlane().planeLock();
         }
+        this.robot.update();
 //Telemetry
         int PositionLeft = this.robot.getSlides().slidesLeft.getCurrentPosition();
         telemetry.addData("positionLeft", (PositionLeft));
         int PositionRight = this.robot.getSlides().slidesRight.getCurrentPosition();
         telemetry.addData("positionRight", (PositionRight));
+        telemetry.addData("Camera Pos Estimate", (robot.estimatedPose));
+        telemetry.addData("Pos Estimate", (robot.drivePose));
+        telemetry.addData("Difference", (robot.distance));
         telemetry.update();
 //Update Robot
-        this.robot.update();
     }
 }

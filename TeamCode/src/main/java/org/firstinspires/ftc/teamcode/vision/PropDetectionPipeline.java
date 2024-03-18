@@ -18,10 +18,10 @@ import static org.firstinspires.ftc.teamcode.vision.Camera.PROP_REJECTION_VERTIC
 
 import android.graphics.Canvas;
 
+import com.tearabite.ielib.common.Alliance;
 import com.tearabite.ielib.vision.ScalarRange;
 
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
-import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 
 public class PropDetectionPipeline implements VisionProcessor {
 
-    CenterStageCommon.Alliance alliance;
+    Alliance alliance;
     private Mat blurred = new Mat();
     private Mat hsv = new Mat();
     private Mat mask = new Mat();
@@ -55,11 +55,11 @@ public class PropDetectionPipeline implements VisionProcessor {
         Imgproc.GaussianBlur(input, blurred, BLUR_SIZE, 0);
         Imgproc.cvtColor(blurred, hsv, Imgproc.COLOR_RGB2HSV);
 
-        if (alliance == CenterStageCommon.Alliance.Red) {
+        if (alliance == Alliance.Red) {
             red.setContour(detect(FTC_RED_RANGE_1, FTC_RED_RANGE_2));
         }
 
-        if (alliance == CenterStageCommon.Alliance.Blue) {
+        if (alliance == Alliance.Blue) {
             blue.setContour(detect(FTC_BLUE_RANGE));
         }
 
@@ -132,11 +132,11 @@ public class PropDetectionPipeline implements VisionProcessor {
         return this.blue;
     }
 
-    public void setAlliance(CenterStageCommon.Alliance alliance) {
+    public void setAlliance(Alliance alliance) {
         this.alliance = alliance;
     }
 
-    public CenterStageCommon.Alliance getAlliance() {
+    public Alliance getAlliance() {
         return this.alliance;
     }
 }

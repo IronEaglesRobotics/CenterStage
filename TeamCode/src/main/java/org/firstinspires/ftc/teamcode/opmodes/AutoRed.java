@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.tearabite.ielib.common.Alliance;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
@@ -105,6 +106,7 @@ public class AutoRed extends LinearOpMode {
 
         this.telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
         this.robot = new Robot().init(hardwareMap);
+        this.robot.getCamera().setAlliance(Alliance.Blue);
 //        this.robot.getCamera().initTargetingCamera();
         this.initialPosition = new Pose2d(34, -59.5, Math.toRadians(270));
         this.robot.getDrive().setPoseEstimate(initialPosition);
@@ -112,16 +114,16 @@ public class AutoRed extends LinearOpMode {
         // Do super fancy chinese shit
         while (!this.isStarted()) {
             this.telemetry.addData("Starting Position", this.robot.getCamera().getStartingPosition());
-//            randomization = String.valueOf(this.robot.getCamera().getStartingPosition());
-//            parkLocation();
-            randomization = "CENTER";
+            randomization = String.valueOf(this.robot.getCamera().getStartingPositionBlue());
+            parkLocation();
+//            randomization = "CENTER";
             this.telemetry.addData("Park Position", parkLocation);
             this.telemetry.update();
         }
-            robot.update();
             scorePreloadOne();
-            boardScore();
-            sleep(250);
+        boardScore();
+        this.robot.refreshPoseEstimateFromAprilTag();
+        sleep(250);
             this.robot.getClaw().open();
             sleep(250);
             park();

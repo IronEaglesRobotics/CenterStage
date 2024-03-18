@@ -169,7 +169,7 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
             randomization = String.valueOf(this.robot.getCamera().getStartingPosition());
             this.telemetry.update();
         }
-
+        this.robot.update();
         scorePreloadOne();
         boardScore();
 
@@ -188,12 +188,12 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
                 toStack();
                 break;
         }
-
         sleep(500);
         this.robot.getClaw().close();
         sleep(250);
         this.robot.getArm().armRest();
         scoreStack();
+        this.robot.refreshPoseEstimateFromAprilTag();
         this.robot.getClaw().setPos(.83);
         scoreTest();
         park();
