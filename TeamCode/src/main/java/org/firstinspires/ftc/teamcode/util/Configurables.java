@@ -39,10 +39,10 @@ public class Configurables {
     @Config
     public static class AuToDeV {
         //Things
-        public static double X1 = 0, Y1 = 0, R1 = 0;
-        public static double X2 = 0, Y2 = 0, R2 = 0;
-        public static double X3 = 0, Y3 = 0, R3 = 0;
-        public static double X4 = 0, Y4 = 0, R4 = 0;
+        public static double X1 = 24, Y1 = -28, R1 = 270;
+        public static double X2 = 50, Y2 = -36, R2 = 360;
+        public static double X3 = 60, Y3 = -6, R3 = 360;
+        public static double X4 = 60, Y4 = -6, R4 = 360;
         public static double X5 = 0, Y5 = 0, R5 = 0;
 
         //Pose2d

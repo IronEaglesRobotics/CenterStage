@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import static org.firstinspires.ftc.teamcode.util.Configurables.AuToDeV.TEMP1;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AuToDeV.TEMP2;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AuToDeV.TEMP3;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AuToDeV.TEMP4;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.tearabite.ielib.common.Alliance;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
@@ -21,12 +25,12 @@ public class AutoRed extends LinearOpMode {
     //Preloads
     final static Pose2d LEFT_PRELOAD_ONE = new Pose2d(40, -37.5, Math.toRadians(270));
     final static Pose2d LEFT_PRELOAD_TWO = new Pose2d(29.5, -32, Math.toRadians(360));
-    final static Pose2d CENTER_PRELOAD = new Pose2d(33, -24, Math.toRadians(270));
-    final static Pose2d RIGHT_PRELOAD = new Pose2d(45, -35, Math.toRadians(270));
+    final static Pose2d CENTER_PRELOAD = new Pose2d(24, -28, Math.toRadians(270));
+    final static Pose2d RIGHT_PRELOAD = new Pose2d(36, -30, Math.toRadians(270));
     //Board Scores
-    final static Pose2d LEFT_BOARD = new Pose2d(75.8, -26.5, Math.toRadians(358));
-    final static Pose2d CENTER_BOARD = new Pose2d(80, -30.3, Math.toRadians(358));
-    final static Pose2d RIGHT_BOARD = new Pose2d(75.8, -40, Math.toRadians(358));
+    final static Pose2d LEFT_BOARD = new Pose2d(50, -26.5, Math.toRadians(358));
+    final static Pose2d CENTER_BOARD = new Pose2d(50, -36.3, Math.toRadians(358));
+    final static Pose2d RIGHT_BOARD = new Pose2d(50, -40, Math.toRadians(358));
 
     //Park
     final static Pose2d PARK = new Pose2d(60, -58, Math.toRadians(360));
@@ -42,7 +46,7 @@ public class AutoRed extends LinearOpMode {
                 builder.lineToLinearHeading(LEFT_PRELOAD_TWO);
                 break;
             case "CENTER":
-                builder.lineToLinearHeading(CENTER_PRELOAD);
+                builder.lineToLinearHeading(TEMP1);
                 break;
             case "RIGHT":
                 builder.lineToLinearHeading(RIGHT_PRELOAD);
@@ -58,7 +62,7 @@ public class AutoRed extends LinearOpMode {
                 builder.lineToLinearHeading(LEFT_BOARD);
                 break;
             case "CENTER":
-                builder.lineToLinearHeading(CENTER_BOARD);
+                builder.lineToLinearHeading(TEMP2);
                 break;
             case "RIGHT":
                 builder.lineToLinearHeading(RIGHT_BOARD);
@@ -77,8 +81,8 @@ public class AutoRed extends LinearOpMode {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         switch(parkLocation) {
             case "LEFT":
-                builder.lineToLinearHeading(PARKLEFT);
-                builder.lineToLinearHeading(PARKLEFT2);
+                builder.lineToLinearHeading(TEMP3);
+                builder.lineToLinearHeading(TEMP4);
                 break;
             case "RIGHT":
                 builder.lineToLinearHeading(PARK);
@@ -94,39 +98,49 @@ public class AutoRed extends LinearOpMode {
         }
     }
 
-    protected void parkLocation(){
+    protected void parkLocation() {
         if (gamepad2.dpad_left) {
-            parkLocation="LEFT";
+            parkLocation = "LEFT";
         } else if (gamepad2.dpad_right) {
             parkLocation = "RIGHT";
-        }}
+        }
+    }
+
+    protected void startLocation() {
+        if (gamepad2.x) {
+            randomization = "LEFT";
+        } else if (gamepad2.y) {
+            randomization = "CENTER";
+        } else if (gamepad2.b) {
+            randomization = "RIGHT";
+        }
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         this.telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
         this.robot = new Robot().init(hardwareMap);
-        this.robot.getCamera().setAlliance(Alliance.Blue);
+//        this.robot.getCamera().setAlliance(Alliance.Blue);
 //        this.robot.getCamera().initTargetingCamera();
-        this.initialPosition = new Pose2d(34, -59.5, Math.toRadians(270));
+        this.initialPosition = new Pose2d(24, -60, Math.toRadians(270));
         this.robot.getDrive().setPoseEstimate(initialPosition);
 
         // Do super fancy chinese shit
         while (!this.isStarted()) {
-            this.telemetry.addData("Starting Position", this.robot.getCamera().getStartingPosition());
-            randomization = String.valueOf(this.robot.getCamera().getStartingPositionBlue());
+//            randomization = String.valueOf(this.robot.getCamera().getStartingPositionBlue());
             parkLocation();
-//            randomization = "CENTER";
+            startLocation();
+            this.telemetry.addData("Starting Position", randomization);
             this.telemetry.addData("Park Position", parkLocation);
             this.telemetry.update();
         }
-            scorePreloadOne();
+        scorePreloadOne();
         boardScore();
-        this.robot.refreshPoseEstimateFromAprilTag();
         sleep(250);
-            this.robot.getClaw().open();
-            sleep(250);
-            park();
+        this.robot.getClaw().open();
+        sleep(250);
+//        park();
     }
 
 }

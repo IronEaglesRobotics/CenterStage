@@ -60,7 +60,7 @@ import java.util.List;
  */
 @Config
 public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(5, 0, 4);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(4, 0, 2);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(15, 0, 1);
 
     public static double LATERAL_MULTIPLIER = 1;
