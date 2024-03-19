@@ -1,10 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import static org.firstinspires.ftc.teamcode.util.Configurables.AuToDeV.TEMP1;
-import static org.firstinspires.ftc.teamcode.util.Configurables.AuToDeV.TEMP2;
-import static org.firstinspires.ftc.teamcode.util.Configurables.AuToDeV.TEMP3;
-import static org.firstinspires.ftc.teamcode.util.Configurables.AuToDeV.TEMP4;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -25,12 +20,12 @@ public class AutoRed extends LinearOpMode {
     //Preloads
     final static Pose2d LEFT_PRELOAD_ONE = new Pose2d(40, -37.5, Math.toRadians(270));
     final static Pose2d LEFT_PRELOAD_TWO = new Pose2d(29.5, -32, Math.toRadians(360));
-    final static Pose2d CENTER_PRELOAD = new Pose2d(24, -28, Math.toRadians(270));
-    final static Pose2d RIGHT_PRELOAD = new Pose2d(36, -30, Math.toRadians(270));
+    final static Pose2d CENTER_PRELOAD = new Pose2d(33, -26, Math.toRadians(270));
+    final static Pose2d RIGHT_PRELOAD = new Pose2d(45, -35, Math.toRadians(270));
     //Board Scores
-    final static Pose2d LEFT_BOARD = new Pose2d(50, -26.5, Math.toRadians(358));
-    final static Pose2d CENTER_BOARD = new Pose2d(50, -36.3, Math.toRadians(358));
-    final static Pose2d RIGHT_BOARD = new Pose2d(50, -40, Math.toRadians(358));
+    final static Pose2d LEFT_BOARD = new Pose2d(75.8, -26.5, Math.toRadians(358));
+    final static Pose2d CENTER_BOARD = new Pose2d(80, -29, Math.toRadians(358));
+    final static Pose2d RIGHT_BOARD = new Pose2d(75.8, -40, Math.toRadians(358));
 
     //Park
     final static Pose2d PARK = new Pose2d(60, -58, Math.toRadians(360));
@@ -42,11 +37,10 @@ public class AutoRed extends LinearOpMode {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         switch (randomization) {
             case "LEFT":
-                builder.lineToLinearHeading(LEFT_PRELOAD_ONE);
-                builder.lineToLinearHeading(LEFT_PRELOAD_TWO);
+                builder.splineToSplineHeading(LEFT_PRELOAD_TWO, Math.toRadians(360));
                 break;
             case "CENTER":
-                builder.lineToLinearHeading(TEMP1);
+                builder.lineToLinearHeading(CENTER_PRELOAD);
                 break;
             case "RIGHT":
                 builder.lineToLinearHeading(RIGHT_PRELOAD);
@@ -62,7 +56,7 @@ public class AutoRed extends LinearOpMode {
                 builder.lineToLinearHeading(LEFT_BOARD);
                 break;
             case "CENTER":
-                builder.lineToLinearHeading(TEMP2);
+                builder.lineToLinearHeading(CENTER_BOARD);
                 break;
             case "RIGHT":
                 builder.lineToLinearHeading(RIGHT_BOARD);
@@ -81,8 +75,8 @@ public class AutoRed extends LinearOpMode {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         switch(parkLocation) {
             case "LEFT":
-                builder.lineToLinearHeading(TEMP3);
-                builder.lineToLinearHeading(TEMP4);
+                builder.lineToLinearHeading(PARKLEFT);
+                builder.lineToLinearHeading(PARKLEFT2);
                 break;
             case "RIGHT":
                 builder.lineToLinearHeading(PARK);
@@ -123,7 +117,7 @@ public class AutoRed extends LinearOpMode {
         this.robot = new Robot().init(hardwareMap);
 //        this.robot.getCamera().setAlliance(Alliance.Blue);
 //        this.robot.getCamera().initTargetingCamera();
-        this.initialPosition = new Pose2d(24, -60, Math.toRadians(270));
+        this.initialPosition = new Pose2d(34, -59.5, Math.toRadians(270));
         this.robot.getDrive().setPoseEstimate(initialPosition);
 
         // Do super fancy chinese shit
@@ -135,12 +129,13 @@ public class AutoRed extends LinearOpMode {
             this.telemetry.addData("Park Position", parkLocation);
             this.telemetry.update();
         }
+        robot.update();
         scorePreloadOne();
         boardScore();
         sleep(250);
         this.robot.getClaw().open();
         sleep(250);
-//        park();
+//            park();
     }
 
 }
