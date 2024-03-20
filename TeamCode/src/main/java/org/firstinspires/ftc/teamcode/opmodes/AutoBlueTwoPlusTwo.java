@@ -246,6 +246,9 @@ public class AutoBlueTwoPlusTwo extends LinearOpMode {
 
         this.telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
         this.robot = new Robot().init(hardwareMap);
+        while(!this.robot.getCamera().isReady()) {
+            sleep(20);
+        }
 //        this.robot.getCamera().setAlliance(Alliance.Blue);
 //        this.robot.getCamera().initTargetingCamera();
         this.initialPosition = new Pose2d(-34, -59.5, Math.toRadians(270));

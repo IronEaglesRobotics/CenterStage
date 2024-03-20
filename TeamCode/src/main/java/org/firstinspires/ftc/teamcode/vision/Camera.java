@@ -117,4 +117,8 @@ public class Camera {
         }
         return this.aprilTagPoseEstimator.estimatePose(detection);
     }
+
+    public boolean isReady() {
+        return this.propPortal.getCameraState() == VisionPortal.CameraState.CAMERA_DEVICE_READY;
+    }
 }
