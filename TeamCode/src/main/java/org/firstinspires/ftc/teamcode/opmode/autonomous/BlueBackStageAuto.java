@@ -29,24 +29,24 @@ public class BlueBackStageAuto extends AutoBase {
 
     public static final Pose2d DROP_1 = new Pose2d(24.5, 45, Math.toRadians(-90));
     public static final Pose2d DEPOSIT_PRELOAD_3 = new Pose2d(53.4, 28.7, Math.toRadians(-180));
-    public static final Pose2d DEPOSIT_PRELOAD_2 = new Pose2d(51.7, 34.5, Math.toRadians(-180));
+    public static final Pose2d DEPOSIT_PRELOAD_2 = new Pose2d(51.5, 34.5, Math.toRadians(-180));
     public static final Pose2d DEPOSIT_PRELOAD_1 = new Pose2d(51.5, 39.3, Math.toRadians(-180));
 
-    public static  final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(53.2, 35.6, Math.toRadians(-187));
+    public static  final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(53.2, 35.6, Math.toRadians(-180));
 
-    public static  final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(52.7, 32.6, Math.toRadians(-187));
+    public static  final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(51, 32.6, Math.toRadians(-180));
 
-    public static  final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(53, 33.5, Math.toRadians(-187));
+    public static  final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(53, 33.5, Math.toRadians(-180));
 
 
     //public static final Vector2d POST_SCORING_SPLINE_END = new Vector2d(24, -8.5);//-36
-    public static final Pose2d POST_SCORING_SPLINE_END = new Pose2d(26, 12.1 , Math.toRadians(-187));//-36
+    public static final Pose2d POST_SCORING_SPLINE_END = new Pose2d(26, 11.1 , Math.toRadians(-180));//-36
 
-    public static final Pose2d STACK_LOCATION1 = new Pose2d(-56.2, 12.1, Math.toRadians(-187));
+    public static final Pose2d STACK_LOCATION1 = new Pose2d(-56.2, 11.1, Math.toRadians(-180));
 
-    public static final Pose2d STACK_LOCATION2 = new Pose2d(-55, 12.1, Math.toRadians(-187));
+    public static final Pose2d STACK_LOCATION2 = new Pose2d(-58, 11.1, Math.toRadians(-180));
 
-    public static final Pose2d STACK_LOCATION3 = new Pose2d(-55.6, 12.1, Math.toRadians(-187));
+    public static final Pose2d STACK_LOCATION3 = new Pose2d(-55.6, 11.1, Math.toRadians(-180));
 
 
     @Override
@@ -89,30 +89,30 @@ public class BlueBackStageAuto extends AutoBase {
             // RUN INTAKE
             case 2:
                 // intake
-                if (getRuntime() < macroTime + 0.25) {
-                    robot.intake.setDcMotor(-0.24);
+//                if (getRuntime() < macroTime + 0.05) {
+//
+//                }
+//                // if intake is done move on
+//               else {
+                robot.intake.setDcMotor(0);
+                robot.arm.setDoor(Arm.DoorPosition.CLOSE);
+                robot.extendMacro_auto(Slides.mini_tier1, getRuntime(), Slides.micro_tier1);
+                builder = this.robot.getTrajectorySequenceBuilder();
+                //Scores yellow pixel
+                switch (teamPropLocation) {
+                    case 1:
+                        builder.lineToLinearHeading(DEPOSIT_PRELOAD_1);
+                        break;
+                    case 2:
+                        builder.lineToLinearHeading(DEPOSIT_PRELOAD_2);
+                        break;
+                    case 3:
+                        builder.lineToLinearHeading(DEPOSIT_PRELOAD_3);
+                        break;
                 }
-                // if intake is done move on
-                else {
-                    robot.intake.setDcMotor(0);
-                    robot.arm.setDoor(Arm.DoorPosition.CLOSE);
-                    robot.extendMacro_auto(Slides.mini_tier1, getRuntime(), Slides.micro_tier1);
-                    builder = this.robot.getTrajectorySequenceBuilder();
-                    //Scores yellow pixel
-                    switch (teamPropLocation) {
-                        case 1:
-                            builder.lineToLinearHeading(DEPOSIT_PRELOAD_1);
-                            break;
-                        case 2:
-                            builder.lineToLinearHeading(DEPOSIT_PRELOAD_2);
-                            break;
-                        case 3:
-                            builder.lineToLinearHeading(DEPOSIT_PRELOAD_3);
-                            break;
-                    }
-                    this.robot.drive.followTrajectorySequenceAsync(builder.build());
-                    macroState++;
-                }
+                this.robot.drive.followTrajectorySequenceAsync(builder.build());
+                macroState++;
+                // }
                 break;
             // EXTEND AND MOVE TO BACKBOARD
             case 3:
@@ -139,7 +139,7 @@ public class BlueBackStageAuto extends AutoBase {
                             builder.lineToConstantHeading(STACK_LOCATION1.vec().plus(new Vector2d(0)));
                             break;
                         case 2:
-                            builder.lineToConstantHeading(STACK_LOCATION2.vec().plus(new Vector2d(-2.65)));
+                            builder.lineToConstantHeading(STACK_LOCATION2.vec().plus(new Vector2d(0)));
                             break;
                         case 3:
                             builder.lineToConstantHeading(STACK_LOCATION3.vec().plus(new Vector2d()));
@@ -154,7 +154,7 @@ public class BlueBackStageAuto extends AutoBase {
                 robot.resetMacro(0, getRuntime());
                 robot.intake.setDcMotor(0.58);
                 robot.intake.setpos(STACK6);
-                if (!robot.drive.isBusy() && getRuntime() > macroTime + 0.2) {
+                if (!robot.drive.isBusy() && getRuntime() > macroTime + 0.4) {
                     //robot.intake.setDcMotor(0.5);
                     macroState++;
                 }
@@ -168,7 +168,7 @@ public class BlueBackStageAuto extends AutoBase {
                 break;
             //goes back to the easel
             case 7:
-                if (getRuntime() > macroTime + 0.6) {
+                if (getRuntime() > macroTime + 0.7) {
                     //robot.intake.setDcMotor(-0.0);
                     robot.arm.setDoor(Arm.DoorPosition.CLOSE);
                     robot.intake.setDcMotor(-0.35);
@@ -224,7 +224,7 @@ public class BlueBackStageAuto extends AutoBase {
                             builder.lineToConstantHeading(STACK_LOCATION1.vec().plus(new Vector2d(-2)));
                             break;
                         case 2:
-                            builder.lineToConstantHeading(STACK_LOCATION2.vec().plus(new Vector2d(-2.75)));
+                            builder.lineToConstantHeading(STACK_LOCATION2.vec().plus(new Vector2d(0)));
                             break;
                         case 3:
                             builder.lineToConstantHeading(STACK_LOCATION3.vec().plus(new Vector2d()));
@@ -239,7 +239,7 @@ public class BlueBackStageAuto extends AutoBase {
                 robot.resetMacro(0, getRuntime());
                 robot.intake.setDcMotor(0.58);
                 robot.intake.setpos(STACK3);
-                if (!robot.drive.isBusy() && getRuntime() > macroTime + 0.2) {
+                if (!robot.drive.isBusy() && getRuntime() > macroTime + 0.4) {
                     //robot.intake.setDcMotor(0.68);
                     macroState++;
                 }

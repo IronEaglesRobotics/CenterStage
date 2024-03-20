@@ -18,8 +18,8 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.Slides;
 
 @Config
-@TeleOp(name = "Main TeleOp", group = "OpModes")
-public class MainTeleOp extends OpMode {
+@TeleOp(name = "Blue TeleOp", group = "OpModes")
+public class BlueTeleop extends OpMode {
 
     public static double normal = 0.7;
     public static double turbo = 1;
@@ -71,6 +71,8 @@ public class MainTeleOp extends OpMode {
         this.telemetry = FtcDashboard.getInstance().getTelemetry();
         telemetry.update();
 
+        this.robot.alliance = 1;
+        this.robot.leds.setPattern(92);
 
     }
 
@@ -96,6 +98,8 @@ public class MainTeleOp extends OpMode {
 
         this.telemetry.addData("battery", getBatteryVoltage());
         this.telemetry.update();
+
+        this.robot.leds.setPattern(93);
 
         // Driver 1
         double x = -gamepad1.left_stick_y;

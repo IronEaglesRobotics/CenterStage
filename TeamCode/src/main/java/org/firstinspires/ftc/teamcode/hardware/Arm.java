@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PController;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -12,6 +13,11 @@ public class Arm {
     private Servo lAServo;
     private Servo doorServo;
     private Servo wristServo;
+
+    private Servo elbow;
+
+
+
     private Slides.Position pos = Slides.Position.DOWN;
     private PController armController;
     private double armControllerTarget;
@@ -22,6 +28,8 @@ public class Arm {
     private double armTempPos;
     private double doorPos;
     private double wristPos;
+
+    private double elbowPos;
     public static double ARM_KP = 0.18;
 
     public static double doorOpenPos = 0.36;
@@ -33,6 +41,10 @@ public class Arm {
     public static double armScore_highMacro = 0.95;
     public static double wristStart = 0.29;
     public static double wristScore = 0.5;
+
+    public static double elbow_mid = 0.5;
+    public static double elbow_right = 0.29;
+    public static double elbow_left = 0.95;
 
     public static double wristScore_highMacro = 0.3;
 
@@ -49,6 +61,7 @@ public class Arm {
         doorServo = hardwareMap.get(Servo.class, "Door");
         lAServo = hardwareMap.get(Servo.class, "LeftArm");
         rAServo = hardwareMap.get(Servo.class, "RightArm");
+       // elbow = hardwareMap.get(Servo.class, "Elbow");
 //        lAServo.setDirection(Servo.Direction.REVERSE);
         rAServo.setDirection(Servo.Direction.REVERSE);
         doorServo.setDirection(Servo.Direction.REVERSE);
@@ -87,6 +100,17 @@ public class Arm {
             wristPos = wristScore;
         } else if (pos == Position.SCOREHI) {
             wristPos = wristScore_highMacro;
+
+        }
+    }
+
+    public void setElbowPos (Position pos){
+        if (pos == Position.INTAKE) {
+            wristPos = elbow_mid;
+        } else if (pos == Position.SCORE) {
+            wristPos = elbow_right;
+        } else if (pos == Position.SCOREHI) {
+            wristPos = elbow_left;
 
         }
     }

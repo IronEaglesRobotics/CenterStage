@@ -21,33 +21,37 @@ import org.firstinspires.ftc.teamcode.util.CenterStageCommon;
 @Config
 @Autonomous(name = "Red FrontPreload (2+1)", group = "Competition", preselectTeleOp = "Main TeleOp")
 public class RedFrontPreload extends AutoBase {
-    public static final Pose2d DROP_1_PART_2 = new Pose2d(-36, -33.5, Math.toRadians(180));
+    public static final Pose2d DROP_1_PART_2 = new Pose2d(-33, -33.5, Math.toRadians(180));
 
-    public static final Pose2d DROP_1 = new Pose2d(-32,-33.5,Math.toRadians(180));
-    public static final Pose2d DROP_2 = new Pose2d(-39.7, -33.5, Math.toRadians(90));
-    public static final Pose2d DROP_2_PART_2 = new Pose2d(-39.7,-36.5, Math.toRadians(90));
-    public static final Pose2d DROP_3 = new Pose2d(-46.7, -50.5, Math.toRadians(90));
+    public static final Pose2d DROP_1 = new Pose2d(-33,-33.5,Math.toRadians(180));
+    public static final Pose2d DROP_2 = new Pose2d(-35.7, -33.5, Math.toRadians(90));
+    public static final Pose2d DROP_2_PART_2 = new Pose2d(-35.7,-41, Math.toRadians(90));
+    public static final Pose2d DROP_3 = new Pose2d(-51, -50.5, Math.toRadians(90));
     public static final Pose2d DROP_1M = new Pose2d(-36, -45, Math.toRadians(90));
 
     public static final Pose2d DROP_2M = new Pose2d(-48.5, -30, Math.toRadians(90));
 
-    public static final Pose2d DROP_3M = new Pose2d(-48.7, -35.9, Math.toRadians(90));
+    public static final Pose2d DROP_3M = new Pose2d(-53.7, -35.9, Math.toRadians(90));
 
-    public static final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(53.3, -38.3, Math.toRadians(188));//187
+    public static final Pose2d DEPOSIT_WHITE_STACKS_1 = new Pose2d(53.3, -38.3, Math.toRadians(180));//187
 
-    public static final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(52, -34, Math.toRadians(188));//187
+    public static final Pose2d DEPOSIT_WHITE_STACKS_2 = new Pose2d(50, -32, Math.toRadians(187));//187
 
-    public static final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(53.6, -23.5, Math.toRadians(186));//817
+    public static final Pose2d DEPOSIT_WHITE_STACKS_3 = new Pose2d(55, -25, Math.toRadians(180));//817
 
-    public static final Pose2d STACK_LOCATION = new Pose2d(-52, -29.6, Math.toRadians(0));
+    public static final Pose2d STACK_LOCATION_1 = new Pose2d(-54.5, -32.6, Math.toRadians(180));
+
+    public static final Pose2d STACK_LOCATION_2 = new Pose2d(-55, -40, Math.toRadians(180));
+
+    public static final Pose2d STACK_LOCATION_3 = new Pose2d(-52, -29.6, Math.toRadians(180));
 
     public static final Pose2d POST_SCORING_SPLINE_END = new Pose2d(24, -12.4, Math.toRadians(190));//-36
 
     public static final Pose2d POST_DROP_POS = new Pose2d(-45, -59.5, Math.toRadians(0));
 
-    public static final Pose2d POST_DROP_POS_PART2 = new Pose2d(-33, -59.5, Math.toRadians(0));
+    public static final Pose2d POST_DROP_POS_PART2 = new Pose2d(-40, -58.5, Math.toRadians(0));
 
-    public static final Pose2d PRE_DEPOSIT_POS = new Pose2d(33, -59.5, Math.toRadians(0));
+    public static final Pose2d PRE_DEPOSIT_POS = new Pose2d(12, -58.5, Math.toRadians(0));
 
     public static final Pose2d PARK_1 = new Pose2d(45,-58,Math.toRadians(180));
 
@@ -95,8 +99,7 @@ public class RedFrontPreload extends AutoBase {
             // RUN INTAKE
             case 2:
                 // intake
-                if (getRuntime() < macroTime + 0.18) {
-                    robot.intake.setDcMotor(-0.23);
+                if (getRuntime() < macroTime + 0.1) {
                 }
                 else{
                     builder = this.robot.getTrajectorySequenceBuilder();
@@ -113,10 +116,23 @@ public class RedFrontPreload extends AutoBase {
                             break;
                     }
                     robot.arm.setDoor(OPEN);
-                    builder.lineToLinearHeading(STACK_LOCATION.plus(new Pose2d(-5.4,-2.5))).waitSeconds(.01);
+                    switch (teamPropLocation) {
+                        case (1):
+                            //team prop location 1
+                            builder.lineToLinearHeading(STACK_LOCATION_1.plus(new Pose2d(0))).waitSeconds(.01);
+                            break;
+                        case (2):
+                            //team prop location 2
+                            builder.lineToLinearHeading(STACK_LOCATION_2).waitSeconds(.01);
+
+                        case (3):
+                            //team prop location 3
+                            builder.lineToLinearHeading(STACK_LOCATION_3.plus(new Pose2d(-4.8,-2))).waitSeconds(.01);
+
+                    }
 
 
-                    robot.intake.setDcMotor(0.74);
+                    robot.intake.setDcMotor(0.44);
                     robot.intake.setpos(STACK6);
                     macroTime = getRuntime();
                     this.robot.drive.followTrajectorySequenceAsync(builder.build());
@@ -132,11 +148,10 @@ public class RedFrontPreload extends AutoBase {
                 }
                 break;
 
-
             case 4:
-                if (getRuntime() > macroTime + 0.06) {
+                if (getRuntime() > macroTime + 0.1) {
                     robot.arm.setDoor(CLOSE);
-                    robot.intake.setDcMotor(-0.5);
+                    robot.intake.setDcMotor(-0.1);
                     builder = this.robot.getTrajectorySequenceBuilder();
 
                     switch (teamPropLocation) {
@@ -169,7 +184,7 @@ public class RedFrontPreload extends AutoBase {
                 if (getRuntime() > macroTime + 4.4 || !robot.drive.isBusy()) {
                     macroTime = getRuntime();
                     robot.macroState = 0;
-                    robot.extendMacro(Slides.mini_tier1-70, getRuntime());
+                    robot.extendMacro(Slides.mini_tier1-30, getRuntime());
                     macroState++;
                 }
                 break;

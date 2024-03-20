@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 @Config
 public class Slides {
-    private DcMotor slide;
-    private DcMotor slide2;
+    public DcMotor slide;
+    public DcMotor slide2;
 
 //    public static double p = 0.0014;
 //    public static double i = 0.02;
@@ -100,28 +100,26 @@ public class Slides {
 //        pickupPos = 20 + heightOffset;
 //        downPos = heightOffset;// TODO add these back in
 
-//        if (target == 0) {
+//        if (slide.getCurrentPosition() <= pTolerance && target <= pTolerance) {
 //            slide.setPower(0);
 //            slide2.setPower(0);
 //        } else {
-//            if (target < 5) {
-//                slide.setPower(0);
-//                slide2.setPower(0);
-//            } else {
-        double pid, ff;
-        controller.setPID(coefficients.p, coefficients.i, coefficients.d);
-        controller.setTolerance(pTolerance);
 
-        pid = controller.calculate(slide.getCurrentPosition(), target);
-        ff = coefficients.f;
-        slide.setPower(pid + ff);
+            double pid, ff;
+            controller.setPID(coefficients.p, coefficients.i, coefficients.d);
+            controller.setTolerance(pTolerance);
 
-        pid = controller.calculate(slide2.getCurrentPosition(), target);
-        ff = coefficients.f;
-        slide2.setPower(pid + ff);
+            pid = controller.calculate(slide.getCurrentPosition(), target);
+            ff = coefficients.f;
+            slide.setPower(pid + ff);
+
+            pid = controller.calculate(slide2.getCurrentPosition(), target);
+            ff = coefficients.f;
+            slide2.setPower(pid + ff);
 //            }
 //        }
-    }
+        }
+
 
     public String getTelemetry() {
         return String.format("Position: %s %s\nTarget: %s %s\nPower: %s %s", slide.getCurrentPosition(), slide2.getCurrentPosition(), target, target, slide.getPower(), slide2.getPower());

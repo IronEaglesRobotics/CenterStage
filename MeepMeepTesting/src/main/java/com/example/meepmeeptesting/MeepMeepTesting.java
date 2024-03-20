@@ -95,8 +95,8 @@ public class MeepMeepTesting {
                 .setBackgroundAlpha(0.95f)
                 //.addEntity(myBot)
                 //.addEntity(BlueFrontStage)
-                .addEntity(BlueFrontStage3)
-                //.addEntity(BlueFrontStage1)
+                //.addEntity(BlueFrontStage3)
+                .addEntity(BlueFrontStage1)
                 .start();
     }
 }
