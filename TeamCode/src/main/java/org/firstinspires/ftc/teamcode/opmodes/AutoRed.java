@@ -24,11 +24,10 @@ public class AutoRed extends LinearOpMode {
     final static Pose2d CENTER_PRELOAD = new Pose2d(33, -26, Math.toRadians(270));
     final static Pose2d RIGHT_PRELOAD = new Pose2d(45, -27, Math.toRadians(270));
     //Board Scores
-    final static Pose2d LEFT_BOARD = new Pose2d(78, -22, Math.toRadians(358));
-    final static Pose2d CENTER_BOARD = new Pose2d(80, -32, Math.toRadians(358));
-    final static Pose2d RIGHT_BOARD = new Pose2d(78, -39, Math.toRadians(358));
-
-    //Park
+    final static Pose2d LEFT_BOARD = new Pose2d(78, -22, Math.toRadians(360));
+    final static Pose2d CENTER_BOARD = new Pose2d(78, -33, Math.toRadians(360));
+    final static Pose2d RIGHT_BOARD = new Pose2d(76, -39, Math.toRadians(360));
+    //Parka
     final static Pose2d PARK = new Pose2d(60, -58, Math.toRadians(360));
     final static Pose2d PARK2 = new Pose2d(80, -60, Math.toRadians(360));
     final static Pose2d PARKLEFT = new Pose2d(50, -15, Math.toRadians(360));
@@ -41,7 +40,7 @@ public class AutoRed extends LinearOpMode {
                 builder.setReversed(true);
                 builder.splineToSplineHeading(LEFT_PRELOAD_TWO, Math.toRadians(180),
                         MecanumDrive.getVelocityConstraint(70, Math.toRadians(60), DriveConstants.TRACK_WIDTH),
-                        MecanumDrive.getAccelerationConstraint(70));
+                        MecanumDrive.getAccelerationConstraint(50));
                 builder.setReversed(false);
                 break;
             case "CENTER":
@@ -61,16 +60,17 @@ public class AutoRed extends LinearOpMode {
                 builder.lineToLinearHeading(LEFT_BOARD);
                 break;
             case "CENTER":
-                builder.lineToLinearHeading(CENTER_BOARD);
+                builder.lineToLinearHeading(CENTER_BOARD,
+                        MecanumDrive.getVelocityConstraint(50, Math.toRadians(60), DriveConstants.TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(50));
                 break;
             case "RIGHT":
                 builder.lineToLinearHeading(RIGHT_BOARD,
                         MecanumDrive.getVelocityConstraint(50, Math.toRadians(60), DriveConstants.TRACK_WIDTH),
-                        MecanumDrive.getAccelerationConstraint(50));
+                        MecanumDrive.getAccelerationConstraint(30));
                 break;
         }
-        builder.addTemporalMarker(.2, robot.getArm()::armScore);
-//        builder.addTemporalMarker(.2, robot.getSlides()::slideFirstLayer);
+        builder.addTemporalMarker(.2, robot.getArm()::armSecondaryScore);
         builder.addTemporalMarker(.2, robot.getWrist()::wristScore);
         this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
         while (this.robot.getDrive().isBusy()) {
@@ -122,14 +122,11 @@ public class AutoRed extends LinearOpMode {
 
         this.telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
         this.robot = new Robot().init(hardwareMap);
-//        this.robot.getCamera().setAlliance(Alliance.Blue);
-//        this.robot.getCamera().initTargetingCamera();
         this.initialPosition = new Pose2d(34, -59.5, Math.toRadians(270));
         this.robot.getDrive().setPoseEstimate(initialPosition);
 
         // Do super fancy chinese shit
         while (!this.isStarted()) {
-//            randomization = String.valueOf(this.robot.getCamera().getStartingPositionBlue());
             parkLocation();
             startLocation();
             this.telemetry.addData("Starting Position", randomization);
@@ -140,7 +137,6 @@ public class AutoRed extends LinearOpMode {
         this.robot.getClaw().close();
         scorePreloadOne();
         boardScore();
-//        sleep(250);
         this.robot.getClaw().open();
         sleep(250);
         park();

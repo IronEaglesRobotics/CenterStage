@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -12,11 +13,15 @@ import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
-@Autonomous(name = "autoRed2+2")
-public class AutoRedTwoPlusTwo extends LinearOpMode {
+@Autonomous(name = "autoRed2+4Test")
+public class AutoRedTwoPlusFourTest extends LinearOpMode {
     protected Pose2d initialPosition;
+    GamepadEx controller1;
+    GamepadEx controller2;
     private Robot robot;
     private String randomization = "CENTER";
+    private Boolean board1 = true;
+    private Boolean board2 = true;
     private String parkLocation = "LEFT";
 
     //Pose2ds
@@ -32,19 +37,14 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
     final static Pose2d PARK = new Pose2d(60, -58, Math.toRadians(360));
     final static Pose2d PARK2 = new Pose2d(80, -60, Math.toRadians(360));
     final static Pose2d PARKLEFT = new Pose2d(50, -15, Math.toRadians(360));
-    final static Pose2d PARKLEFT2 = new Pose2d(75, -12, Math.toRadians(360));
+    final static Pose2d PARKLEFT2 = new Pose2d(75, -10, Math.toRadians(360));
     //Cycles
     final static Vector2d LEAVE_BOARD = new Vector2d(50, -10);
     final static Vector2d TO_STACK = new Vector2d(-35, -10);
     final static Vector2d TO_STACK_SLOW = new Vector2d(-45, -10);
-    final static Pose2d TO_STACK_SLOW2 = new Pose2d(-38.5, -8, Math.toRadians(360));
-    final static Pose2d BACK_THROUGH_GATE = new Pose2d(50, -10, Math.toRadians(360));
-    final static Pose2d APPROACHING_BOARD = new Pose2d(70, -31, Math.toRadians(360));
     final static Vector2d SCORE_STACK = new Vector2d(72.5, -35);
-    final static Vector2d SCORE_STACK_SLOW = new Vector2d(73, -35);
-    //Park
-    final static Pose2d BACK_OFF = new Pose2d(60, -58, Math.toRadians(360));
 
+    //Trajectory Builders
     protected void scorePreloadOne() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         switch (randomization) {
@@ -83,7 +83,6 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
                 break;
         }
         builder.addTemporalMarker(.2, robot.getArm()::armSecondaryScore);
-//        builder.addTemporalMarker(.2, robot.getSlides()::slideFirstLayer);
         builder.addTemporalMarker(.2, robot.getWrist()::wristScore);
         this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
         while (this.robot.getDrive().isBusy()) {
@@ -155,7 +154,7 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
         builder.addTemporalMarker(.3, robot.getArm()::armPickupStackLow);
         builder.addTemporalMarker(.3, robot.getClaw()::close);
         builder.addTemporalMarker(.3, robot.getWrist()::wristPickup);
-        builder.addTemporalMarker(2, robot.getClaw()::openStack);
+        builder.addTemporalMarker(.5, robot.getClaw()::openStack);
         builder.addTemporalMarker(.2, robot.getSlides()::slideDown);
         this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
         while (this.robot.getDrive().isBusy()) {
@@ -169,7 +168,7 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
         builder.splineToConstantHeading(SCORE_STACK, Math.toRadians(360),
                 MecanumDrive.getVelocityConstraint(40, Math.toRadians(60), DriveConstants.TRACK_WIDTH),
                 MecanumDrive.getAccelerationConstraint(40));
-        builder.addTemporalMarker(.01, robot.getArm()::armPickdaUpy);
+        builder.addTemporalMarker(.1, robot.getArm()::armPickdaUpy);
         builder.addTemporalMarker(2.5, robot.getArm()::armScoreStack);
         builder.addTemporalMarker(2.5, robot.getWrist()::wristScore);
         builder.addTemporalMarker(2.5, robot.getSlides()::slideFirstLayer);
@@ -183,19 +182,12 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         builder.lineToConstantHeading(PARKLEFT2.vec());
         builder.addTemporalMarker(.01, robot.getArm()::armPickdaUpy);
+        builder.addTemporalMarker(2.5, robot.getArm()::armScoreStack);
+        builder.addTemporalMarker(2.5, robot.getWrist()::wristScore);
         this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
         while (this.robot.getDrive().isBusy()) {
             robot.update();
         }
-    }
-
-    protected void scoreTest() {
-        TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
-        builder.lineToConstantHeading(SCORE_STACK_SLOW,
-                MecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                MecanumDrive.getAccelerationConstraint(30));
-        builder.addTemporalMarker(.3, this::clawSlowOpen);
-        this.robot.getDrive().followTrajectorySequence(builder.build());
     }
 
     protected void clawSlowOpen() {
@@ -230,6 +222,7 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
         }
     }
 
+    //Init Customization
     protected void parkLocation() {
         if (gamepad2.dpad_left) {
             parkLocation = "LEFT";
@@ -248,6 +241,19 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
         }
     }
 
+    protected void cycles() {
+        if (gamepad2.left_bumper) {
+            if (!board1) board1 = true;
+            else board1 = false;
+            sleep(500);
+        } else if (gamepad2.right_bumper) {
+            if (!board2) board2 = true;
+            else board2 = false;
+            sleep(500);
+        }
+    }
+
+    //Super fancy chinese shit
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -255,47 +261,54 @@ public class AutoRedTwoPlusTwo extends LinearOpMode {
         this.robot = new Robot().init(hardwareMap);
 //        this.robot.getCamera().setAlliance(Alliance.Blue);
 //        this.robot.getCamera().initTargetingCamera();
+        this.controller2 = new GamepadEx(this.gamepad2);
+        this.controller1 = new GamepadEx(this.gamepad1);
         this.initialPosition = new Pose2d(34, -59.5, Math.toRadians(270));
         this.robot.getDrive().setPoseEstimate(initialPosition);
 
         // Do super fancy chinese shit
         while (!this.isStarted()) {
 //            randomization = String.valueOf(this.robot.getCamera().getStartingPositionBlue());
+            cycles();
             parkLocation();
             startLocation();
-            this.telemetry.addData("Starting Position", randomization);
+            this.telemetry.addData("Randomization", randomization);
             this.telemetry.addData("Park Position", parkLocation);
+            this.telemetry.addData("Board 1", board1);
+            this.telemetry.addData("Board 2", board2);
             this.telemetry.update();
         }
         robot.update();
         this.robot.getClaw().close();
         scorePreloadOne();
         boardScore();
-//        sleep(250);
         this.robot.getClaw().open();
         sleep(250);
         toStack();
         this.robot.getClaw().close();
-        toBoard();
-        clawSlowOpen();
-//            sleep(100);
+        if (board1) {
+            toBoard();
+            clawSlowOpen();
+        } else {
+            toStage();
+            this.robot.getClaw().openStack();
+        }
         toStackLower();
         this.robot.getClaw().close();
-        switch (randomization) {
-            default:
-                toBoard();
-                clawSlowOpen();
-                break;
-//                case "LEFT":
-//                    toStage();
-//                    break;
+        if (board2) {
+            toBoard();
+            clawSlowOpen();
+        } else {
+            toStage();
+            this.robot.getClaw().openStack();
         }
         while (!isStopRequested()) {
             this.robot.getArm().armRest(true);
-            this.robot.getClaw().openStack();
+            this.robot.getWrist().wristPickup();
+            this.robot.getSlides().slideDown();
+            this.robot.getClaw().open();
             robot.update();
         }
-//            park();
     }
 
 }

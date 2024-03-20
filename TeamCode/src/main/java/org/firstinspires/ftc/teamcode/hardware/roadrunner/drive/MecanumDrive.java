@@ -336,8 +336,8 @@ public class MecanumDrive extends com.acmerobotics.roadrunner.drive.MecanumDrive
     }
 
     public void setInput(Gamepad gamepad1, Gamepad gamepad2) {
-        double speedScale = gamepad1.y ? SLOWMODE_SPEED : SPEED;
-        double turnScale = gamepad1.y ? SLOWMODE_TURN : TURN;
+        double speedScale = gamepad1.y || gamepad1.right_bumper ? SLOWMODE_SPEED : SPEED;
+        double turnScale = gamepad1.y || gamepad1.right_bumper ? SLOWMODE_TURN : TURN;
 
         this.setWeightedDrivePower(
                 new Pose2d(

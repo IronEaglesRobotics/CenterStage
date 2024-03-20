@@ -461,7 +461,7 @@ public class Robot {
     public static class Claw {
         //Values
         public static double OPEN = 0.65;
-        public static double BIGOPEN = .48;
+        public static double BIGOPEN = .42;
         public static double CLOSE = 0.75;
         public static double CLAW_MIN = 0;
         public static double CLAW_MAX = 1;
