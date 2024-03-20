@@ -168,7 +168,7 @@ public class Robot {
         //Values
         public static double SLIDE_POWER_UP = .7;
         public static double SLIDE_POWER_DOWN = .2;
-        public static int SLIDELAYERONE = 60;
+        public static int SLIDELAYERONE = 150;
         public static int SLIDEAUTOSTACKS = 250;
         public static int SLIDEUP = 630;
         public static int SLIDELAYERTWO = 350;
@@ -302,9 +302,10 @@ public class Robot {
         public static double DIFFY_TOL = 0.01;
         public static double ARM_MAX_DELTA = 0.02;
         public static double ARMREST = 0.89;
-        public static double ARMSCORE = 0.4;
+        public static double ARMSCORESTACK = 0.53;
         public static double ARMACCSCORE = .57;
-        public static double ARMPICKUPSTACK = 0.815;
+        public static double ARMPICKUPSTACK = 0.91;
+        public static double ARMPICKUPSTACKLOW = 0.93;
         public static double PICKUP = 0.92;
         //PControler
         public PController armPController;
@@ -332,6 +333,11 @@ public class Robot {
             moveArm(PICKUP, now);
         }
 
+        public void armPickdaUpy() {
+            moveArm(.83, false);
+        }
+
+
         public void armScore() {
             this.armSecondaryScore();
         }
@@ -340,9 +346,18 @@ public class Robot {
             moveArm(ARMACCSCORE, false);
         }
 
+        public void armScoreStack() {
+            moveArm(ARMSCORESTACK, false);
+        }
+
         public void armPickupStack() {
             moveArm(ARMPICKUPSTACK, false);
         }
+
+        public void armPickupStackLow() {
+            moveArm(ARMPICKUPSTACKLOW, false);
+        }
+
 
         public void armRest() {
             armRest(false);
@@ -446,8 +461,8 @@ public class Robot {
     public static class Claw {
         //Values
         public static double OPEN = 0.65;
-        public static double BIGOPEN = 0f;
-        public static double CLOSE = 0.73;
+        public static double BIGOPEN = .48;
+        public static double CLOSE = 0.75;
         public static double CLAW_MIN = 0;
         public static double CLAW_MAX = 1;
         //Servo

@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
+import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.hardware.roadrunner.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 
 @Autonomous(name = "autoRed")
@@ -18,26 +20,29 @@ public class AutoRed extends LinearOpMode {
 
     //Pose2ds
     //Preloads
-    final static Pose2d LEFT_PRELOAD_ONE = new Pose2d(40, -37.5, Math.toRadians(270));
-    final static Pose2d LEFT_PRELOAD_TWO = new Pose2d(29.5, -32, Math.toRadians(360));
+    final static Pose2d LEFT_PRELOAD_TWO = new Pose2d(27, -26, Math.toRadians(360));
     final static Pose2d CENTER_PRELOAD = new Pose2d(33, -26, Math.toRadians(270));
-    final static Pose2d RIGHT_PRELOAD = new Pose2d(45, -35, Math.toRadians(270));
+    final static Pose2d RIGHT_PRELOAD = new Pose2d(45, -27, Math.toRadians(270));
     //Board Scores
-    final static Pose2d LEFT_BOARD = new Pose2d(75.8, -26.5, Math.toRadians(358));
-    final static Pose2d CENTER_BOARD = new Pose2d(80, -29, Math.toRadians(358));
-    final static Pose2d RIGHT_BOARD = new Pose2d(75.8, -40, Math.toRadians(358));
+    final static Pose2d LEFT_BOARD = new Pose2d(78, -22, Math.toRadians(358));
+    final static Pose2d CENTER_BOARD = new Pose2d(80, -32, Math.toRadians(358));
+    final static Pose2d RIGHT_BOARD = new Pose2d(78, -39, Math.toRadians(358));
 
     //Park
     final static Pose2d PARK = new Pose2d(60, -58, Math.toRadians(360));
     final static Pose2d PARK2 = new Pose2d(80, -60, Math.toRadians(360));
-    final static Pose2d PARKLEFT = new Pose2d(60, -6, Math.toRadians(360));
-    final static Pose2d PARKLEFT2 = new Pose2d(80, -6, Math.toRadians(360));
+    final static Pose2d PARKLEFT = new Pose2d(50, -15, Math.toRadians(360));
+    final static Pose2d PARKLEFT2 = new Pose2d(75, -2, Math.toRadians(360));
 
     protected void scorePreloadOne() {
         TrajectorySequenceBuilder builder = this.robot.getTrajectorySequenceBuilder();
         switch (randomization) {
             case "LEFT":
-                builder.splineToSplineHeading(LEFT_PRELOAD_TWO, Math.toRadians(360));
+                builder.setReversed(true);
+                builder.splineToSplineHeading(LEFT_PRELOAD_TWO, Math.toRadians(180),
+                        MecanumDrive.getVelocityConstraint(70, Math.toRadians(60), DriveConstants.TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(70));
+                builder.setReversed(false);
                 break;
             case "CENTER":
                 builder.lineToLinearHeading(CENTER_PRELOAD);
@@ -59,11 +64,13 @@ public class AutoRed extends LinearOpMode {
                 builder.lineToLinearHeading(CENTER_BOARD);
                 break;
             case "RIGHT":
-                builder.lineToLinearHeading(RIGHT_BOARD);
+                builder.lineToLinearHeading(RIGHT_BOARD,
+                        MecanumDrive.getVelocityConstraint(50, Math.toRadians(60), DriveConstants.TRACK_WIDTH),
+                        MecanumDrive.getAccelerationConstraint(50));
                 break;
         }
         builder.addTemporalMarker(.2, robot.getArm()::armScore);
-        builder.addTemporalMarker(.2, robot.getSlides()::slideFirstLayer);
+//        builder.addTemporalMarker(.2, robot.getSlides()::slideFirstLayer);
         builder.addTemporalMarker(.2, robot.getWrist()::wristScore);
         this.robot.getDrive().followTrajectorySequenceAsync(builder.build());
         while (this.robot.getDrive().isBusy()) {
@@ -130,12 +137,13 @@ public class AutoRed extends LinearOpMode {
             this.telemetry.update();
         }
         robot.update();
+        this.robot.getClaw().close();
         scorePreloadOne();
         boardScore();
-        sleep(250);
+//        sleep(250);
         this.robot.getClaw().open();
         sleep(250);
-//            park();
+        park();
     }
 
 }
