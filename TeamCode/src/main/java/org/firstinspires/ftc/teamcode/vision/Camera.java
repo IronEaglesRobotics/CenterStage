@@ -67,37 +67,27 @@ public class Camera {
         this.initialized = true;
     }
 
-    // Close the Targeting Camera
-    public void stopTargetingCamera() {
-        if (targetingCameraInitialized) {
-            targetingCamera.closeCameraDeviceAsync(() -> targetingCameraInitialized = false);
-        }
-    }
-
-    // Get the Red Goal Detection
-    public Detection getRed() {
-        return targetingCameraInitialized ? prop.getRed() : INVALID_DETECTION;
-    }
-
-    public void setAlliance(Alliance alliance) {
-        this.prop.setAlliance(alliance);
-    }
-
     public StarterPosition getStartingPosition() {
-        if (!targetingCameraInitialized) {
+        Detection red = this.prop.getRed();
+        Detection blue = this.prop.getBlue();
+
+        double redArea = red.getArea();
+        double blueArea = blue.getArea();
+
+        return getStartingPosition(redArea > blueArea ? red : blue);
+    }
+
+    private static StarterPosition getStartingPosition(Detection detection) {
+        if (detection == null) {
             return StarterPosition.UNKNOWN;
         }
 
-        Detection detection = this.getRed();
-        if (detection == null || !detection.isValid()) {
-            return StarterPosition.UNKNOWN;
-        }
         Point center = detection.getCenter();
         if (center == null) {
             return StarterPosition.UNKNOWN;
         }
 
-        double centerX = this.getRed().getCenter().x + 50;
+        double centerX = detection.getCenter().x + 50;
         if (centerX < 33) {
             return StarterPosition.LEFT;
         } else if (centerX < 66) {
@@ -106,50 +96,13 @@ public class Camera {
             return StarterPosition.RIGHT;
         }
 
-
-
         return StarterPosition.UNKNOWN;
     }
 
-    public Detection getBlue() {
-        return targetingCameraInitialized ? prop.getBlue() : INVALID_DETECTION;
-    }
-
-    public StarterPositionBlue getStartingPositionBlue() {
-        if (!targetingCameraInitialized) {
-            return StarterPositionBlue.UNKNOWN;
-        }
-
-        Detection detection = this.getBlue();
-        if (detection == null || !detection.isValid()) {
-            return StarterPositionBlue.UNKNOWN;
-        }
-        Point center = detection.getCenter();
-        if (center == null) {
-            return StarterPositionBlue.UNKNOWN;
-        }
-
-        double centerX = this.getBlue().getCenter().x + 50;
-        if (centerX < 33) {
-            return StarterPositionBlue.LEFT;
-        } else if (centerX < 66) {
-            return StarterPositionBlue.CENTER;
-        } else if (centerX < 100) {
-            return StarterPositionBlue.RIGHT;
-        }
-
-
-        return StarterPositionBlue.UNKNOWN;
-    }
 
     public enum StarterPosition {
         UNKNOWN, LEFT, CENTER, RIGHT
     }
-
-    public enum StarterPositionBlue {
-        UNKNOWN, LEFT, CENTER, RIGHT
-    }
-
 
     public AprilTagDetection getBestAprilTagDetection() {
         return this.aprilTag.getDetections()
@@ -164,5 +117,4 @@ public class Camera {
         }
         return this.aprilTagPoseEstimator.estimatePose(detection);
     }
-
 }

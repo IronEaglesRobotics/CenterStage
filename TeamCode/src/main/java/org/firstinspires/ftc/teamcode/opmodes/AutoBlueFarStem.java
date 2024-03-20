@@ -132,8 +132,8 @@ public class AutoBlueFarStem extends LinearOpMode {
 
         // Do super fancy chinese shit
         while (!this.isStarted()) {
-            this.telemetry.addData("Starting Position", this.robot.getCamera().getStartingPositionBlue());
-            randomization = String.valueOf(this.robot.getCamera().getStartingPositionBlue());
+            this.telemetry.addData("Starting Position", this.robot.getCamera().getStartingPosition());
+            randomization = String.valueOf(this.robot.getCamera().getStartingPosition());
             if (gamepad2.dpad_left) {
                 parkLocation="LEFT";
             } else if (gamepad2.dpad_right) {

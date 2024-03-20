@@ -55,13 +55,8 @@ public class PropDetectionPipeline implements VisionProcessor {
         Imgproc.GaussianBlur(input, blurred, BLUR_SIZE, 0);
         Imgproc.cvtColor(blurred, hsv, Imgproc.COLOR_RGB2HSV);
 
-        if (alliance == Alliance.Red) {
-            red.setContour(detect(FTC_RED_RANGE_1, FTC_RED_RANGE_2));
-        }
-
-        if (alliance == Alliance.Blue) {
-            blue.setContour(detect(FTC_BLUE_RANGE));
-        }
+        red.setContour(detect(FTC_RED_RANGE_1, FTC_RED_RANGE_2));
+        blue.setContour(detect(FTC_BLUE_RANGE));
 
         return input;
     }

@@ -75,8 +75,8 @@ public class AutoBlue extends LinearOpMode {
 
         // Do super fancy chinese shit
         while (!this.isStarted()) {
-            this.telemetry.addData("Starting Position", this.robot.getCamera().getStartingPositionBlue());
-            randomization = String.valueOf(this.robot.getCamera().getStartingPositionBlue());
+            this.telemetry.addData("Starting Position", this.robot.getCamera().getStartingPosition());
+            randomization = String.valueOf(this.robot.getCamera().getStartingPosition());
             this.telemetry.update();
         }
         boardScore();
