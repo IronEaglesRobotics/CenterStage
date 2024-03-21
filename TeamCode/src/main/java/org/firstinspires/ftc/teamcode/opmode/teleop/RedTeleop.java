@@ -189,21 +189,21 @@ public class RedTeleop extends OpMode {
 
                 robot.slides.increaseTarget(controller2.getLeftStick().getY());
 
-                if (robot.intake.getPower() >= 0.01) {
-                    robot.arm.setDoor(OPEN);
-                } else if (robot.intake.getPower() <= -0.01) {
-                    robot.arm.setDoor(OPEN);
-                } else if (controller2.getLeftBumper().isPressed()) {
-                    robot.arm.setDoor(Arm.DoorPosition.OPEN);
-                } else {
-                    robot.arm.setDoor(CLOSE);
-                }
+//                if (robot.intake.getPower() >= 0.01) {
+//                    robot.arm.setDoor(OPEN);
+//                } else if (robot.intake.getPower() <= -0.01) {
+//                    robot.arm.setDoor(OPEN);
+//                } else if (controller2.getLeftBumper().isPressed()) {
+//                    robot.arm.setDoor(Arm.DoorPosition.OPEN);
+//                } else {
+//                    robot.arm.setDoor(CLOSE);
+//                }
                 //Elbowpos
-                if (controller2.getDRight().isPressed()){
+                if (controller2.getDRight().isJustPressed()){
                     robot.arm.setElbowPos(4);
-                } else if (controller2.getDLeft().isPressed()) {
+                } else if (controller2.getDLeft().isJustPressed()) {
                     robot.arm.setElbowPos(3);
-                }else {
+                }else if(controller2.getDUp().isJustPressed())  {
                     robot.arm.setElbowPos(1);
                 }
 

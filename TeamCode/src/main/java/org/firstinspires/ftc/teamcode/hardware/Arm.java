@@ -166,5 +166,6 @@ public class Arm {
 
         doorServo.setPosition(doorPos);
         wristServo.setPosition(wristPos);
+        elbow.setPosition(elbowPos);
     }
 }
