@@ -50,11 +50,12 @@ public class BlueTeleop extends OpMode {
 
         this.servos[0] = this.hardwareMap.get(Servo.class, "LeftIntake");
         this.servos[1] = this.hardwareMap.get(Servo.class, "Wrist");
-        this.servos[2] = this.hardwareMap.get(Servo.class, "Door");
+        this.servos[2] = this.hardwareMap.get(Servo.class, "Elbow");
         this.servos[3] = this.hardwareMap.get(Servo.class, "RightArm");
         this.servos[4] = this.hardwareMap.get(Servo.class, "LeftArm");
         this.servos[5] = this.hardwareMap.get(Servo.class, "Right Intake Servo");
         this.servos[6] = this.hardwareMap.get(Servo.class, "Drone");
+
 
         controller1 = new Controller(gamepad1);
         controller2 = new Controller(gamepad2);
@@ -179,10 +180,14 @@ public class BlueTeleop extends OpMode {
         }
 
 
-        //Elbowpos
-
-
-
+        //ElbowPos
+        if (controller2.getDRight().isPressed()){
+            robot.arm.setElbowPos(4);
+        } else if (controller2.getDLeft().isPressed()) {
+            robot.arm.setElbowPos(3);
+        }else {
+            robot.arm.setElbowPos(1);
+        }
 
 
         // macros
@@ -190,16 +195,28 @@ public class BlueTeleop extends OpMode {
             case (0): // manual mode
 
                 robot.slides.increaseTarget(controller2.getLeftStick().getY());
+
+//                if (robot.intake.getPower() >= 0.01) {
+//                    robot.arm.setDoor(OPEN);
+//                } else if (robot.intake.getPower() <= -0.01) {
+//                    robot.arm.setDoor(OPEN);
+//                } else if (controller2.getLeftBumper().isPressed()) {
+//                    robot.arm.setDoor(Arm.DoorPosition.OPEN);
+//                } else {
+//                    robot.arm.setDoor(CLOSE);
+//                }
+
                 if (robot.intake.getPower() >= 0.01) {
-                    robot.arm.setDoor(OPEN);
+                    robot.intake.wheel_swallow();
                 } else if (robot.intake.getPower() <= -0.01) {
-                    robot.arm.setDoor(OPEN);
+                    robot.intake.wheel_swallow();
                 } else if (controller2.getLeftBumper().isPressed()) {
-                    robot.arm.setDoor(Arm.DoorPosition.OPEN);
+                    robot.intake.wheel_swallow();
                 } else {
-                    robot.arm.setDoor(CLOSE);
+                    robot.intake.wheel_stop();
                 }
 
+                //Start A/B stuff
                 if (controller2.getX().isJustPressed()) {
                     robot.runningMacro = 1;
                 } else if (controller2.getY().isJustPressed()) {

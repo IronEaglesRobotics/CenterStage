@@ -188,6 +188,7 @@ public class RedTeleop extends OpMode {
             case (0): // manual mode
 
                 robot.slides.increaseTarget(controller2.getLeftStick().getY());
+
                 if (robot.intake.getPower() >= 0.01) {
                     robot.arm.setDoor(OPEN);
                 } else if (robot.intake.getPower() <= -0.01) {
@@ -197,6 +198,15 @@ public class RedTeleop extends OpMode {
                 } else {
                     robot.arm.setDoor(CLOSE);
                 }
+                //Elbowpos
+                if (controller2.getDRight().isPressed()){
+                    robot.arm.setElbowPos(4);
+                } else if (controller2.getDLeft().isPressed()) {
+                    robot.arm.setElbowPos(3);
+                }else {
+                    robot.arm.setElbowPos(1);
+                }
+
 
                 if (controller2.getX().isJustPressed()) {
                     robot.runningMacro = 1;

@@ -39,8 +39,8 @@ public class Arm {
     public static double armScore = 0.95;
 
     public static double armScore_highMacro = 0.95;
-    public static double wristStart = 0.29;
-    public static double wristScore = 0.5;
+    public static double wristStart = 0.8;
+    public static double wristScore = 0.31;
 
     public static double elbow_mid = 0.5;
     public static double elbow_right = 0.29;
@@ -48,12 +48,18 @@ public class Arm {
 
     public static double wristScore_highMacro = 0.3;
 
+    public double counter;
+
     public enum Position {
         INTAKE, SCORE, SCOREHI, SCORELEFT, SCORERIGHT
     }
 
     public enum DoorPosition {
         OPEN, CLOSE
+    }
+
+    public enum Elbowpos{
+
     }
 
     public Arm(HardwareMap hardwareMap) {
@@ -76,6 +82,7 @@ public class Arm {
 
         setWristPos(Position.INTAKE);
         setDoor(DoorPosition.CLOSE);
+        setElbowPos(1);
     }
 
     public void setArmPos(Position pos) {
@@ -104,16 +111,15 @@ public class Arm {
         }
     }
 
-    public void setElbowPos (Position pos){
-        if (pos == Position.INTAKE) {
+    public void setElbowPos (int counter){
+        if (counter == 1) {
             elbowPos = elbow_mid;
-        } else if (pos == Position.SCORE) {
-            wristPos = elbow_mid;
-        } else if (pos == Position.SCORELEFT) {
-            wristPos = elbow_left;
-        } else if (pos == Position.SCORERIGHT) {
-            wristPos = elbow_right;
-
+        } else if (counter == 2) {
+            elbowPos = elbow_mid;
+        } else if (counter == 3) {
+            elbowPos = elbow_left;
+        } else if (counter == 4) {
+            elbowPos = elbow_right;
         }
     }
 
