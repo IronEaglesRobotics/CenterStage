@@ -49,7 +49,7 @@ public class Arm {
     public static double wristScore_highMacro = 0.3;
 
     public enum Position {
-        INTAKE, SCORE, SCOREHI
+        INTAKE, SCORE, SCOREHI, SCORELEFT, SCORERIGHT
     }
 
     public enum DoorPosition {
@@ -61,7 +61,7 @@ public class Arm {
         doorServo = hardwareMap.get(Servo.class, "Door");
         lAServo = hardwareMap.get(Servo.class, "LeftArm");
         rAServo = hardwareMap.get(Servo.class, "RightArm");
-       // elbow = hardwareMap.get(Servo.class, "Elbow");
+        elbow = hardwareMap.get(Servo.class, "Elbow");
 //        lAServo.setDirection(Servo.Direction.REVERSE);
         rAServo.setDirection(Servo.Direction.REVERSE);
         doorServo.setDirection(Servo.Direction.REVERSE);
@@ -106,11 +106,13 @@ public class Arm {
 
     public void setElbowPos (Position pos){
         if (pos == Position.INTAKE) {
-            wristPos = elbow_mid;
+            elbowPos = elbow_mid;
         } else if (pos == Position.SCORE) {
-            wristPos = elbow_right;
-        } else if (pos == Position.SCOREHI) {
+            wristPos = elbow_mid;
+        } else if (pos == Position.SCORELEFT) {
             wristPos = elbow_left;
+        } else if (pos == Position.SCORERIGHT) {
+            wristPos = elbow_right;
 
         }
     }

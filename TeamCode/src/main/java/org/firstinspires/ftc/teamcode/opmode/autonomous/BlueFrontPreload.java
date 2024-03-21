@@ -125,11 +125,11 @@ public class BlueFrontPreload extends AutoBase {
                         case (2):
                             //team prop location 2
                             builder.lineToLinearHeading(STACK_LOCATION_2.plus(new Pose2d(-5.8,2))).waitSeconds(.01);
-
+                            break;
                         case (3):
                             //team prop location 3
                             builder.lineToLinearHeading(STACK_LOCATION_3.plus(new Pose2d(-4.8,2))).waitSeconds(.01);
-
+                            break;
                     }
 
 
