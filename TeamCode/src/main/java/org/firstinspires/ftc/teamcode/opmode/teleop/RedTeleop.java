@@ -198,7 +198,7 @@ public class RedTeleop extends OpMode {
 //                } else {
 //                    robot.arm.setDoor(CLOSE);
 //                }
-                //Elbowpos
+                //Elbowpo
                 if (controller2.getDRight().isJustPressed()){
                     robot.arm.setElbowPos(4);
                 } else if (controller2.getDLeft().isJustPressed()) {
