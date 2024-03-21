@@ -43,7 +43,7 @@ public abstract class AutoBase extends LinearOpMode {
                 telemetry.addLine("Initialized");
                 // Detection vndafds = robot.camera.getProp() <- returns a detection
                 // int fdsf = detection.getCenter().x <- x value on the screen between -50,50
-                double PropDetection = robot.camera.getProp().getCenter().x;
+                  double PropDetection = robot.camera.getProp().getCenter().x;
 
                 if (PropDetection <= -DetectionTest ) {
                     teamPropLocation = 1;

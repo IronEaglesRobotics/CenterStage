@@ -18,8 +18,8 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.Slides;
 
 @Config
-@TeleOp(name = "Main TeleOp", group = "OpModes")
-public class MainTeleOp extends OpMode {
+@TeleOp(name = "Red TeleOp", group = "OpModes")
+public class RedTeleop extends OpMode {
 
     public static double normal = 0.7;
     public static double turbo = 1;
@@ -70,6 +70,9 @@ public class MainTeleOp extends OpMode {
         telemetry.addLine("Initialized");
         this.telemetry = FtcDashboard.getInstance().getTelemetry();
         telemetry.update();
+        this.robot.alliance = 2;
+
+        this.robot.leds.setPattern(79);
 
 
     }
@@ -96,6 +99,8 @@ public class MainTeleOp extends OpMode {
 
         this.telemetry.addData("battery", getBatteryVoltage());
         this.telemetry.update();
+
+        this.robot.leds.setPattern(80);
 
         // Driver 1
         double x = -gamepad1.left_stick_y;
@@ -183,15 +188,25 @@ public class MainTeleOp extends OpMode {
             case (0): // manual mode
 
                 robot.slides.increaseTarget(controller2.getLeftStick().getY());
-                if (robot.intake.getPower() >= 0.01) {
-                    robot.arm.setDoor(OPEN);
-                } else if (robot.intake.getPower() <= -0.01) {
-                    robot.arm.setDoor(OPEN);
-                } else if (controller2.getLeftBumper().isPressed()) {
-                    robot.arm.setDoor(Arm.DoorPosition.OPEN);
-                } else {
-                    robot.arm.setDoor(CLOSE);
+
+//                if (robot.intake.getPower() >= 0.01) {
+//                    robot.arm.setDoor(OPEN);
+//                } else if (robot.intake.getPower() <= -0.01) {
+//                    robot.arm.setDoor(OPEN);
+//                } else if (controller2.getLeftBumper().isPressed()) {
+//                    robot.arm.setDoor(Arm.DoorPosition.OPEN);
+//                } else {
+//                    robot.arm.setDoor(CLOSE);
+//                }
+                //Elbowpos(
+                if (controller2.getDRight().isJustPressed()){
+                    robot.arm.setElbowPos(4);
+                } else if (controller2.getDLeft().isJustPressed()) {
+                    robot.arm.setElbowPos(3);
+                }else if(controller2.getDUp().isJustPressed())  {
+                    robot.arm.setElbowPos(1);
                 }
+
 
                 if (controller2.getX().isJustPressed()) {
                     robot.runningMacro = 1;

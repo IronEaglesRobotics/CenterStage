@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.hardware.Arm.DoorPosition.OPEN;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
@@ -20,6 +21,7 @@ public class Robot {
     public Intake intake;
     public Slides slides;
     public Arm arm;
+    public LEDs leds;
     public endGame_Mechs endGameMechs;
 
     public double macroStartTime = 0;
@@ -32,6 +34,8 @@ public class Robot {
     public static double scoreWait = 0.65;
     public static double armWait = 2.0;
 
+    public int alliance = 0;
+
     //Name the objects
     public Robot(HardwareMap hardwareMap) {
         drive = new SampleMecanumDrive(hardwareMap);
@@ -41,9 +45,16 @@ public class Robot {
         arm = new Arm(hardwareMap);
         endGameMechs = new endGame_Mechs(hardwareMap);
         camEnabled = true;
+        leds = new LEDs(hardwareMap);
     }
 
     public void extendMacro(int slidePos, double runTime) {
+        if (alliance == 1){
+            leds.setPattern(2);
+        }else{
+            leds.setPattern(3);
+        }
+
         switch(macroState) {
             case(0):
                 macroStartTime = runTime;
@@ -66,12 +77,23 @@ public class Robot {
                     macroState = 0;
                     lastMacro = runningMacro;
                     runningMacro = 0;
+                    if (alliance == 1){
+                        leds.setPattern(93);
+                    }else{
+                        leds.setPattern(80);
+                    }
                 }
                 break;
         }
     }
 
     public void resetMacro(int slidePos, double runTime) {
+        if (alliance == 1){
+            leds.setPattern(2);
+        }else{
+            leds.setPattern(3);
+        }
+
         switch(macroState) {
             case(0):
                 macroStartTime = runTime;
@@ -103,6 +125,11 @@ public class Robot {
                     macroState = 0;
                     lastMacro = runningMacro;
                     runningMacro = 0;
+                    if (alliance == 1){
+                        leds.setPattern(93);
+                    }else{
+                        leds.setPattern(80);
+                    }
                 }
                 break;
         }
@@ -180,14 +207,34 @@ public class Robot {
     }
 
     public void update(double runTime) {
-        Pose2d estimatedPose = null;
-        if (camera != null) {
-            estimatedPose = this.camera.estimatePoseFromAprilTag();
-        }
-        drive.update(estimatedPose);
+//        drive.getPoseEstimate().getX();
+//         = estimatedPose.getX();
+  Pose2d estimatedPose = null;
+//        if (camera != null) {
+//            estimatedPose = this.camera.estimatePoseFromAprilTag();
+//        }
+        //drive.update(estimatedPose);
+
+//        Pose2d p1 = drive.getPoseEstimate();
+//
+//        Pose2d p2 = this.camera.estimatePoseFromAprilTag();
+//
+//        double D = Math.sqrt(Math.pow((p2.getX()-p1.getX()),2) + Math.pow((p2.getY()-p1.getY()),2));
+//
+//        if (D >= 6 || D <= 1){
+//            estimatedPose = null;
+//        }else{
+//            estimatedPose = this.camera.estimatePoseFromAprilTag();
+//
+//        }
+
+        drive.update(/*estimatedPose*/);
         slides.update(runTime);
         arm.update();
+        //leds.setPattern();
     }
+
+
 
     public String getTelemetry() {
         return String.format("Arm:\n------------\n%s\nSlides:\n------------\n%s\nIMU:\n------------\n%s" , arm.getTelemetry(), slides.getTelemetry(), drive.getExternalHeadingVelocity());
